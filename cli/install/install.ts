@@ -20,6 +20,7 @@ export class InstallCmd implements CommandModule {
         type: 'boolean'
       }
     })
+    .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     return yargs;
   }
   handler(args) {

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import path from 'path';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import {installCmd} from '@teambit/bvm.cli.install';
