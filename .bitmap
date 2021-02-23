@@ -2,5 +2,6 @@
 
 {
   "cli/app": {"mainFile":"index.ts","rootDir":"cli/app","exported":false},
+  "cli/install": {"mainFile":"index.ts","rootDir":"cli/install","exported":false},
   "version": "1.0.12"
 }

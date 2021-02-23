@@ -1,0 +1,1 @@
+export {InstallCmd, command as installCmd} from './install';

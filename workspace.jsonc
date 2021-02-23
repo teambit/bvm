@@ -65,7 +65,7 @@
           "--access public"
         ],
         "packageJson": {
-          "name": "@teambit/{scope}.{name}",
+          "name": "@teambit/bvm.{name}",
           "private": false,
           "engines": {
             "node": ">=12.15.0"
@@ -90,6 +90,9 @@
           "private": false,
           "engines": {
             "node": ">=12.15.0"
+          },
+          "bin": {
+            "bvm": "dist/app"
           },
           "repository": {
             "type": "git",
