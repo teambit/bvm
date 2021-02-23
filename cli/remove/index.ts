@@ -1,0 +1,1 @@
+export {RemoveCmd, command as removeCmd} from './remove';
