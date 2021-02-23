@@ -33,8 +33,18 @@
      */
     "packageManager": "teambit.dependencies/yarn",
     "policy": {
-      "dependencies": {}
-    }
+      "dependencies": {
+        "@types/node": "14.14.31",
+        "@types/yargs": "16.0.0",
+        "yargs": "16.2.0"
+      },
+      "peerDependencies": {}
+    },
+    "packageManagerArgs": [],
+    "devFilePatterns": [
+      "**/*.spec.ts"
+    ],
+    "strictPeerDependencies": true
   },
   /**
    * workspace variants allow to set different subsets of configuration for components in your workspace.
@@ -49,7 +59,47 @@
       /**
        * uncomment to apply the react environment on all components.
        **/
-      "teambit.harmony/node": { }
+      "teambit.harmony/node": {},
+      "teambit.pkg/pkg": {
+        "packageManagerPublishArgs": [
+          "--access public"
+        ],
+        "packageJson": {
+          "name": "@teambit/{scope}.{name}",
+          "private": false,
+          "engines": {
+            "node": ">=12.15.0"
+          },
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/teambit/bvm"
+          },
+          "keywords": [
+            "bit"
+          ]
+        }
+      }
+    },
+    "cli/app":{
+      "teambit.pkg/pkg": {
+        "packageManagerPublishArgs": [
+          "--access public"
+        ],
+        "packageJson": {
+          "name": "@teambit/bvm",
+          "private": false,
+          "engines": {
+            "node": ">=12.15.0"
+          },
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/teambit/bvm"
+          },
+          "keywords": [
+            "bit"
+          ]
+        }
+      }
     }
   }
 }
