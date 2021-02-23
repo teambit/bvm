@@ -1,6 +1,4 @@
-import type {CommandModule, Argv} from '@types/yargs';
-import { type } from 'os';
-
+import type {CommandModule, Argv} from 'yargs';
 export class InstallCmd implements CommandModule {
   aliases = ['i', 'install'];
   describe = 'install command';

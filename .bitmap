@@ -3,5 +3,7 @@
 {
   "cli/app": {"mainFile":"index.ts","rootDir":"cli/app","exported":false},
   "cli/install": {"mainFile":"index.ts","rootDir":"cli/install","exported":false},
+  "cli/list": {"mainFile":"index.ts","rootDir":"cli/list","exported":false},
+  "cli/remove": {"mainFile":"index.ts","rootDir":"cli/remove","exported":false},
   "version": "1.0.12"
 }
