@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
-import {installCmd} from '@teambit/bvm.cli.install';
-import {removeCmd} from '@teambit/bvm.cli.remove';
-import {listCmd} from '@teambit/bvm.cli.list';
+import {installCmd} from '@teambit/bvm.install.cli';
+import {removeCmd} from '@teambit/bvm.remove.cli';
+import {listCmd} from '@teambit/bvm.list.cli';
+import {upgradeCmd} from '@teambit/bvm.upgrade.cli';
 
 yargs(hideBin(process.argv))
   .usage('Usage: $0 <cmd> [options]') // usage string of application.
@@ -13,6 +14,7 @@ yargs(hideBin(process.argv))
     description: 'display help message'
   })
   .alias('v', 'version')
+  .command(upgradeCmd)
   .command(installCmd)
   .command(listCmd)
   .command(removeCmd)
