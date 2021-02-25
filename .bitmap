@@ -2,7 +2,10 @@
 
 {
   "app/cli": {"mainFile":"index.ts","rootDir":"app/cli","exported":false},
+  "artifactory/list": {"mainFile":"index.ts","rootDir":"artifactory/list","exported":false},
+  "artifactory/request": {"mainFile":"index.ts","rootDir":"artifactory/request","exported":false},
   "install/cli": {"mainFile":"index.ts","rootDir":"install/cli","exported":false},
+  "list/api": {"mainFile":"index.ts","rootDir":"list/api","exported":false},
   "list/cli": {"mainFile":"index.ts","rootDir":"list/cli","exported":false},
   "remove/cli": {"mainFile":"index.ts","rootDir":"remove/cli","exported":false},
   "upgrade/cli": {"mainFile":"index.ts","rootDir":"upgrade/cli","exported":false},

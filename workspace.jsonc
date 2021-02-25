@@ -35,7 +35,9 @@
     "policy": {
       "dependencies": {
         "@types/node": "14.14.31",
+        "@types/node-fetch": "2.5.8",
         "@types/yargs": "16.0.0",
+        "node-fetch": "2.6.1",
         "yargs": "16.2.0"
       },
       "peerDependencies": {}
@@ -80,7 +82,7 @@
         }
       }
     },
-    "cli/app":{
+    "cli/app": {
       "teambit.pkg/pkg": {
         "packageManagerPublishArgs": [
           "--access public"

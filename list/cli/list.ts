@@ -1,4 +1,5 @@
 import type {CommandModule, Argv} from 'yargs';
+import {listRemote} from '@teambit/bvm.list.api';
 
 export class ListCmd implements CommandModule {
   aliases = ['l', 'list'];
@@ -20,7 +21,12 @@ export class ListCmd implements CommandModule {
     .example('$0 list --remote', 'show all versions available for install')
     return yargs;
   }
-  handler(args) {
+  async handler(args) {
+    if (args.remote){
+      const list = await listRemote();
+      console.log(list);
+      return;
+    }
     return console.log(`run list command with remote ${args.remote}`);
   };
 }

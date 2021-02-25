@@ -53,6 +53,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-fetch@npm:2.5.8":
+  version: 2.5.8
+  resolution: "@types/node-fetch@npm:2.5.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fnode-fetch%2F-%2Fnode-fetch-2.5.8.tgz"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: 608cdd6aed2c6a44a26406eb63475d4bfb8f63f78f22f747e30dd7cda309b86dc019e4427b9092011541da95d83ef03e2e6558c37d39221c0931617f32d3c4e1
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:14.14.31":
   version: 14.14.31
   resolution: "@types/node@npm:14.14.31::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fnode%2F-%2Fnode-14.14.31.tgz"
@@ -101,11 +111,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"app-5474c9@workspace:cli/app":
-  version: 0.0.0-use.local
-  resolution: "app-5474c9@workspace:cli/app"
-  languageName: unknown
-  linkType: soft
+"asynckit@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "asynckit@npm:0.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fasynckit%2F-%2Fasynckit-0.4.0.tgz"
+  checksum: a024000b9ddd938e2f27b3cb8188f96a5e1fff58185e98b84862fc4e01de279a547874a800340c2b106bb9de9b0fc61c6c683bc6892abf65e6be29a96addafd3
+  languageName: node
+  linkType: hard
 
 "chalk@npm:^4.0.0":
   version: 4.1.0
@@ -116,6 +127,36 @@ __metadata:
   checksum: f860285b419f9e925c2db0f45ffa88aa8794c14b80cc5d01ff30930bcfc384996606362706f0829cf557f6d36152a5fb2d227ad63c4bc90e2ec9e9dbed4a3c07
   languageName: node
   linkType: hard
+
+"cli-3e2ecf@workspace:install/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-3e2ecf@workspace:install/cli"
+  languageName: unknown
+  linkType: soft
+
+"cli-55af4b@workspace:upgrade/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-55af4b@workspace:upgrade/cli"
+  languageName: unknown
+  linkType: soft
+
+"cli-bbfbae@workspace:remove/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-bbfbae@workspace:remove/cli"
+  languageName: unknown
+  linkType: soft
+
+"cli-d60351@workspace:app/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-d60351@workspace:app/cli"
+  languageName: unknown
+  linkType: soft
+
+"cli-e54bed@workspace:list/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-e54bed@workspace:list/cli"
+  languageName: unknown
+  linkType: soft
 
 "cliui@npm:^7.0.2":
   version: 7.0.4
@@ -144,6 +185,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"combined-stream@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "combined-stream@npm:1.0.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcombined-stream%2F-%2Fcombined-stream-1.0.8.tgz"
+  dependencies:
+    delayed-stream: ~1.0.0
+  checksum: 5791ce7944530f0db74a97e77ea28b6fdbf89afcf038e41d6b4195019c4c803cd19ed2905a54959e5b3830d50bd5d6f93c681c6d3aaea8614ad43b48e62e9d65
+  languageName: node
+  linkType: hard
+
+"delayed-stream@npm:~1.0.0":
+  version: 1.0.0
+  resolution: "delayed-stream@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fdelayed-stream%2F-%2Fdelayed-stream-1.0.0.tgz"
+  checksum: d9dfb0a7c79fd308fada9db2cf29d1ff22047ceb50dd78f7e3c173567909b438f418259cb76a6d9c9f513e88ef41d3a14154f618741ec8368c3efeff616d0c9f
+  languageName: node
+  linkType: hard
+
 "diff-sequences@npm:^26.6.2":
   version: 26.6.2
   resolution: "diff-sequences@npm:26.6.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fdiff-sequences%2F-%2Fdiff-sequences-26.6.2.tgz"
@@ -162,6 +219,17 @@ __metadata:
   version: 3.1.1
   resolution: "escalade@npm:3.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fescalade%2F-%2Fescalade-3.1.1.tgz"
   checksum: 1e31ff50d66f47cd0dfffa702061127116ccf9886d1f54a802a7b3bc95b94cab0cbf5b145cc5ac199036df6fd9d1bb24af1fa1bfed87c94879e950fbee5f86d1
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "form-data@npm:3.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fform-data%2F-%2Fform-data-3.0.1.tgz"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 6574ff4d2d845c47ba288151a6e0573767eefdee9da358be199e0f0b66aa5c454e7d62ed5e0daef6f84167ba1e9596e064f36f206488e460ef449ef7b653cdfc
   languageName: node
   linkType: hard
 
@@ -205,6 +273,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-db@npm:1.46.0":
+  version: 1.46.0
+  resolution: "mime-db@npm:1.46.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmime-db%2F-%2Fmime-db-1.46.0.tgz"
+  checksum: 4e137ac502ca5ba6c583e552c5fa6abd0c2157592f647824ba7246b771eb42c65c2a1816fc52b27afdbb88a026127f1d5fba354f9dcde591b3b464be07c3d27e
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.12":
+  version: 2.1.29
+  resolution: "mime-types@npm:2.1.29::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmime-types%2F-%2Fmime-types-2.1.29.tgz"
+  dependencies:
+    mime-db: 1.46.0
+  checksum: 744d72b2a24c64d2aacc1ead86bfc827c2c4f1bb6f3b4bf6d8684b82f5ddd0b75a5c0eff128a888c09080f9ad7979400b64a697889690fca3c42de80c8f5e187
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2.6.1":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnode-fetch%2F-%2Fnode-fetch-2.6.1.tgz"
+  checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpretty-format%2F-%2Fpretty-format-26.6.2.tgz"
@@ -237,7 +328,9 @@ __metadata:
   dependencies:
     "@types/jest": 26.0.20
     "@types/node": 14.14.31
+    "@types/node-fetch": 2.5.8
     "@types/yargs": 16.0.0
+    node-fetch: 2.6.1
     yargs: 16.2.0
   languageName: unknown
   linkType: soft
