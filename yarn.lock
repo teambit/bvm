@@ -118,6 +118,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tar-fs@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@types/tar-fs@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ftar-fs%2F-%2Ftar-fs-2.0.0.tgz"
+  dependencies:
+    "@types/node": "*"
+    "@types/tar-stream": "*"
+  checksum: ba8a64443b4b05187708c582011f0ecb6cfe84bb7a486c417320443b8f807d859a327b4d140374f9b2db01651ee66ba06ed3e59b5e9a6fc7068bad6c1962a052
+  languageName: node
+  linkType: hard
+
+"@types/tar-stream@npm:*":
+  version: 2.2.0
+  resolution: "@types/tar-stream@npm:2.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ftar-stream%2F-%2Ftar-stream-2.2.0.tgz"
+  dependencies:
+    "@types/node": "*"
+  checksum: 6faf159b1845e64f425a8efb3a18ccb915a2ca42296e076b09116d1891ab4672d78a212fb25f66a8720c2aed82f8cac884efe54521a88937659ff3347b91f143
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 20.2.0
   resolution: "@types/yargs-parser@npm:20.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fyargs-parser%2F-%2Fyargs-parser-20.2.0.tgz"
@@ -239,6 +258,13 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: f860285b419f9e925c2db0f45ffa88aa8794c14b80cc5d01ff30930bcfc384996606362706f0829cf557f6d36152a5fb2d227ad63c4bc90e2ec9e9dbed4a3c07
+  languageName: node
+  linkType: hard
+
+"chownr@npm:^1.1.1":
+  version: 1.1.4
+  resolution: "chownr@npm:1.1.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fchownr%2F-%2Fchownr-1.1.4.tgz"
+  checksum: 4a7f1a0b2637450fd15ddb085b10649487ddd1d59a8d9335b1aa5b1e9ad55840a591ab7d7f9b568001cb6777d017334477ab2e32e048788b13a069d011cd5781
   languageName: node
   linkType: hard
 
@@ -367,6 +393,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.1":
+  version: 1.4.4
+  resolution: "end-of-stream@npm:1.4.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fend-of-stream%2F-%2Fend-of-stream-1.4.4.tgz"
+  dependencies:
+    once: ^1.4.0
+  checksum: 7da60e458bdb5e16c006a45e85ef3bc1e3791db5ba275b0913258ccddc8899acb9252c4ddbcce87bd1b46e2a3f97315aafb9f0c0330e8aac44defb504a9d3ccd
+  languageName: node
+  linkType: hard
+
 "escalade@npm:^3.1.1":
   version: 3.1.1
   resolution: "escalade@npm:3.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fescalade%2F-%2Fescalade-3.1.1.tgz"
@@ -388,6 +423,13 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: 6574ff4d2d845c47ba288151a6e0573767eefdee9da358be199e0f0b66aa5c454e7d62ed5e0daef6f84167ba1e9596e064f36f206488e460ef449ef7b653cdfc
+  languageName: node
+  linkType: hard
+
+"fs-constants@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fs-constants@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ffs-constants%2F-%2Ffs-constants-1.0.0.tgz"
+  checksum: b8382395f555012591b20bddf08d258723f660b4e7312943d10431a893e2af879295fefc15a917df43c9ed52d80d2f014c0ca8ca359367969be5c8a133e39742
   languageName: node
   linkType: hard
 
@@ -545,6 +587,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mkdirp-classic@npm:^0.5.2":
+  version: 0.5.3
+  resolution: "mkdirp-classic@npm:0.5.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp-classic%2F-%2Fmkdirp-classic-0.5.3.tgz"
+  checksum: b3c46c62840bdc82c2a5bee417e4e7518a8109d32a85a6dc67bdcfecbe6aff5cfc73cdb98844a61178ddd8ac75743f977857f0badd6e12d14fd18cf1639e41a1
+  languageName: node
+  linkType: hard
+
 "nconf@npm:0.11.2":
   version: 0.11.2
   resolution: "nconf@npm:0.11.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnconf%2F-%2Fnconf-0.11.2.tgz"
@@ -561,6 +610,15 @@ __metadata:
   version: 2.6.1
   resolution: "node-fetch@npm:2.6.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnode-fetch%2F-%2Fnode-fetch-2.6.1.tgz"
   checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
+  languageName: node
+  linkType: hard
+
+"once@npm:^1.3.1, once@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "once@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fonce%2F-%2Fonce-1.4.0.tgz"
+  dependencies:
+    wrappy: 1
+  checksum: 57afc246536cf6494437f982b26475f22bee860f8b77ce8eb1543f42a8bffe04b2c66ddfea9a16cb25ccb80943f8ee4fc639367ef97b7a6a4f2672eb573963f5
   languageName: node
   linkType: hard
 
@@ -608,6 +666,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pump@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pump@npm:3.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpump%2F-%2Fpump-3.0.0.tgz"
+  dependencies:
+    end-of-stream: ^1.1.0
+    once: ^1.3.1
+  checksum: 5464d5cf6c6f083cc60cb45b074fb9a4a92ba4d3e0d89e9b2fa1906d8151fd3766784a426725ccf1af50d1c29963ac20b13829933549830e08a6704e3f95e08c
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^17.0.1":
   version: 17.0.1
   resolution: "react-is@npm:17.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Freact-is%2F-%2Freact-is-17.0.1.tgz"
@@ -615,7 +683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:^3.4.0":
+"readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Freadable-stream%2F-%2Freadable-stream-3.6.0.tgz"
   dependencies:
@@ -661,6 +729,7 @@ __metadata:
     "@types/node-fetch": 2.5.8
     "@types/ora": 3.1.0
     "@types/semver": 7.3.4
+    "@types/tar-fs": 2.0.0
     "@types/yargs": 16.0.0
     fs-extra: 9.1.0
     lodash.pick: 4.4.0
@@ -668,6 +737,7 @@ __metadata:
     node-fetch: 2.6.1
     ora: 5.3.0
     semver: 7.3.4
+    tar-fs: 2.1.1
     user-home: 2.0.0
     yargs: 16.2.0
   languageName: unknown
@@ -743,6 +813,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tar-fs@npm:2.1.1":
+  version: 2.1.1
+  resolution: "tar-fs@npm:2.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftar-fs%2F-%2Ftar-fs-2.1.1.tgz"
+  dependencies:
+    chownr: ^1.1.1
+    mkdirp-classic: ^0.5.2
+    pump: ^3.0.0
+    tar-stream: ^2.1.4
+  checksum: 4739382487b6ed646670a52cac637c818ecdceb728eb4718847dfdaddd7322d8cce2ea9db160ba8ad2920194034fda7c307b44f4eeb50d244f198bd7e28f2914
+  languageName: node
+  linkType: hard
+
+"tar-stream@npm:^2.1.4":
+  version: 2.2.0
+  resolution: "tar-stream@npm:2.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftar-stream%2F-%2Ftar-stream-2.2.0.tgz"
+  dependencies:
+    bl: ^4.0.3
+    end-of-stream: ^1.4.1
+    fs-constants: ^1.0.0
+    inherits: ^2.0.3
+    readable-stream: ^3.1.1
+  checksum: 7eec0a7fc8d0337729c1c2356d567a7527141d6ba0dd4804db979e17fc6389163e70fd4abdb855fc5ab54b944aeff7988e35e95ab6cee34a4156ca2d42980576
+  languageName: node
+  linkType: hard
+
 "universalify@npm:^2.0.0":
   version: 2.0.0
   resolution: "universalify@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Funiversalify%2F-%2Funiversalify-2.0.0.tgz"
@@ -783,6 +878,13 @@ __metadata:
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
   checksum: 09939dd775ae565bb99a25a6c072fe3775a95fa71751b5533c94265fe986ba3e3ab071a027ab76cf26876bd9afd10ac3c2d06d7c4bcce148bf7d2d9514e3a0df
+  languageName: node
+  linkType: hard
+
+"wrappy@npm:1":
+  version: 1.0.2
+  resolution: "wrappy@npm:1.0.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fwrappy%2F-%2Fwrappy-1.0.2.tgz"
+  checksum: 519fcda0fcdf0c16327be2de9d98646742307bc830277e8868529fcf7566f2b330a6453c233e0cdcb767d5838dd61a90984a02ecc983bcddebea5ad0833bbf98
   languageName: node
   linkType: hard
 

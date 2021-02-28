@@ -7,6 +7,7 @@
   "config/api": {"mainFile":"index.ts","rootDir":"config/api","exported":false},
   "config/cli": {"mainFile":"index.ts","rootDir":"config/cli","exported":false},
   "download/api": {"mainFile":"index.ts","rootDir":"download/api","exported":false},
+  "fs/untar": {"mainFile":"index.ts","rootDir":"toolbox/fs/untar","exported":false},
   "install/api": {"mainFile":"index.ts","rootDir":"install/api","exported":false},
   "install/cli": {"mainFile":"index.ts","rootDir":"install/cli","exported":false},
   "list/api": {"mainFile":"index.ts","rootDir":"list/api","exported":false},

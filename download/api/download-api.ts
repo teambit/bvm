@@ -16,7 +16,12 @@ const defaultOpts = {
   override: false
 }
 
-export async function download(version: string, opts: DownloadOpts = defaultOpts): Promise<string> {
+export type DownloadResults = {
+  versionDir: string, 
+  downloadedFile?: string
+}
+
+export async function download(version: string, opts: DownloadOpts = defaultOpts): Promise<DownloadResults> {
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const allVersions = await listRemote();
   let resolvedVersion = version;
@@ -36,7 +41,7 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const exists = await fs.pathExists(versionDir);
   if (exists){
     if (!concreteOpts.override){
-      return versionDir;
+      return {versionDir};
     }
     await fs.remove(versionDir);
   }
@@ -48,5 +53,5 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   await fileDownload(url, destination);
   loader.succeed(loaderText);
   loader.stop();
-  return versionDir;
+  return {versionDir, downloadedFile: destination};
 }
