@@ -8,6 +8,7 @@ import {upgradeCmd} from '@teambit/bvm.upgrade.cli';
 import {configCmd} from '@teambit/bvm.config.cli';
 
 yargs(hideBin(process.argv))
+  .scriptName('bvm')
   .usage('Usage: $0 <cmd> [options]') // usage string of application.
   .version()
   .option('h', {

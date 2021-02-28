@@ -46,5 +46,5 @@ function composeApiUrl(releaseType: RELEASE_TYPE): string {
 
 function composeUrlFromVersion(version: string, releaseType: RELEASE_TYPE): string {
   // TODO: consider call the API again to get the real name, for now using convention
-  return (`${BASE_URL}/${REPO_NAME}/${releaseType}/bit-${version}.tar.gz`);
+  return (`${BASE_URL}/${REPO_NAME}/${releaseType}/${version}/bit-${version}.tar.gz`);
 }

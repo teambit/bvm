@@ -6,9 +6,12 @@
   "artifactory/request": {"mainFile":"index.ts","rootDir":"artifactory/request","exported":false},
   "config/api": {"mainFile":"index.ts","rootDir":"config/api","exported":false},
   "config/cli": {"mainFile":"index.ts","rootDir":"config/cli","exported":false},
+  "download/api": {"mainFile":"index.ts","rootDir":"download/api","exported":false},
+  "install/api": {"mainFile":"index.ts","rootDir":"install/api","exported":false},
   "install/cli": {"mainFile":"index.ts","rootDir":"install/cli","exported":false},
   "list/api": {"mainFile":"index.ts","rootDir":"list/api","exported":false},
   "list/cli": {"mainFile":"index.ts","rootDir":"list/cli","exported":false},
+  "network/file-downloader": {"mainFile":"index.ts","rootDir":"toolbox/network/file-downloader","exported":false},
   "remove/cli": {"mainFile":"index.ts","rootDir":"remove/cli","exported":false},
   "upgrade/cli": {"mainFile":"index.ts","rootDir":"upgrade/cli","exported":false},
   "version": "1.0.16"

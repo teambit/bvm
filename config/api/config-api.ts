@@ -9,6 +9,7 @@ export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
 export const CONFIG_FILENAME = 'config.json';
 export const KNOWN_KEYS = ['BVM_DIR', 'DEFAULT_ALIAS'];
+export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
 const globalDefaults = {
@@ -89,5 +90,9 @@ export class Config {
 
   getDefaultAlias(): string {
     return this.store.get('DEFAULT_ALIAS');
+  }
+
+  getBitVersionsDir(): string {
+    return path.join(this.getBvmDirectory(), BIT_VERSIONS_FOLDER_NAME);
   }
 }
