@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import userHome from 'user-home';
 import pick from 'lodash.pick';
+import fs from 'fs-extra';
 
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
@@ -46,6 +47,9 @@ export class Config {
   static load(): Config {
     const name = CONFIG_KEY_NAME;
     const configPath = getConfigPath();
+    if (!fs.existsSync(configPath)){
+      fs.writeJSONSync(configPath, {});
+    }
     const config = new Config(name, configPath, globalDefaults);
     return config;
   }
