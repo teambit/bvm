@@ -5,6 +5,7 @@ import {Config} from '@teambit/bvm.config.api';
 import { download as fileDownload } from '@teambit/toolbox.network.file-downloader';
 import semver from 'semver';
 import ora from 'ora';
+import { timeFormat } from '@teambit/time.time-format';
 
 const config = Config.load();
 
@@ -15,6 +16,8 @@ export type DownloadOpts = {
 const defaultOpts = {
   override: false
 }
+
+const loader = ora();
 
 export type DownloadResults = {
   versionDir: string, 
@@ -48,10 +51,12 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const fileName = url.split('/').pop();
   const destination = path.join(versionDir, fileName);
   const loaderText = `downloading version ${entry.version} from ${url}`;
-  const loader = ora();
   loader.start(loaderText);
+  const downloadStartTime = Date.now();
   await fileDownload(url, destination);
-  loader.succeed(loaderText);
+  const downloadEndTime = Date.now();
+  const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
+  loader.succeed(`${loaderText} in ${downloadTimeDiff}`);
   loader.stop();
   return {versionDir, downloadedFile: destination};
 }

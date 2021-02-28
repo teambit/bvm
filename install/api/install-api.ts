@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import {download, DownloadOpts} from '@teambit/bvm.download.api';
 import {untar} from '@teambit/toolbox.fs.untar';
 import ora from 'ora';
+import { timeFormat } from '@teambit/time.time-format';
 
 export type InstallOpts = {
   override?: boolean
@@ -24,12 +25,18 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   const tarFile = downloadResults.downloadedFile;
   const untarLoaderText = `untarring ${tarFile}`;
   loader.start(untarLoaderText);
+  const untarStartTime = Date.now();
   await untar(tarFile);
-  loader.succeed(untarLoaderText);
+  const untarEndTime = Date.now();
+  const untarTimeDiff = timeFormat(untarEndTime - untarStartTime);
+  loader.succeed(`${untarLoaderText} in ${untarTimeDiff}`);
   const removeLoaderText = `removing ${tarFile}`;
   loader.start(removeLoaderText);
+  const removeStartTime = Date.now();
   await fs.remove(tarFile);
-  loader.succeed(removeLoaderText);
+  const removeEndTime = Date.now();
+  const removeTimeDiff = timeFormat(removeEndTime - removeStartTime);
+  loader.succeed(`${removeLoaderText} in ${removeTimeDiff}`);
   loader.stop();
   return downloadResults.versionDir;
 }

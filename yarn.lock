@@ -18,6 +18,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@teambit/time.time-format@npm:0.0.298":
+  version: 0.0.298
+  resolution: "@teambit/time.time-format@npm:0.0.298::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Ftime.time-format%2F-%2Ftime.time-format-0.0.298.tgz"
+  dependencies:
+    core-js: 3.8.3
+    humanize-duration: 3.23.1
+  peerDependencies:
+    "@teambit/legacy": 1.0.17
+    react: 16.13.1
+    react-dom: 16.13.1
+  checksum: dc2957652a4e29d72c86daa61609310d739a380352271ac313ca0a09b586b7a9066e6ee97d0447057d9d2466bbda3891fc40778b58b1bd3ba797a644206922ca
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:9.0.7":
   version: 9.0.7
   resolution: "@types/fs-extra@npm:9.0.7::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ffs-extra%2F-%2Ffs-extra-9.0.7.tgz"
@@ -363,6 +377,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:3.8.3":
+  version: 3.8.3
+  resolution: "core-js@npm:3.8.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcore-js%2F-%2Fcore-js-3.8.3.tgz"
+  checksum: 3c67d1732d505f6afaf836f18038dae8267e8c0e8e84e1c679bac67589e66d0807c24750c7d8b1118cc386c3d66a1d96f20d9cb0f6a879b19cfc04e9f073fe78
+  languageName: node
+  linkType: hard
+
 "defaults@npm:^1.0.3":
   version: 1.0.3
   resolution: "defaults@npm:1.0.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fdefaults%2F-%2Fdefaults-1.0.3.tgz"
@@ -463,6 +484,13 @@ __metadata:
   version: 4.0.0
   resolution: "has-flag@npm:4.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fhas-flag%2F-%2Fhas-flag-4.0.0.tgz"
   checksum: 2e5391139d3d287231ccb58659702392f6e3abeac3296fb4721afaff46493f3d9b99a9329ae015dfe973aa206ed5c75f43e86aec0267dce79aa5c2b6e811b3ad
+  languageName: node
+  linkType: hard
+
+"humanize-duration@npm:3.23.1":
+  version: 3.23.1
+  resolution: "humanize-duration@npm:3.23.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fhumanize-duration%2F-%2Fhumanize-duration-3.23.1.tgz"
+  checksum: 0ad1527c03cdba476fff6ec83e90db74716fc641e10f179d25deeb534d69586afbef27f9013e4f2a555facadcaaa09939cd518f523291119a1d0090a92140840
   languageName: node
   linkType: hard
 
@@ -721,6 +749,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@teambit/time.time-format": 0.0.298
     "@types/fs-extra": 9.0.7
     "@types/jest": 26.0.20
     "@types/lodash.pick": 4.4.6
@@ -844,6 +873,12 @@ __metadata:
   checksum: 36bfbdc97bd4b483596e66ea65e20663f5ab9ec3650157d99b075b7f97afcdefe46bbb23f89171dd75595d398cea3769a5b6d7130f5c66cae2a0f00904780f62
   languageName: node
   linkType: hard
+
+"untar-27a0c7@workspace:toolbox/fs/untar":
+  version: 0.0.0-use.local
+  resolution: "untar-27a0c7@workspace:toolbox/fs/untar"
+  languageName: unknown
+  linkType: soft
 
 "user-home@npm:2.0.0":
   version: 2.0.0

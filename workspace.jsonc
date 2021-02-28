@@ -34,6 +34,7 @@
     "packageManager": "teambit.dependencies/yarn",
     "policy": {
       "dependencies": {
+        "@teambit/time.time-format": "0.0.298",
         "@types/fs-extra": "9.0.7",
         "@types/lodash.pick": "4.4.6",
         "@types/nconf": "0.10.0",
