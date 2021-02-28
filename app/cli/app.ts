@@ -5,6 +5,7 @@ import {installCmd} from '@teambit/bvm.install.cli';
 import {removeCmd} from '@teambit/bvm.remove.cli';
 import {listCmd} from '@teambit/bvm.list.cli';
 import {upgradeCmd} from '@teambit/bvm.upgrade.cli';
+import {configCmd} from '@teambit/bvm.config.cli';
 
 yargs(hideBin(process.argv))
   .usage('Usage: $0 <cmd> [options]') // usage string of application.
@@ -18,6 +19,7 @@ yargs(hideBin(process.argv))
   .command(installCmd)
   .command(listCmd)
   .command(removeCmd)
+  .command(configCmd)
   .example('$0 upgrade', 'install the latest version of bit')
   .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
   .example('$0 list', 'show all installed versions')

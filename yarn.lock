@@ -53,6 +53,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.pick@npm:4.4.6":
+  version: 4.4.6
+  resolution: "@types/lodash.pick@npm:4.4.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash.pick%2F-%2Flodash.pick-4.4.6.tgz"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 2c4a9d7329bd44524f8e9ecb9f75c36b5e7dedb205c410178094850b6ed16746023f90da74786783d93b27639a8abf6dc4497419a66a7f1d0174c7b22d0e458d
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.168
+  resolution: "@types/lodash@npm:4.14.168::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash%2F-%2Flodash-4.14.168.tgz"
+  checksum: 9a4e25f89fc035b9f0388f1f7be85e5eff49f9e6db0d93432c9a89fce0916f8a89db4e8290415f7ea02de6b00d3573826378dcb655b7b2d20530a6e8d6dd6fd0
+  languageName: node
+  linkType: hard
+
+"@types/nconf@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@types/nconf@npm:0.10.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fnconf%2F-%2Fnconf-0.10.0.tgz"
+  checksum: fb7e8c9060854b31779429474941b66067bb774dc0e7190c58a2dc9a59d534aa42abdca2d1caa259610ccf11e989a5022f7e85df856d78b0df77a66805b4d392
+  languageName: node
+  linkType: hard
+
 "@types/node-fetch@npm:2.5.8":
   version: 2.5.8
   resolution: "@types/node-fetch@npm:2.5.8::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fnode-fetch%2F-%2Fnode-fetch-2.5.8.tgz"
@@ -111,6 +134,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"api-ad728e@workspace:config/api":
+  version: 0.0.0-use.local
+  resolution: "api-ad728e@workspace:config/api"
+  languageName: unknown
+  linkType: soft
+
+"api-fec336@workspace:list/api":
+  version: 0.0.0-use.local
+  resolution: "api-fec336@workspace:list/api"
+  languageName: unknown
+  linkType: soft
+
+"async@npm:^1.4.0":
+  version: 1.5.2
+  resolution: "async@npm:1.5.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fasync%2F-%2Fasync-1.5.2.tgz"
+  checksum: 1a83326544c94e5e18203e548f3abca73af85222017e3db6701a2a188044ec711543ccdd62ecae0afeb76f0efca505d61281404d4cef1a3ca576f7b10333d089
+  languageName: node
+  linkType: hard
+
 "asynckit@npm:^0.4.0":
   version: 0.4.0
   resolution: "asynckit@npm:0.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fasynckit%2F-%2Fasynckit-0.4.0.tgz"
@@ -143,6 +185,12 @@ __metadata:
 "cli-bbfbae@workspace:remove/cli":
   version: 0.0.0-use.local
   resolution: "cli-bbfbae@workspace:remove/cli"
+  languageName: unknown
+  linkType: soft
+
+"cli-d19392@workspace:config/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-d19392@workspace:config/cli"
   languageName: unknown
   linkType: soft
 
@@ -247,6 +295,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ini@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "ini@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fini%2F-%2Fini-2.0.0.tgz"
+  checksum: 4ad34607409491b6ebe8e7b1e6b06ad1c147851cae5838186e27a906bf33abc1511fb539df7b96bdf8993fc0f81fd3f1e5995812fb616a965d8d4d4ad738bcf5
+  languageName: node
+  linkType: hard
+
 "is-fullwidth-code-point@npm:^3.0.0":
   version: 3.0.0
   resolution: "is-fullwidth-code-point@npm:3.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fis-fullwidth-code-point%2F-%2Fis-fullwidth-code-point-3.0.0.tgz"
@@ -273,6 +328,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"list-3f91da@workspace:artifactory/list":
+  version: 0.0.0-use.local
+  resolution: "list-3f91da@workspace:artifactory/list"
+  languageName: unknown
+  linkType: soft
+
+"lodash.pick@npm:4.4.0":
+  version: 4.4.0
+  resolution: "lodash.pick@npm:4.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flodash.pick%2F-%2Flodash.pick-4.4.0.tgz"
+  checksum: 3cf24484b1bd36652bfbe1e925e6955ee0332f1612919331a2d6115d5617bcaaf559e4fb21f4160d51eb2359f7a8dc0e478773da516b4ccc15ef261327064aab
+  languageName: node
+  linkType: hard
+
 "mime-db@npm:1.46.0":
   version: 1.46.0
   resolution: "mime-db@npm:1.46.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmime-db%2F-%2Fmime-db-1.46.0.tgz"
@@ -289,10 +357,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nconf@npm:0.11.2":
+  version: 0.11.2
+  resolution: "nconf@npm:0.11.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnconf%2F-%2Fnconf-0.11.2.tgz"
+  dependencies:
+    async: ^1.4.0
+    ini: ^2.0.0
+    secure-keys: ^1.0.0
+    yargs: ^16.1.1
+  checksum: 300048cbc0cd45a90d46d623fb88a2e7ef9c8aa6435323798da062ca00f3fe3242a93207677be437598c5de33ac9f3bda00718a5dfaea846552b394cb7477028
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:2.6.1":
   version: 2.6.1
   resolution: "node-fetch@npm:2.6.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnode-fetch%2F-%2Fnode-fetch-2.6.1.tgz"
   checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
+  languageName: node
+  linkType: hard
+
+"os-homedir@npm:^1.0.0":
+  version: 1.0.2
+  resolution: "os-homedir@npm:1.0.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fos-homedir%2F-%2Fos-homedir-1.0.2.tgz"
+  checksum: 725256246b2cec353250ec46442e3cfa7bc96ef92285d448a90f12f4bbd78c1bf087051b2cef0382da572e1a9ebc8aa24bd0940a3bdc633c3e3012eef1dc6848
   languageName: node
   linkType: hard
 
@@ -315,6 +402,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"request-c66a08@workspace:artifactory/request":
+  version: 0.0.0-use.local
+  resolution: "request-c66a08@workspace:artifactory/request"
+  languageName: unknown
+  linkType: soft
+
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frequire-directory%2F-%2Frequire-directory-2.1.1.tgz"
@@ -327,13 +420,25 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@types/jest": 26.0.20
+    "@types/lodash.pick": 4.4.6
+    "@types/nconf": 0.10.0
     "@types/node": 14.14.31
     "@types/node-fetch": 2.5.8
     "@types/yargs": 16.0.0
+    lodash.pick: 4.4.0
+    nconf: 0.11.2
     node-fetch: 2.6.1
+    user-home: 2.0.0
     yargs: 16.2.0
   languageName: unknown
   linkType: soft
+
+"secure-keys@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "secure-keys@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fsecure-keys%2F-%2Fsecure-keys-1.0.0.tgz"
+  checksum: e42d2252e5d3d6d2e0209dc4a142bb3c11306ec414f488ca4a7f607aa12d9231cb93d19c0644c0b64c97372e059a9e37bbbc859ce2956a49bcb08d8bbca2f4e5
+  languageName: node
+  linkType: hard
 
 "string-width@npm:^4.1.0, string-width@npm:^4.2.0":
   version: 4.2.0
@@ -364,6 +469,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"user-home@npm:2.0.0":
+  version: 2.0.0
+  resolution: "user-home@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fuser-home%2F-%2Fuser-home-2.0.0.tgz"
+  dependencies:
+    os-homedir: ^1.0.0
+  checksum: ba2791a65d3b4b506d0494fc08188be8cf66e29a43e80820845f531607d14638168828eda650a2e8edbf8327476cb8802091a8ac389567d9e88e9d1406b623fe
+  languageName: node
+  linkType: hard
+
 "wrap-ansi@npm:^7.0.0":
   version: 7.0.0
   resolution: "wrap-ansi@npm:7.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fwrap-ansi%2F-%2Fwrap-ansi-7.0.0.tgz"
@@ -389,7 +503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:16.2.0":
+"yargs@npm:16.2.0, yargs@npm:^16.1.1":
   version: 16.2.0
   resolution: "yargs@npm:16.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fyargs%2F-%2Fyargs-16.2.0.tgz"
   dependencies:
