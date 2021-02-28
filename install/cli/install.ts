@@ -1,6 +1,9 @@
 import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallOpts} from '@teambit/bvm.install.api';
+import { timeFormat } from '@teambit/time.time-format';
+import ora from 'ora';
 
+const loader = ora();
 export class InstallCmd implements CommandModule {
   aliases = ['i', 'install'];
   describe = 'install specific bit version';
@@ -34,8 +37,11 @@ export class InstallCmd implements CommandModule {
     const opts: InstallOpts = {
       override: args.override
     }
+    const installStartTime = Date.now();
     const finalPath = await installVersion(args.bitVersion, opts);
-    console.log(`version ${args.bitVersion} installed on ${finalPath}`);
+    const installEndTime = Date.now();
+    const installTimeDiff = timeFormat(installEndTime - installStartTime);
+    console.log(`version ${args.bitVersion} installed on ${finalPath} in ${installTimeDiff}`);
     return;
   };
 }
