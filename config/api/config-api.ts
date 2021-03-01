@@ -33,6 +33,8 @@ function getConfigPath(): string {
   return path.join(getConfigDirectory(), CONFIG_FILENAME);
 }
 
+let configSingleton;
+
 export class Config {
   private store: Provider;
   private fsStore: Provider;
@@ -45,13 +47,19 @@ export class Config {
     this.fsStore = fsStore;
   }
 
-  static load(): Config {
+  static load(newInstance = false): Config {
+    if (!newInstance && configSingleton){
+      return configSingleton;
+    }
     const name = CONFIG_KEY_NAME;
     const configPath = getConfigPath();
     if (!fs.existsSync(configPath)){
       fs.writeJSONSync(configPath, {});
     }
     const config = new Config(name, configPath, globalDefaults);
+    if (!newInstance){
+      configSingleton = config;
+    }
     return config;
   }
 

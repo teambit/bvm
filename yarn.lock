@@ -32,6 +32,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chalk@npm:0.4.31":
+  version: 0.4.31
+  resolution: "@types/chalk@npm:0.4.31::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fchalk%2F-%2Fchalk-0.4.31.tgz"
+  checksum: 960d90dcb804c8be38f0ca07010ff985c5f5bb44af521d4836e14b3b5ab84d744e3803033de8a01dc72bcc141f2aa5e85f8e0084cc8212915c586db973e54321
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:9.0.7":
   version: 9.0.7
   resolution: "@types/fs-extra@npm:9.0.7::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ffs-extra%2F-%2Ffs-extra-9.0.7.tgz"
@@ -198,6 +205,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"api-5aede8@workspace:link/api":
+  version: 0.0.0-use.local
+  resolution: "api-5aede8@workspace:link/api"
+  languageName: unknown
+  linkType: soft
+
 "api-7e6993@workspace:install/api":
   version: 0.0.0-use.local
   resolution: "api-7e6993@workspace:install/api"
@@ -265,7 +278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
+"chalk@npm:4.1.0, chalk@npm:^4.0.0, chalk@npm:^4.1.0":
   version: 4.1.0
   resolution: "chalk@npm:4.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fchalk%2F-%2Fchalk-4.1.0.tgz"
   dependencies:
@@ -281,6 +294,12 @@ __metadata:
   checksum: 4a7f1a0b2637450fd15ddb085b10649487ddd1d59a8d9335b1aa5b1e9ad55840a591ab7d7f9b568001cb6777d017334477ab2e32e048788b13a069d011cd5781
   languageName: node
   linkType: hard
+
+"cli-1039cf@workspace:link/cli":
+  version: 0.0.0-use.local
+  resolution: "cli-1039cf@workspace:link/cli"
+  languageName: unknown
+  linkType: soft
 
 "cli-3e2ecf@workspace:install/cli":
   version: 0.0.0-use.local
@@ -750,6 +769,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@teambit/time.time-format": 0.0.298
+    "@types/chalk": 0.4.31
     "@types/fs-extra": 9.0.7
     "@types/jest": 26.0.20
     "@types/lodash.pick": 4.4.6
@@ -760,6 +780,7 @@ __metadata:
     "@types/semver": 7.3.4
     "@types/tar-fs": 2.0.0
     "@types/yargs": 16.0.0
+    chalk: 4.1.0
     fs-extra: 9.1.0
     lodash.pick: 4.4.0
     nconf: 0.11.2

@@ -6,6 +6,7 @@ import {removeCmd} from '@teambit/bvm.remove.cli';
 import {listCmd} from '@teambit/bvm.list.cli';
 import {upgradeCmd} from '@teambit/bvm.upgrade.cli';
 import {configCmd} from '@teambit/bvm.config.cli';
+import {linkCmd} from '@teambit/bvm.link.cli';
 
 yargs(hideBin(process.argv))
   .scriptName('bvm')
@@ -19,6 +20,7 @@ yargs(hideBin(process.argv))
   .command(upgradeCmd)
   .command(installCmd)
   .command(listCmd)
+  .command(linkCmd)
   .command(removeCmd)
   .command(configCmd)
   .example('$0 upgrade', 'install the latest version of bit')

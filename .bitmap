@@ -10,6 +10,8 @@
   "fs/untar": {"mainFile":"index.ts","rootDir":"toolbox/fs/untar","exported":false},
   "install/api": {"mainFile":"index.ts","rootDir":"install/api","exported":false},
   "install/cli": {"mainFile":"index.ts","rootDir":"install/cli","exported":false},
+  "link/api": {"mainFile":"index.ts","rootDir":"link/api","exported":false},
+  "link/cli": {"mainFile":"index.ts","rootDir":"link/cli","exported":false},
   "list/api": {"mainFile":"index.ts","rootDir":"list/api","exported":false},
   "list/cli": {"mainFile":"index.ts","rootDir":"list/cli","exported":false},
   "network/file-downloader": {"mainFile":"index.ts","rootDir":"toolbox/network/file-downloader","exported":false},

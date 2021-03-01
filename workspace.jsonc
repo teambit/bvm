@@ -35,6 +35,7 @@
     "policy": {
       "dependencies": {
         "@teambit/time.time-format": "0.0.298",
+        "@types/chalk": "0.4.31",
         "@types/fs-extra": "9.0.7",
         "@types/lodash.pick": "4.4.6",
         "@types/nconf": "0.10.0",
@@ -44,6 +45,7 @@
         "@types/semver": "7.3.4",
         "@types/tar-fs": "2.0.0",
         "@types/yargs": "16.0.0",
+        "chalk": "4.1.0",
         "fs-extra": "9.1.0",
         "lodash.pick": "4.4.0",
         "nconf": "0.11.2",
