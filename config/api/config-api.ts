@@ -1,14 +1,15 @@
-import nconf, {IOptions, Provider } from 'nconf';
+import { Provider } from 'nconf';
 import os from 'os';
 import path from 'path';
 import userHome from 'user-home';
-import pick from 'lodash.pick';
+import pickBy from 'lodash.pickby';
 import fs from 'fs-extra';
 
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
 export const CONFIG_FILENAME = 'config.json';
 export const KNOWN_KEYS = ['BVM_DIR', 'DEFAULT_ALIAS'];
+export const ALIAS_KEY = 'alias';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
@@ -54,6 +55,7 @@ export class Config {
     const name = CONFIG_KEY_NAME;
     const configPath = getConfigPath();
     if (!fs.existsSync(configPath)){
+      fs.ensureDirSync(path.dirname(configPath));
       fs.writeJSONSync(configPath, {});
     }
     const config = new Config(name, configPath, globalDefaults);
@@ -84,8 +86,10 @@ export class Config {
   }
 
   list(persistedOnly = false): any {
-    const val =  persistedOnly ? this.fsStore.load() : this.store.load();
-    return pick(val, KNOWN_KEYS);
+    const allConfigs =  persistedOnly ? this.fsStore.load() : this.store.load();
+    return pickBy(allConfigs, (val, key) => {
+      return (KNOWN_KEYS.includes(key) || (key.startsWith(ALIAS_KEY)))
+    });
   }
 
   path(): string {
@@ -102,5 +106,12 @@ export class Config {
 
   getBitVersionsDir(): string {
     return path.join(this.getBvmDirectory(), BIT_VERSIONS_FOLDER_NAME);
+  }
+
+  getAliases(): Record<string, string> {
+    const all = this.list();
+    return pickBy(all, (val, key) => {
+      return ((key.startsWith(ALIAS_KEY)))
+    });
   }
 }

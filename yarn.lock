@@ -92,6 +92,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.pickby@npm:4.6.6":
+  version: 4.6.6
+  resolution: "@types/lodash.pickby@npm:4.6.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash.pickby%2F-%2Flodash.pickby-4.6.6.tgz"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 31107be3039001aca41a140c635f29d514545f23d201b4f8caabc4989d0a46bf18e3961495fcc1ef25fc681e2e31f7a28c3bfb4443419529a8b33efb4b9c5508
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:*":
   version: 4.14.168
   resolution: "@types/lodash@npm:4.14.168::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash%2F-%2Flodash-4.14.168.tgz"
@@ -593,6 +602,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.pickby@npm:4.6.0":
+  version: 4.6.0
+  resolution: "lodash.pickby@npm:4.6.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flodash.pickby%2F-%2Flodash.pickby-4.6.0.tgz"
+  checksum: 4be8dc90315a03aa002d9c3899a5803f8ba22739442a187de2258a332666d51a0800db8b87875543ebc05bdc6919d12a0d8b6d8ab2e0fcdd20fe1cf908f15c31
+  languageName: node
+  linkType: hard
+
 "log-symbols@npm:^4.0.0":
   version: 4.0.0
   resolution: "log-symbols@npm:4.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flog-symbols%2F-%2Flog-symbols-4.0.0.tgz"
@@ -773,6 +789,7 @@ __metadata:
     "@types/fs-extra": 9.0.7
     "@types/jest": 26.0.20
     "@types/lodash.pick": 4.4.6
+    "@types/lodash.pickby": 4.6.6
     "@types/nconf": 0.10.0
     "@types/node": 14.14.31
     "@types/node-fetch": 2.5.8
@@ -783,6 +800,7 @@ __metadata:
     chalk: 4.1.0
     fs-extra: 9.1.0
     lodash.pick: 4.4.0
+    lodash.pickby: 4.6.0
     nconf: 0.11.2
     node-fetch: 2.6.1
     ora: 5.3.0
