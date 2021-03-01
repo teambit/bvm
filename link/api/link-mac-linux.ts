@@ -31,15 +31,3 @@ function validateBinDirInPath(binDir: string){
     );
   }
 }
-
-
-// exec(`chmod u+x ${source}`, (e, sout, serr) => {
-//   if (error) {
-//     console.error(`exec error: ${error}`);
-//     return;
-//   }
-
-//   if (sout) console.log(sout);
-//   if (serr) console.error(serr);
-//   console.log(`now you can use the "${linkName}" command to run you dev app`);
-// });
