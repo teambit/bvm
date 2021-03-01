@@ -118,7 +118,7 @@
         }
       }
     },
-    "cli/app": {
+    "app/cli": {
       "teambit.pkg/pkg": {
         "packageManagerPublishArgs": [
           "--access public"
