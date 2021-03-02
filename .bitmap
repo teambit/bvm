@@ -11,12 +11,14 @@
   "gcloud-storage": {"mainFile":"index.ts","rootDir":"gcloud-storage","exported":false},
   "install/api": {"mainFile":"index.ts","rootDir":"install/api","exported":false},
   "install/cli": {"mainFile":"index.ts","rootDir":"install/cli","exported":false},
+  "latest/api": {"mainFile":"index.ts","rootDir":"latest/api","exported":false},
   "link/api": {"mainFile":"index.ts","rootDir":"link/api","exported":false},
   "link/cli": {"mainFile":"index.ts","rootDir":"link/cli","exported":false},
   "list/api": {"mainFile":"index.ts","rootDir":"list/api","exported":false},
   "list/cli": {"mainFile":"index.ts","rootDir":"list/cli","exported":false},
   "network/file-downloader": {"mainFile":"index.ts","rootDir":"toolbox/network/file-downloader","exported":false},
   "remove/cli": {"mainFile":"index.ts","rootDir":"remove/cli","exported":false},
+  "upgrade/api": {"mainFile":"index.ts","rootDir":"upgrade/api","exported":false},
   "upgrade/cli": {"mainFile":"index.ts","rootDir":"upgrade/cli","exported":false},
   "version": "1.0.19"
 }
