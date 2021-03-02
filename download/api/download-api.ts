@@ -21,6 +21,7 @@ const loader = ora();
 
 export type DownloadResults = {
   versionDir: string, 
+  resolvedVersion: string,
   downloadedFile?: string
 }
 
@@ -44,7 +45,7 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const exists = await fs.pathExists(versionDir);
   if (exists){
     if (!concreteOpts.override){
-      return {versionDir};
+      return {versionDir, resolvedVersion: entry.version};
     }
     await fs.remove(versionDir);
   }
@@ -58,5 +59,5 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
   loader.succeed(`${loaderText} in ${downloadTimeDiff}`);
   loader.stop();
-  return {versionDir, downloadedFile: destination};
+  return {versionDir, downloadedFile: destination, resolvedVersion: entry.version};
 }
