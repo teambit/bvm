@@ -1,5 +1,5 @@
 import type {CommandModule, Argv} from 'yargs';
-import {listRemote} from '@teambit/bvm.list.api';
+import {listRemote, listLocal} from '@teambit/bvm.list.api';
 
 export class ListCmd implements CommandModule {
   aliases = ['l', 'list'];
@@ -27,8 +27,14 @@ export class ListCmd implements CommandModule {
       console.log(list);
       return;
     }
-    return console.log(`run list command with remote ${args.remote}`);
+    const list = await listLocal();
+    console.log(localListOutput(list));
+    return;
   };
 }
 
 export const command =  new ListCmd();
+
+function localListOutput(versions: string[]): string {
+  return versions.join('\n');
+}
