@@ -20,5 +20,7 @@
   "remove/cli": {"mainFile":"index.ts","rootDir":"remove/cli","exported":false},
   "upgrade/api": {"mainFile":"index.ts","rootDir":"upgrade/api","exported":false},
   "upgrade/cli": {"mainFile":"index.ts","rootDir":"upgrade/cli","exported":false},
+  "version/api": {"mainFile":"index.ts","rootDir":"version/api","exported":false},
+  "version/cli": {"mainFile":"index.ts","rootDir":"version/cli","exported":false},
   "version": "1.0.19"
 }

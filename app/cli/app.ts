@@ -7,6 +7,7 @@ import {listCmd} from '@teambit/bvm.list.cli';
 import {upgradeCmd} from '@teambit/bvm.upgrade.cli';
 import {configCmd} from '@teambit/bvm.config.cli';
 import {linkCmd} from '@teambit/bvm.link.cli';
+import {versionCmd} from '@teambit/bvm.version.cli';
 
 yargs(hideBin(process.argv))
   .scriptName('bvm')
@@ -17,12 +18,14 @@ yargs(hideBin(process.argv))
     description: 'display help message'
   })
   .alias('v', 'version')
+  .command(versionCmd)
   .command(upgradeCmd)
   .command(installCmd)
   .command(listCmd)
   .command(linkCmd)
   .command(removeCmd)
   .command(configCmd)
+  .example('$0 version', 'show used (current) version, latest installed version and latest remote version')
   .example('$0 upgrade', 'install the latest version of bit')
   .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
   .example('$0 list', 'show all installed versions')
