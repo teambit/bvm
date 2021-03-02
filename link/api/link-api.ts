@@ -9,21 +9,29 @@ const config = Config.load();
 const IS_WINDOWS = os.platform() === 'win32';
 
 export type LinkResult = {
-  alias: string,
+  linkName: string,
   version: string
 }
 
-export async function linkAll(): Promise<LinkResult[]>{}
+export async function linkAll(): Promise<LinkResult[]>{
+  const links = config.getLinks();
+  const promises = Object.entries(links).map(([linkName, version]) => {
+    return linkOne(linkName, version);
+  });
+  return Promise.all(promises);
+}
 
-export async function linkOne(alias: string, version: string): Promise<LinkResult> {
+export async function linkOne(linkName: string, version: string): Promise<LinkResult> {
   const source = getSourcePath(version);
   if (!IS_WINDOWS){
-    await linuxMacLink(source, alias);
+    await linuxMacLink(source, linkName);
+    config.setLink(linkName, version);
     return {
-      alias, 
+      linkName, 
       version
     }
   }
+  // TODO: implement for windows
 }
 
 function getSourcePath(version: string): string {
