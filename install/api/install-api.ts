@@ -12,7 +12,8 @@ export type InstallOpts = {
 }
 
 const defaultOpts = {
-  override: false
+  override: false,
+  replace: false
 }
 
 const loader = ora();
@@ -53,7 +54,7 @@ async function removeWithLoader(tarFile: string) {
   loader.succeed(`${removeLoaderText} in ${removeTimeDiff}`);
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): boolean {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): Promise<boolean> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){

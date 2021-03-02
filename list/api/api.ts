@@ -1,7 +1,6 @@
 import {listVersions as artifactoryListVersions} from '@teambit/bvm.artifactory.list';
 import {Config} from '@teambit/bvm.config.api';
 import fs from 'fs-extra';
-import { version } from 'process';
 
 export type RemoteVersion = {
   version: string,
