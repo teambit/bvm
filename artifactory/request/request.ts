@@ -1,6 +1,6 @@
 import fetch, {RequestInit} from 'node-fetch';
 
-export const BASE_URL = 'https://bitsrc.jfrog.io/artifactory';
+export const BASE_URL = 'https://bvm.bit.dev/artifactory';
 export const REPO_NAME = 'bvm';
 export type RELEASE_TYPE = 'dev' | 'prod';
 

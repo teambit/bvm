@@ -1,4 +1,4 @@
-import {listVersions as artifactoryListVersions} from '@teambit/bvm.artifactory.list';
+import { RemoteVersions} from '@teambit/bvm.gcloud-storage';
 import {Config} from '@teambit/bvm.config.api';
 import fs from 'fs-extra';
 import { version } from 'process';
@@ -12,7 +12,8 @@ export type RemoteVersionList = Array<RemoteVersion>
 const config = Config.load();
 
 export async function listRemote(): Promise<RemoteVersionList> {
-  return artifactoryListVersions('dev');
+  const remote = RemoteVersions.create();
+  return remote.list('dev')
 }
 
 export async function listLocal(): Promise<string[]> {
