@@ -6,6 +6,7 @@ import { download as fileDownload } from '@teambit/toolbox.network.file-download
 import semver from 'semver';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
+import { latestRemote } from '@teambit/bvm.latest.api';
 
 const config = Config.load();
 
@@ -30,8 +31,7 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const allVersions = await listRemote();
   let resolvedVersion = version;
   if (!version || version === 'latest'){
-    const allVersionsSemvers = allVersions.map(entry => entry.version);
-    resolvedVersion = semver.maxSatisfying(allVersionsSemvers, '*');
+    resolvedVersion = await latestRemote();
   }
   const entry = allVersions.find((versionEntry) => {
     return versionEntry.version === resolvedVersion;
