@@ -1,7 +1,6 @@
 import { RemoteVersions} from '@teambit/bvm.gcloud-storage';
 import {Config} from '@teambit/bvm.config.api';
 import fs from 'fs-extra';
-import { version } from 'process';
 
 export type RemoteVersion = {
   version: string,
