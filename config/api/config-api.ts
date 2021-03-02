@@ -8,14 +8,15 @@ import fs from 'fs-extra';
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
 export const CONFIG_FILENAME = 'config.json';
-export const KNOWN_KEYS = ['BVM_DIR', 'DEFAULT_ALIAS'];
-export const ALIAS_KEY = 'alias';
+export const KNOWN_KEYS = ['BVM_DIR', 'DEFAULT_LINK'];
+export const ALIASES_KEY = 'aliases';
+export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
 const globalDefaults = {
   BVM_DIR: getBvmDirectory(),
-  DEFAULT_ALIAS: 'bit'
+  DEFAULT_LINK: 'bit'
 }
 
 function getBvmDirectory(): string {
@@ -88,7 +89,7 @@ export class Config {
   list(persistedOnly = false): any {
     const allConfigs =  persistedOnly ? this.fsStore.load() : this.store.load();
     return pickBy(allConfigs, (val, key) => {
-      return (KNOWN_KEYS.includes(key) || (key.startsWith(ALIAS_KEY)))
+      return (KNOWN_KEYS.includes(key) || (key.startsWith(ALIASES_KEY) || (key.startsWith(LINKS_KEY))))
     });
   }
 
@@ -100,8 +101,8 @@ export class Config {
     return this.store.get('BVM_DIR');
   }
 
-  getDefaultAlias(): string {
-    return this.store.get('DEFAULT_ALIAS');
+  getDefaultLinkName(): string {
+    return this.store.get('DEFAULT_LINK');
   }
 
   getBitVersionsDir(): string {
@@ -110,8 +111,38 @@ export class Config {
 
   getAliases(): Record<string, string> {
     const all = this.list();
-    return pickBy(all, (val, key) => {
-      return ((key.startsWith(ALIAS_KEY)))
+    const flatAliases = pickBy(all, (val, key) => {
+      return ((key.startsWith(ALIASES_KEY)))
     });
+    const res = Object.keys(flatAliases).reduce((acc, keyName) => {
+      const keyWithoutPrefix = keyName.replace(`${ALIASES_KEY}.`, '');
+      acc[keyWithoutPrefix] = flatAliases[keyName];
+      return acc;
+    }, {});
+    return res;
+  }
+
+  getLinks(): Record<string, string> {
+    const all = this.list();
+    const flatLinks = pickBy(all, (val, key) => {
+      return ((key.startsWith(LINKS_KEY)))
+    });
+    const res = Object.keys(flatLinks).reduce((acc, keyName) => {
+      const keyWithoutPrefix = keyName.replace(`${LINKS_KEY}.`, '');
+      acc[keyWithoutPrefix] = flatLinks[keyName];
+      return acc;
+    }, {});
+    return res;
+  }
+
+  setLink(linkName: string, value: string){
+    const keyName = `${LINKS_KEY}.${linkName}`;
+    this.set(keyName, value);
+  }
+
+  getDefaultLinkVersion(): string | undefined {
+    const allLinks = this.getLinks();
+    const defaultLinkName = this.getDefaultLinkName();
+    return allLinks[defaultLinkName];
   }
 }
