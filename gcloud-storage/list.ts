@@ -9,7 +9,6 @@ export class RemoteVersions {
     const prefix = `${this.prefix}/${releaseType}/bit-`;
     const [files] = await this.bucket.getFiles({ prefix });
     return files.map((file) => {
-      console.log(file.name);
       const version = new Version(file.metadata.name, file.bucket.name);
       return version.toObject();
     });

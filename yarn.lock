@@ -739,6 +739,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gcloud-storage-9031e3@workspace:gcloud-storage":
+  version: 0.0.0-use.local
+  resolution: "gcloud-storage-9031e3@workspace:gcloud-storage"
+  languageName: unknown
+  linkType: soft
+
 "gcp-metadata@npm:^4.2.0":
   version: 4.2.1
   resolution: "gcp-metadata@npm:4.2.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fgcp-metadata%2F-%2Fgcp-metadata-4.2.1.tgz"
