@@ -1,5 +1,6 @@
 import type {CommandModule, Argv} from 'yargs';
-
+import {upgrade} from '@teambit/bvm.upgrade.api';
+import chalk from 'chalk';
 export class UpgradeCmd implements CommandModule {
   aliases = ['u', 'upgrade'];
   describe = 'install latest bit version from the server, update the current version, and delete the previous installed version';
@@ -11,8 +12,9 @@ export class UpgradeCmd implements CommandModule {
     .example('$0 upgrade', 'install latest bit version from the server, update the current version, and delete the previous installed version')
     return yargs;
   }
-  handler(args) {
-    return console.log(`run upgrade command`);
+  async handler(args) {
+    const upgradeResults = await upgrade();
+    return console.log(`current is now linked to version ${chalk.green(upgradeResults.installedVersion)} in path ${chalk.green(upgradeResults.versionPath)}`);
   };
 }
 
