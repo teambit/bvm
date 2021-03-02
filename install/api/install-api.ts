@@ -11,6 +11,13 @@ export type InstallOpts = {
   replace?: boolean
 }
 
+type InstallResults = {
+  installedVersion: string,
+  downloadRequired: boolean,
+  replacedCurrent: boolean,
+  versionPath: string
+}
+
 const defaultOpts = {
   override: false,
   replace: false
@@ -18,30 +25,26 @@ const defaultOpts = {
 
 const loader = ora();
 
-export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<string>{
+export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const downloadOpts: DownloadOpts = {
     override: concreteOpts.override
   }
   const downloadResults = await download(version, downloadOpts);
   // version already exists, return it's location
-  if (!downloadResults.downloadedFile) return downloadResults.versionDir;
-  const tarFile = downloadResults.downloadedFile;
-  await untarWithLoader(tarFile);
-  await removeWithLoader(tarFile);
-  await replaceCurrentIfNeeded(opts.replace, downloadResults.resolvedVersion);
+  if (downloadResults.downloadedFile) {
+    const tarFile = downloadResults.downloadedFile;
+    await untar(tarFile);
+    await removeWithLoader(tarFile);
+  }
+  const replacedCurrent = await replaceCurrentIfNeeded(opts.replace, downloadResults.resolvedVersion);
   loader.stop();
-  return downloadResults.versionDir;
-}
-
-async function untarWithLoader(tarFile: string) {
-  const untarLoaderText = `untarring ${tarFile}`;
-  loader.start(untarLoaderText);
-  const untarStartTime = Date.now();
-  await untar(tarFile);
-  const untarEndTime = Date.now();
-  const untarTimeDiff = timeFormat(untarEndTime - untarStartTime);
-  loader.succeed(`${untarLoaderText} in ${untarTimeDiff}`);
+  return {
+    downloadRequired: !!downloadResults.downloadedFile,
+    installedVersion: downloadResults.resolvedVersion,
+    replacedCurrent,
+    versionPath: downloadResults.versionDir
+  }
 }
 
 async function removeWithLoader(tarFile: string) {
