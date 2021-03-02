@@ -35,7 +35,8 @@ export class InstallCmd implements CommandModule {
   }
   async handler(args) {
     const opts: InstallOpts = {
-      override: args.override
+      override: args.override,
+      replace: args.replace
     }
     const installStartTime = Date.now();
     const finalPath = await installVersion(args.bitVersion, opts);
