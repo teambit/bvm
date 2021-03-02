@@ -27,5 +27,7 @@ yargs(hideBin(process.argv))
   .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
   .example('$0 list', 'show all installed versions')
   .example('$0 remove all --keep-latest-versions 3', 'remove all installed versions except the last 3 installed versions')
+  // Show help when there is no args
+  .demandCommand(1, '')
   .epilog('for more information visit https://harmony-docs.bit.dev/docs/getting-started/install-bit')
   .argv
