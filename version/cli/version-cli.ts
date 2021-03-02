@@ -18,6 +18,7 @@ export class VersionCmd implements CommandModule {
       }
     })
     .example('$0 version', 'show used (current) version, latest installed version and latest remote version')
+    .example('$0 version --include-remote false', 'show used (current) version and latest installed version (without latest remote version)')
     return yargs;
   }
   async handler(args) {
