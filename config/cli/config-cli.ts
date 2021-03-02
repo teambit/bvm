@@ -51,7 +51,6 @@ export class ConfigCmd implements CommandModule {
     }
     const list = config.list(args.persisted);
     console.log(list);
-    return console.log(`run config command with remote`);
   };
 }
 
