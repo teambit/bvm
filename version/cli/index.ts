@@ -1,1 +1,0 @@
-export {VersionCmd, command as versionCmd} from './version-cli';

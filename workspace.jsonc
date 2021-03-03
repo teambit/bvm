@@ -101,7 +101,7 @@
         }
       }
     },
-    "toolbox": {
+    "teambit.toolbox": {
       "defaultScope": "teambit.toolbox",
       "teambit.pkg/pkg": {
         "packageManagerPublishArgs": [
@@ -123,7 +123,29 @@
         }
       }
     },
-    "app/cli": {
+    "teambit.gcp": {
+      "defaultScope": "teambit.gcp",
+      "teambit.pkg/pkg": {
+        "packageManagerPublishArgs": [
+          "--access public"
+        ],
+        "packageJson": {
+          "name": "@teambit/gcp.{name}",
+          "private": false,
+          "engines": {
+            "node": ">=12.15.0"
+          },
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/teambit/bvm"
+          },
+          "keywords": [
+            "bit"
+          ]
+        }
+      }
+    },
+    "teambit.bvm/cli/app": {
       "teambit.pkg/pkg": {
         "packageManagerPublishArgs": [
           "--access public"
