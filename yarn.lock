@@ -160,6 +160,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.difference@npm:4.5.6":
+  version: 4.5.6
+  resolution: "@types/lodash.difference@npm:4.5.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash.difference%2F-%2Flodash.difference-4.5.6.tgz"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: d2c52bc2dcb8772c65c72e3194eef8c329820f83abf7e354e3bd29a110c3e828eeac99e892533fad10c8b30c2c637353997d9a74e7ccf19be9bd63b9428c2333
+  languageName: node
+  linkType: hard
+
+"@types/lodash.intersection@npm:4.4.6":
+  version: 4.4.6
+  resolution: "@types/lodash.intersection@npm:4.4.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash.intersection%2F-%2Flodash.intersection-4.4.6.tgz"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 0adaf9561cadaa84c35c2d660a6c818c8b48ee77db1fe227afe57c315aab0eb409001ff9b2adda3300148eaa4be44e2133898f435139cd72c4b7a84f9a396226
+  languageName: node
+  linkType: hard
+
 "@types/lodash.pick@npm:4.4.6":
   version: 4.4.6
   resolution: "@types/lodash.pick@npm:4.4.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Flodash.pick%2F-%2Flodash.pick-4.4.6.tgz"
@@ -215,6 +233,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 0918b2cc33e56a9c8274383ea3cb844328806470e0c0f7f0aa983831273b7882d3ecc626e6f8545dc24037a2f1c1fd3fcd83951516c6966b9fe28d4e13814236
+  languageName: node
+  linkType: hard
+
+"@types/semver-sort@npm:0.0.1":
+  version: 0.0.1
+  resolution: "@types/semver-sort@npm:0.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fsemver-sort%2F-%2Fsemver-sort-0.0.1.tgz"
+  checksum: fab473a9a6499eb0db5e71df6c53464b8486201527eab7dd65beb66cacf9962accfb37d738374ea85e3f7e1b0254822408f714343f1a5a12a0da0013c6b418da
   languageName: node
   linkType: hard
 
@@ -981,6 +1006,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"lodash.difference@npm:4.5.0":
+  version: 4.5.0
+  resolution: "lodash.difference@npm:4.5.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flodash.difference%2F-%2Flodash.difference-4.5.0.tgz"
+  checksum: 7a2c297cf5fb6cf6899825e620cb017694a1891b3b35e11aa7ddc503128222a84d851937c36584a9e690344ccaf84116f137d04fdd8949ee90918edd4637d3b6
+  languageName: node
+  linkType: hard
+
+"lodash.intersection@npm:4.4.0":
+  version: 4.4.0
+  resolution: "lodash.intersection@npm:4.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flodash.intersection%2F-%2Flodash.intersection-4.4.0.tgz"
+  checksum: ff842f5d2d1bffcb121f00cc18563e0e9a8f17a06231011011756e81e5da6297212b9d047c195e3cb65f874c9e721f5e60173bd4663a9b0f095c2065bfe7925e
+  languageName: node
+  linkType: hard
+
 "lodash.pick@npm:4.4.0":
   version: 4.4.0
   resolution: "lodash.pick@npm:4.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Flodash.pick%2F-%2Flodash.pick-4.4.0.tgz"
@@ -1243,6 +1282,8 @@ __metadata:
     "@types/chalk": 0.4.31
     "@types/fs-extra": 9.0.7
     "@types/jest": 26.0.20
+    "@types/lodash.difference": 4.5.6
+    "@types/lodash.intersection": 4.4.6
     "@types/lodash.pick": 4.4.6
     "@types/lodash.pickby": 4.6.6
     "@types/nconf": 0.10.0
@@ -1250,16 +1291,20 @@ __metadata:
     "@types/node-fetch": 2.5.8
     "@types/ora": 3.1.0
     "@types/semver": 7.3.4
+    "@types/semver-sort": 0.0.1
     "@types/tar-fs": 2.0.0
     "@types/yargs": 16.0.0
     chalk: 4.1.0
     fs-extra: 9.1.0
+    lodash.difference: 4.5.0
+    lodash.intersection: 4.4.0
     lodash.pick: 4.4.0
     lodash.pickby: 4.6.0
     nconf: 0.11.2
     node-fetch: 2.6.1
     ora: 5.3.0
     semver: 7.3.4
+    semver-sort: 0.0.4
     tar-fs: 2.1.1
     user-home: 2.0.0
     yargs: 16.2.0
@@ -1280,6 +1325,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver-regex@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "semver-regex@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fsemver-regex%2F-%2Fsemver-regex-1.0.0.tgz"
+  checksum: bc76b860c25df22d62f5c366e2d3469ff42d00c898a5ed9c5368797108dd5ac4b5aae8c8c1514922cb57d315b127aca7defdb94151ca3b913ea50b9844795a76
+  languageName: node
+  linkType: hard
+
+"semver-sort@npm:0.0.4":
+  version: 0.0.4
+  resolution: "semver-sort@npm:0.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fsemver-sort%2F-%2Fsemver-sort-0.0.4.tgz"
+  dependencies:
+    semver: ^5.0.3
+    semver-regex: ^1.0.0
+  checksum: 9ad5418c8aff21a2fed2b06a06b08eb94dcc5dcacc210a5c2e1514d3515f04f6ffe212361ec6debf98776086c4d33095e860edf0f4f5686d52f4ebb73b7c36d4
+  languageName: node
+  linkType: hard
+
 "semver@npm:7.3.4":
   version: 7.3.4
   resolution: "semver@npm:7.3.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fsemver%2F-%2Fsemver-7.3.4.tgz"
@@ -1288,6 +1350,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: f2c7f9aeb976d1484b2f39aa7afc8332a1d21fd32ca4a6fbf650e1423455ebf3e7029f6e2e7ba0cd71935b85942521f1ec25b6cc2c031b953c8ca4ff2d7a823d
+  languageName: node
+  linkType: hard
+
+"semver@npm:^5.0.3":
+  version: 5.7.1
+  resolution: "semver@npm:5.7.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fsemver%2F-%2Fsemver-5.7.1.tgz"
+  bin:
+    semver: ./bin/semver
+  checksum: 06ff0ed753ebf741b7602be8faad620d6e160a2cb3f61019d00d919c8bca141638aa23c34da779b8595afdc9faa3678bfbb5f60366b6a4f65f98cf86605bbcdb
   languageName: node
   linkType: hard
 

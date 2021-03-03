@@ -1,10 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallOpts} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/time.time-format';
-import ora from 'ora';
 import chalk from 'chalk';
-
-const loader = ora();
 export class InstallCmd implements CommandModule {
   aliases = ['i', 'install'];
   describe = 'install specific bit version';

@@ -12,10 +12,11 @@
   "config": {"mainFile":"index.ts","rootDir":"teambit.bvm/config","exported":false},
   "download": {"mainFile":"index.ts","rootDir":"teambit.bvm/download","exported":false},
   "fs/untar": {"mainFile":"index.ts","rootDir":"teambit.toolbox/fs/untar","exported":false},
-  "storage": {"mainFile":"index.ts","rootDir":"teambit.gcp/storage","exported":false},
   "install": {"mainFile":"index.ts","rootDir":"teambit.bvm/install","exported":false},
   "link": {"mainFile":"index.ts","rootDir":"teambit.bvm/link","exported":false},
   "list": {"mainFile":"index.ts","rootDir":"teambit.bvm/list","exported":false},
   "network/file-downloader": {"mainFile":"index.ts","rootDir":"teambit.toolbox/network/file-downloader","exported":false},
+  "remove": {"mainFile":"index.ts","rootDir":"teambit.bvm/remove","exported":false},
+  "storage": {"mainFile":"index.ts","rootDir":"teambit.gcp/storage","exported":false},
   "version": "1.0.21"
 }
