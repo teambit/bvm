@@ -1,6 +1,13 @@
 import type {CommandModule, Argv} from 'yargs';
-import {getVersions, GetVersionsResult} from '@teambit/bvm.version';
 import chalk from 'chalk';
+import { Config } from "@teambit/bvm.config";
+import { latestLocal, latestRemote } from "@teambit/bvm.list";
+
+export type VersionsResult = {
+  currentVersion?: string;
+  latestRemoteVersion?: string;
+  latestInstalledVersion?: string;
+};
 
 export class VersionCmd implements CommandModule {
   aliases = ['version'];
@@ -22,19 +29,22 @@ export class VersionCmd implements CommandModule {
     return yargs;
   }
   async handler(args) {
-    const versions = await getVersions({
-      showCurrentVersion: true,
-      showLatestInstalledVersion: true,
-      showLatestRemoteVersion: args.includeRemote
-    });
-    const output = formatOutput(versions);
+    const config = Config.load();
+    const currentVersion = config.getDefaultLinkVersion();
+    const latestInstalledVersion = await latestLocal();
+    const latestRemoteVersion = args.includeRemote ?  await latestRemote() : undefined;
+    
+    const output = formatOutput({currentVersion,
+      latestInstalledVersion,
+      latestRemoteVersion
+      });
     return console.log(output);
   };
 }
 
 export const command =  new VersionCmd();
 
-function formatOutput(versions: GetVersionsResult): string {
+function formatOutput(versions: VersionsResult): string {
   const currentVersionOutput = versions.currentVersion ? `current (used) version: ${chalk.green(versions.currentVersion)}` : undefined;
   const latestInstalled = versions.latestInstalledVersion ? `latest installed version: ${chalk.green(versions.latestInstalledVersion)}` : undefined;
   const latestRemote = versions.latestRemoteVersion ? `latest remote version: ${chalk.green(versions.latestRemoteVersion)}` : undefined;

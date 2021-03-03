@@ -17,6 +17,5 @@
   "link": {"mainFile":"index.ts","rootDir":"teambit.bvm/link","exported":false},
   "list": {"mainFile":"index.ts","rootDir":"teambit.bvm/list","exported":false},
   "network/file-downloader": {"mainFile":"index.ts","rootDir":"teambit.toolbox/network/file-downloader","exported":false},
-  "version": {"mainFile":"index.ts","rootDir":"teambit.bvm/version","exported":false},
   "version": "1.0.21"
 }
