@@ -163,7 +163,7 @@
             "node": ">=12.15.0"
           },
           "bin": {
-            "bvm": "dist/app"
+            "bvm": "./dist/app.js"
           },
           "repository": {
             "type": "git",
