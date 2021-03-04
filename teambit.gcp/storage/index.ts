@@ -1,1 +1,1 @@
-export { RemoteVersions } from "./list";
+export { GcpStorage } from "./storage";

@@ -28,7 +28,7 @@ export class ListCmd implements CommandModule {
       return;
     }
     const list = await listLocal();
-    console.log(localListOutput(list));
+    console.log(localListOutput(list.toVersionsStringArray()));
     return;
   };
 }

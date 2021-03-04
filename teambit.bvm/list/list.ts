@@ -1,43 +1,32 @@
-import { RemoteVersions} from '@teambit/gcp.storage';
+import {GcpList} from './gcp';
 import {Config} from '@teambit/bvm.config';
 import semver from 'semver';
 import fs from 'fs-extra';
-
-export type RemoteVersion = {
-  version: string,
-  url: string
-}
-export type RemoteVersionList = Array<RemoteVersion>
+import { LocalVersionList, RemoteVersionList } from './version-list';
+import { LocalVersion } from './version';
 
 const config = Config.load();
 
 export async function listRemote(): Promise<RemoteVersionList> {
-  const remote = RemoteVersions.create();
-  return remote.list('dev')
+  const gcpList = GcpList.create('dev');
+  return gcpList.list();
 }
 
-export async function listLocal(): Promise<string[]> {
+export async function listLocal(): Promise<LocalVersionList> {
   const versionsDir = config.getBitVersionsDir();
   const exists = fs.pathExists(versionsDir);
-  if (!exists) return [];
+  if (!exists) return new LocalVersionList([]);
   const dirEntries = await fs.readdir(versionsDir, { withFileTypes: true });
   const versions = dirEntries.filter((dirent) => {
-    return dirent.isDirectory() || dirent.isSymbolicLink();
+    return ((dirent.isDirectory() || dirent.isSymbolicLink()) && semver.valid(dirent.name));
   })
-  .map((dirent) => dirent.name);
-  return versions;
-}
-
-export async function latestLocal(): Promise<string | undefined> {
-  const allVersions = await listLocal();
-  if (!allVersions || !allVersions.length) return undefined;
-  return latestFromArray(allVersions);
-}
-
-export async function latestRemote(): Promise<string> {
-  const allVersions = await listRemote();
-  const allVersionsSemvers = allVersions.map(entry => entry.version);
-  return latestFromArray(allVersionsSemvers)
+  .map((dirent) => {
+    const version = dirent.name;
+    const {versionDir} = config.getSpecificVersionDir(version);
+    const localVersion = new LocalVersion(version, versionDir);
+    return localVersion;
+  });
+  return new LocalVersionList(versions);
 }
 
 export function latestFromArray(versions: string[]): string {

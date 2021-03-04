@@ -109,6 +109,16 @@ export class Config {
     return path.join(this.getBvmDirectory(), BIT_VERSIONS_FOLDER_NAME);
   }
 
+  getSpecificVersionDir(version: string):{versionDir: string, exists: boolean} {
+    const versionsDir = this.getBitVersionsDir();
+    const versionDir = path.join(versionsDir, version);
+    const exists = fs.pathExistsSync(versionDir);
+    return {
+      versionDir,
+      exists
+    } 
+  }
+
   getAliases(): Record<string, string> {
     const all = this.list();
     const flatAliases = pickBy(all, (val, key) => {

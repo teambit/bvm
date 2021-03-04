@@ -35,8 +35,7 @@ export async function linkOne(linkName: string, version: string): Promise<LinkRe
 }
 
 function getSourcePath(version: string): string {
-  const versionsDir = config.getBitVersionsDir();
-  const versionDir = path.join(versionsDir, version);
+  const {versionDir} = config.getSpecificVersionDir(version);
   const innerBinPath = path.join(`bit-${version}`, 'node_modules', '@teambit', 'bit', 'bin', 'bit');
   const source = path.join(versionDir, innerBinPath);
   return source;

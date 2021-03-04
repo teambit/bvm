@@ -1,9 +1,9 @@
-import { Version } from "./version";
+import { GcpVersion } from "./gcp-version";
 
 describe("Google Cloud Storage Versions List", () => {
   describe("version", () => {
     it("should return bit version from Class", async () => {
-      const version = new Version(
+      const version = new GcpVersion(
         "versions/dev/bit-0.0.301.tar.gz",
         "bvm.bit.dev",
         "https"
@@ -12,7 +12,7 @@ describe("Google Cloud Storage Versions List", () => {
     });
 
     it("should return bit version from Object", async () => {
-      const version = new Version(
+      const version = new GcpVersion(
         "versions/dev/bit-0.0.300.tar.gz",
         "bvm.bit.dev",
         "https"
@@ -23,7 +23,7 @@ describe("Google Cloud Storage Versions List", () => {
 
   describe("download url", () => {
     it("should return download url from Class", async () => {
-      const version = new Version(
+      const version = new GcpVersion(
         "versions/dev/bit-0.0.1.tar.gz",
         "bvm.bit.dev",
         "https"
@@ -34,7 +34,7 @@ describe("Google Cloud Storage Versions List", () => {
       );
     });
     it("should return download url from Object", async () => {
-      const version = new Version(
+      const version = new GcpVersion(
         "versions/dev/bit-0.0.1.tar.gz",
         "bvm.bit.dev",
         "https"

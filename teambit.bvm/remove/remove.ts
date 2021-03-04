@@ -1,4 +1,4 @@
-import {listLocal, latestLocal} from '@teambit/bvm.list'
+import {listLocal} from '@teambit/bvm.list'
 import {Config} from '@teambit/bvm.config';
 import fs from 'fs-extra';
 import intersect from 'lodash.intersection';
@@ -17,14 +17,14 @@ export async function removeVersions(versions: string[]): Promise<RemoveResults>
   let resolvedVersions = versions;
   const localVersions = await listLocal();
   if (versions.includes('latest')){
-    const latestVersion = await latestLocal();
+    const latestVersion = (await listLocal()).latest().version;
     resolvedVersions = resolvedVersions.filter(version => {
       return (version !== 'latest');
     });
     resolvedVersions.push(latestVersion);
   }
-  const missingVersions = difference(resolvedVersions, localVersions);
-  const removedVersions = intersect(resolvedVersions, localVersions);
+  const missingVersions = difference(resolvedVersions, localVersions.toVersionsStringArray());
+  const removedVersions = intersect(resolvedVersions, localVersions.toVersionsStringArray());
   if (!removeVersions.length){
     return {
       missingVersions,
@@ -45,7 +45,7 @@ export async function removeVersions(versions: string[]): Promise<RemoveResults>
 
 export async function removeAll(versionsToKeep: string[] = [], numberOfLatestToKeep: number = 0): Promise<RemoveResults> {
   const localVersions = await listLocal();
-  const withoutVersionsToKeep = difference(localVersions, versionsToKeep);
+  const withoutVersionsToKeep = difference(localVersions.toVersionsStringArray(), versionsToKeep);
   let versionsToRemove = withoutVersionsToKeep;
   if (numberOfLatestToKeep > 0){
     versionsToRemove = semverSortDesc(versionsToRemove);

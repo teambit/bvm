@@ -1,7 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import chalk from 'chalk';
 import { Config } from "@teambit/bvm.config";
-import { latestLocal, latestRemote } from "@teambit/bvm.list";
+import { listLocal, listRemote } from "@teambit/bvm.list";
 
 export type VersionsResult = {
   currentVersion?: string;
@@ -31,8 +31,8 @@ export class VersionCmd implements CommandModule {
   async handler(args) {
     const config = Config.load();
     const currentVersion = config.getDefaultLinkVersion();
-    const latestInstalledVersion = await latestLocal();
-    const latestRemoteVersion = args.includeRemote ?  await latestRemote() : undefined;
+    const latestInstalledVersion = (await listLocal()).latest().version;
+    const latestRemoteVersion = args.includeRemote ?  (await listRemote()).latest().version : undefined;
     
     const output = formatOutput({currentVersion,
       latestInstalledVersion,

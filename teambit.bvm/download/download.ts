@@ -1,9 +1,8 @@
 import path from 'path';
 import fs from 'fs-extra';
-import {listRemote, latestRemote} from '@teambit/bvm.list';
+import {listRemote } from '@teambit/bvm.list';
 import {Config} from '@teambit/bvm.config';
 import { download as fileDownload } from '@teambit/toolbox.network.file-downloader';
-import semver from 'semver';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
 
@@ -27,30 +26,28 @@ export type DownloadResults = {
 
 export async function download(version: string, opts: DownloadOpts = defaultOpts): Promise<DownloadResults> {
   const concreteOpts = Object.assign({}, defaultOpts, opts);
-  const allVersions = await listRemote();
-  let resolvedVersion = version;
+  const remoteVersionList = await listRemote();
+  let resolvedVersion;
   if (!version || version === 'latest'){
-    resolvedVersion = await latestRemote();
+    resolvedVersion = remoteVersionList.latest();
+  } else {
+    resolvedVersion = remoteVersionList.find(version);
   }
-  const entry = allVersions.find((versionEntry) => {
-    return versionEntry.version === resolvedVersion;
-  });
-  if (!entry){
+
+  if (!resolvedVersion){
     throw new Error(`version ${version} not found on remote, use bvm list --remote to see available versions`);
   }
-  const url = entry.url;
-  const versionsDir = config.getBitVersionsDir();
-  const versionDir = path.join(versionsDir, entry.version);
-  const exists = await fs.pathExists(versionDir);
+  const url = resolvedVersion.url;
+  const {versionDir, exists} = config.getSpecificVersionDir(resolvedVersion.version);
   if (exists){
     if (!concreteOpts.override){
-      return {versionDir, resolvedVersion: entry.version};
+      return {versionDir, resolvedVersion: resolvedVersion.version};
     }
     await fs.remove(versionDir);
   }
   const fileName = url.split('/').pop();
   const destination = path.join(versionDir, fileName);
-  const loaderText = `downloading version ${entry.version} from ${url}`;
+  const loaderText = `downloading version ${resolvedVersion.version} from ${url}`;
   loader.start(loaderText);
   const downloadStartTime = Date.now();
   await fileDownload(url, destination);
@@ -58,5 +55,5 @@ export async function download(version: string, opts: DownloadOpts = defaultOpts
   const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
   loader.succeed(`${loaderText} in ${downloadTimeDiff}`);
   loader.stop();
-  return {versionDir, downloadedFile: destination, resolvedVersion: entry.version};
+  return {versionDir, downloadedFile: destination, resolvedVersion: resolvedVersion.version};
 }

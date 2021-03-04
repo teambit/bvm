@@ -1,4 +1,6 @@
-export class Version {
+import {RemoteVersion} from '../version';
+
+export class GcpVersion {
   constructor(
     private fileName: string,
     private host: string,
@@ -15,6 +17,10 @@ export class Version {
 
   get url() {
     return `${this.protocol}://${this.host}/${this.fileName}`;
+  }
+
+  toRemoteVersion(): RemoteVersion {
+    return new RemoteVersion(this.version, this.url);
   }
 
   toObject() {
