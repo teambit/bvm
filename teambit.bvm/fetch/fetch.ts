@@ -8,7 +8,7 @@ import { timeFormat } from '@teambit/time.time-format';
 
 const config = Config.load();
 
-export type DownloadOpts = {
+export type FetchOpts = {
   override?: boolean
 }
 
@@ -18,13 +18,13 @@ const defaultOpts = {
 
 const loader = ora();
 
-export type DownloadResults = {
+export type FetchResults = {
   versionDir: string, 
   resolvedVersion: string,
   downloadedFile?: string
 }
 
-export async function download(version: string, opts: DownloadOpts = defaultOpts): Promise<DownloadResults> {
+export async function fetch(version: string, opts: FetchOpts = defaultOpts): Promise<FetchResults> {
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const remoteVersionList = await listRemote();
   let resolvedVersion;

@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import {download, DownloadOpts} from '@teambit/bvm.download';
+import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {untar} from '@teambit/toolbox.fs.untar';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
@@ -27,10 +27,10 @@ const loader = ora();
 
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
-  const downloadOpts: DownloadOpts = {
+  const fetchOpts: FetchOpts = {
     override: concreteOpts.override
   }
-  const downloadResults = await download(version, downloadOpts);
+  const downloadResults = await fetch(version, fetchOpts);
   // version already exists, return it's location
   if (downloadResults.downloadedFile) {
     const tarFile = downloadResults.downloadedFile;
