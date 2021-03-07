@@ -109,9 +109,12 @@ export class Config {
     return path.join(this.getBvmDirectory(), BIT_VERSIONS_FOLDER_NAME);
   }
 
-  getSpecificVersionDir(version: string):{versionDir: string, exists: boolean} {
+  getSpecificVersionDir(version: string, innerDir = false):{versionDir: string, exists: boolean} {
     const versionsDir = this.getBitVersionsDir();
-    const versionDir = path.join(versionsDir, version);
+    let versionDir = path.join(versionsDir, version);
+    if (innerDir){
+      versionDir = path.join(versionDir, `bit-${version}`);
+    }
     const exists = fs.pathExistsSync(versionDir);
     return {
       versionDir,
