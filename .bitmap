@@ -55,6 +55,12 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config"
     },
+    "error": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/error"
+    },
     "fetch": {
         "scope": "teambit.bvm",
         "version": "0.0.4",
@@ -75,7 +81,7 @@
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.0.4",
+        "version": "0.0.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },

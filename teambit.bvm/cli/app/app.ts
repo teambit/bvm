@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs/yargs';
+import chalk from 'chalk';
 import { hideBin } from 'yargs/helpers';
 import {installCmd} from '@teambit/bvm.commands.install';
 import {removeCmd} from '@teambit/bvm.commands.remove';
@@ -9,13 +10,16 @@ import {configCmd} from '@teambit/bvm.commands.config';
 import {linkCmd} from '@teambit/bvm.commands.link';
 import {versionCmd} from '@teambit/bvm.commands.version';
 
-yargs(hideBin(process.argv))
+const argv = yargs(hideBin(process.argv))
   .scriptName('bvm')
   .usage('Usage: $0 <cmd> [options]') // usage string of application.
   .version()
   .option('h', {
     alias: 'help',
     description: 'display help message'
+  })
+  .option('verbose', {
+    description: 'show verbose output'
   })
   .alias('v', 'version')
   .command(versionCmd)
@@ -33,4 +37,14 @@ yargs(hideBin(process.argv))
   // Show help when there is no args
   .demandCommand(1, '')
   .epilog('for more information visit https://harmony-docs.bit.dev/docs/getting-started/install-bit')
+  .fail(handleError)
   .argv
+
+
+function handleError(msg, err, yargs){
+  console.log(chalk.red(err.message || msg));
+
+  if (!err.bvm || argv.verbose) {
+    console.log(err.stack);
+  }
+}

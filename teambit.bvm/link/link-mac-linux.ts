@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
+import { BvmError } from '@teambit/bvm.error';
 
 const BIN_DIR = '/usr/local/bin';
 
@@ -26,7 +27,7 @@ export async function link(source: string, linkName: string){
 function validateBinDirInPath(binDir: string){
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) === -1) {
-    throw new Error(
+    throw new BvmError(
       `the directory ${binDir} is not a bin directory (not in the path) on the machine`
     );
   }

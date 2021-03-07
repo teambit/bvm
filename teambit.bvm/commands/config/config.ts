@@ -1,5 +1,6 @@
 import type {CommandModule, Argv} from 'yargs';
 import {Config} from '@teambit/bvm.config';
+import { BvmError } from '@teambit/bvm.error';
 
 const config = Config.load();
 
@@ -57,26 +58,26 @@ export class ConfigCmd implements CommandModule {
 function handleSubCommand(args: any): void {
   switch (args.subCommand) {
     case 'get':{
-      if (!args.key) throw new Error('must provide a key');
+      if (!args.key) throw new BvmError('must provide a key');
       const val = config.get(args.key);
       console.log(val);
       return;
     }
     case 'set':{
-      if (!args.key) throw new Error('must provide a key');
-      if (!args.value) throw new Error('must provide a value');
+      if (!args.key) throw new BvmError('must provide a key');
+      if (!args.value) throw new BvmError('must provide a value');
       config.set(args.key, args.value);
       console.log('set successfully');
       return;
     }
     case 'del':{
-      if (!args.key) throw new Error('must provide a key');
+      if (!args.key) throw new BvmError('must provide a key');
       const val = config.del(args.key);
       console.log('deleted successfully');
       return;
     }
     default:
-      throw new Error(`sub command ${args.subCommand} is invalid`);
+      throw new BvmError(`sub command ${args.subCommand} is invalid`);
   }
 }
 

@@ -1,5 +1,6 @@
 import type {CommandModule, Argv} from 'yargs';
 import {removeVersions, removeAll, RemoveResults} from '@teambit/bvm.remove';
+import { BvmError } from '@teambit/bvm.error';
 import chalk from 'chalk';
 import ora from 'ora';
 
@@ -55,7 +56,7 @@ export class RemoveCmd implements CommandModule {
       loader.stop();
       return printOutput(res);
     }
-    throw new Error('no versions marked to be removed');
+    throw new BvmError('no versions marked to be removed');
   };
 }
 

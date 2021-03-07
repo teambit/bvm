@@ -5,6 +5,7 @@ import {Config} from '@teambit/bvm.config';
 import { download as fileDownload } from '@teambit/toolbox.network.file-downloader';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
+import { BvmError } from '@teambit/bvm.error';
 
 const config = Config.load();
 
@@ -35,7 +36,7 @@ export async function fetch(version: string, opts: FetchOpts = defaultOpts): Pro
   }
 
   if (!resolvedVersion){
-    throw new Error(`version ${version} not found on remote, use bvm list --remote to see available versions`);
+    throw new BvmError(`version ${version} not found on remote, use bvm list --remote to see available versions`);
   }
   const url = resolvedVersion.url;
   const {versionDir, exists} = config.getSpecificVersionDir(resolvedVersion.version);

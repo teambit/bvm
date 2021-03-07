@@ -1,6 +1,7 @@
 import {Config} from '@teambit/bvm.config';
 import path from 'path';
 import binLinks from 'bin-links';
+import { BvmError } from '@teambit/bvm.error';
 
 const config = Config.load();
 
@@ -19,7 +20,10 @@ export async function linkAll(): Promise<LinkResult[]>{
 
 export async function linkOne(linkName: string, version: string, addToConfig = false): Promise<LinkResult> {
   const source = getLinkSource();
-  const {versionDir} = config.getSpecificVersionDir(version, true);
+  const {versionDir, exists} = config.getSpecificVersionDir(version, true);
+  if (!exists){
+    throw new BvmError(`version ${version} is not installed`);
+  }
   const pkg = {
     bin: {
       [linkName]: source
