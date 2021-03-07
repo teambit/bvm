@@ -5,6 +5,10 @@ import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 
 const IS_WINDOWS = os.platform() === 'win32';
+const DOCS_BASE_URL = 'https://harmony-docs.bit.dev/tutorial/install-bit';
+const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/tutorial/install-bit`;
+const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/tutorial/install-bit`;
+
 const config = Config.load();
 
 export type LinkResult = {
@@ -46,10 +50,12 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
   if (addToConfig){
     config.setLink(linkName, version);
   }
+  let binDir = path.join(os.homedir(), 'bin');
   if (IS_WINDOWS){
-    const bvmDir = config.getBvmDirectory();
-    validateBinDirInPath(bvmDir);
+    binDir = config.getBvmDirectory();
   }
+  validateBinDirInPath(binDir);
+
   return {
     linkName, 
     version
@@ -69,14 +75,30 @@ function getBitBinPath(){
 function validateBinDirInPath(binDir: string){
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) === -1) {
-    const docsLink = 'https://harmony-docs.bit.dev/tutorial/install-bit';
-    // Join with \n for better visablity in windows
-    const errLines = [
-      'global Bit install location was not found in your PATH global variable.',
-      'please run the following command and then re-open the terminal:',
-      `setx path "%path%;${binDir}" and re-open your terminal`,
-      `for more information read here - ${docsLink}`
-    ];
-    throw new BvmError(errLines.join('\n'));
+    const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
+    throw new BvmError(err);
   }
 }
+
+function windowsMissingInPathError(binDir: string, docsLink){
+  // Join with \n for better visibility in windows
+  const errLines = [
+    'global Bit install location was not found in your PATH global variable.',
+    'please run the following command and then re-open the terminal:',
+    `setx path "%path%;${binDir}" and re-open your terminal`,
+    `for more information read here - ${docsLink}`
+  ];
+  return errLines.join('\n');
+}
+
+function macLinuxMissingInPathError(binDir: string, docsLink){
+  // Join with \n for better visibility in windows
+  const errLines = [
+    'global Bit install location was not found in your PATH global variable.',
+    'please run the following command to your bash/zsh profile then re-open the terminal:',
+    `export PATH=$HOME/bin:$PATH" and re-open your terminal`,
+    `for more information read here - ${docsLink}`
+  ];
+  return errLines.join('\n');
+}
+
