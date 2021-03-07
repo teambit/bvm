@@ -5,9 +5,9 @@ import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 
 const IS_WINDOWS = os.platform() === 'win32';
-const DOCS_BASE_URL = 'https://harmony-docs.bit.dev/tutorial/install-bit';
-const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/tutorial/install-bit`;
-const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/tutorial/install-bit`;
+const DOCS_BASE_URL = 'https://harmony-docs.bit.dev';
+const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/introduction/installation`;
+const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/introduction/installation`;
 
 const config = Config.load();
 
