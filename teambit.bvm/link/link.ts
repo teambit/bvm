@@ -2,7 +2,9 @@ import {Config} from '@teambit/bvm.config';
 import path from 'path';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
+import os from 'os';
 
+const IS_WINDOWS = os.platform() === 'win32';
 const config = Config.load();
 
 export type LinkResult = {
@@ -37,10 +39,16 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
     force: true,
   }
   // const generatedLinks = binLinks.getPaths(opts);
+  // console.log('generated links', generatedLinks)
   await binLinks(opts);
+
 
   if (addToConfig){
     config.setLink(linkName, version);
+  }
+  if (IS_WINDOWS){
+    const bvmDir = config.getBvmDirectory();
+    validateBinDirInPath(bvmDir);
   }
   return {
     linkName, 
@@ -56,4 +64,19 @@ function getLinkSource(): string {
 
 function getBitBinPath(){
   return path.join('@teambit', 'bit', 'bin', 'bit');
+}
+
+function validateBinDirInPath(binDir: string){
+  const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
+  if (osPaths.indexOf(binDir) === -1) {
+    const docsLink = 'https://harmony-docs.bit.dev';
+    // Join with \n for better visablity in windows
+    const errLines = [
+      'global Bit install location was not found in your PATH global variable.',
+      'please run the following command and then re-open the terminal:',
+      `setx path "%path%;${binDir}" and re-open your terminal`,
+      `for more information read here - ${docsLink}`
+    ];
+    throw new BvmError(errLines.join('\n'));
+  }
 }
