@@ -1,12 +1,8 @@
-import os from 'os';
 import {Config} from '@teambit/bvm.config';
 import path from 'path';
-import {link as linuxMacLink} from './link-mac-linux';
-
+import binLinks from 'bin-links';
 
 const config = Config.load();
-
-const IS_WINDOWS = os.platform() === 'win32';
 
 export type LinkResult = {
   linkName: string,
@@ -16,27 +12,44 @@ export type LinkResult = {
 export async function linkAll(): Promise<LinkResult[]>{
   const links = config.getLinks();
   const promises = Object.entries(links).map(([linkName, version]) => {
-    return linkOne(linkName, version);
+    return linkOne(linkName, version, false);
   });
   return Promise.all(promises);
 }
 
-export async function linkOne(linkName: string, version: string): Promise<LinkResult> {
-  const source = getSourcePath(version);
-  if (!IS_WINDOWS){
-    await linuxMacLink(source, linkName);
-    config.setLink(linkName, version);
-    return {
-      linkName, 
-      version
+export async function linkOne(linkName: string, version: string, addToConfig = false): Promise<LinkResult> {
+  const source = getLinkSource();
+  const {versionDir} = config.getSpecificVersionDir(version, true);
+  const pkg = {
+    bin: {
+      [linkName]: source
     }
+  };
+  const opts = {
+    path: versionDir,
+    pkg,
+    global: true,
+    top: true,
+    force: true,
   }
-  // TODO: implement for windows
+  // const generatedLinks = binLinks.getPaths(opts);
+  await binLinks(opts);
+
+  if (addToConfig){
+    config.setLink(linkName, version);
+  }
+  return {
+    linkName, 
+    version
+  }
 }
 
-function getSourcePath(version: string): string {
-  const {versionDir} = config.getSpecificVersionDir(version);
-  const innerBinPath = path.join(`bit-${version}`, 'node_modules', '@teambit', 'bit', 'bin', 'bit');
-  const source = path.join(versionDir, innerBinPath);
+function getLinkSource(): string {
+  const bitBinPath = getBitBinPath();
+  const source = path.join('.', 'node_modules', bitBinPath);
   return source;
+}
+
+function getBitBinPath(){
+  return path.join('@teambit', 'bit', 'bin', 'bit');
 }

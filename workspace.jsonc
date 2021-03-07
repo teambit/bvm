@@ -50,6 +50,7 @@
         "@types/semver-sort": "0.0.1",
         "@types/tar-fs": "2.0.0",
         "@types/yargs": "16.0.0",
+        "bin-links": "2.2.1",
         "chalk": "4.1.0",
         "fs-extra": "9.1.0",
         "lodash.difference": "4.5.0",

@@ -371,6 +371,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"balanced-match@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "balanced-match@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fbalanced-match%2F-%2Fbalanced-match-1.0.0.tgz"
+  checksum: f515a605fe1b59f476f7477c5e1d53ad55b4f42982fca1d57b6701906f4ad1f1ac90fd6587d92cc1af2edb43eecf979214dd847ee410a6de9db4ebf0dd128d62
+  languageName: node
+  linkType: hard
+
 "base64-js@npm:^1.3.0, base64-js@npm:^1.3.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fbase64-js%2F-%2Fbase64-js-1.5.1.tgz"
@@ -385,6 +392,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bin-links@npm:2.2.1":
+  version: 2.2.1
+  resolution: "bin-links@npm:2.2.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fbin-links%2F-%2Fbin-links-2.2.1.tgz"
+  dependencies:
+    cmd-shim: ^4.0.1
+    mkdirp: ^1.0.3
+    npm-normalize-package-bin: ^1.0.0
+    read-cmd-shim: ^2.0.0
+    rimraf: ^3.0.0
+    write-file-atomic: ^3.0.3
+  checksum: 7e091fc86dcc1a1e3e2d08ece33033c34b909d6739efa46a00867d95c86df046d963c01f815c4944f83b3be6ed3317f5fb3d9427e1970bfc7777c0bc9a2d45db
+  languageName: node
+  linkType: hard
+
 "bl@npm:^4.0.3":
   version: 4.1.0
   resolution: "bl@npm:4.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fbl%2F-%2Fbl-4.1.0.tgz"
@@ -393,6 +414,16 @@ __metadata:
     inherits: ^2.0.4
     readable-stream: ^3.4.0
   checksum: 15d009339c2eeaedb9dab39c48f910a2fd6a9ba11400e61990917ebf3b25fa32cd9b80c7531a95467078258f6a59bd3f5d93323565423a7843855a16a1794261
+  languageName: node
+  linkType: hard
+
+"brace-expansion@npm:^1.1.7":
+  version: 1.1.11
+  resolution: "brace-expansion@npm:1.1.11::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fbrace-expansion%2F-%2Fbrace-expansion-1.1.11.tgz"
+  dependencies:
+    balanced-match: ^1.0.0
+    concat-map: 0.0.1
+  checksum: 4c878e25e4858baf801945dfd63eb68feab2e502cf1122f25f3915c0e3bf397af3a93ff6bef0798db41c0d81ef28c08e55daac38058710f749a3b96eee6b8f40
   languageName: node
   linkType: hard
 
@@ -430,6 +461,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chownr@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "chownr@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fchownr%2F-%2Fchownr-2.0.0.tgz"
+  checksum: b06ba0bf4218bc2214cdb94a7d0200db5c6425f9425795c064dcf5a3801aac8ae87f764727890cd1f48c026559159e7e0e15ed3d1940ce453dec54898d013379
+  languageName: node
+  linkType: hard
+
 "cli-cursor@npm:^3.1.0":
   version: 3.1.0
   resolution: "cli-cursor@npm:3.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcli-cursor%2F-%2Fcli-cursor-3.1.0.tgz"
@@ -464,6 +502,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cmd-shim@npm:^4.0.1":
+  version: 4.1.0
+  resolution: "cmd-shim@npm:4.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcmd-shim%2F-%2Fcmd-shim-4.1.0.tgz"
+  dependencies:
+    mkdirp-infer-owner: ^2.0.0
+  checksum: 98651224e285675a0c103d6445d880ca2cee597e83b00ff9cbd7237c95672f01b8252cd5dcccab0f8f64245526fc2ff44f894e6c79f2b64cdb16b837a7227fa2
+  languageName: node
+  linkType: hard
+
 "color-convert@npm:^2.0.1":
   version: 2.0.1
   resolution: "color-convert@npm:2.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcolor-convert%2F-%2Fcolor-convert-2.0.1.tgz"
@@ -495,6 +542,13 @@ __metadata:
   dependencies:
     mime-db: ">= 1.43.0 < 2"
   checksum: 8ac178b6ef4f72adc51e495f23f7212a4764395dde24e476046cca1db988859eef96453e11563bcf40d1bf74469cdd7db29539fd4ac553577d9812d3f112fada
+  languageName: node
+  linkType: hard
+
+"concat-map@npm:0.0.1":
+  version: 0.0.1
+  resolution: "concat-map@npm:0.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fconcat-map%2F-%2Fconcat-map-0.0.1.tgz"
+  checksum: 554e28d9ee5aa6e061795473ee092cb3d3a2cbdb76c35416e0bb6e03f136d7d07676da387b2ed0ec4106cedbb6534080d9abc48ecc4a92b76406cf2d0c3c0c4b
   languageName: node
   linkType: hard
 
@@ -589,12 +643,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"download-0132f4@workspace:teambit.bvm/download":
-  version: 0.0.0-use.local
-  resolution: "download-0132f4@workspace:teambit.bvm/download"
-  languageName: unknown
-  linkType: soft
-
 "duplexify@npm:^4.0.0, duplexify@npm:^4.1.1":
   version: 4.1.1
   resolution: "duplexify@npm:4.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fduplexify%2F-%2Fduplexify-4.1.1.tgz"
@@ -667,6 +715,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-2b56ca@workspace:teambit.bvm/fetch":
+  version: 0.0.0-use.local
+  resolution: "fetch-2b56ca@workspace:teambit.bvm/fetch"
+  languageName: unknown
+  linkType: soft
+
 "file-downloader-f09588@workspace:teambit.toolbox/network/file-downloader":
   version: 0.0.0-use.local
   resolution: "file-downloader-f09588@workspace:teambit.toolbox/network/file-downloader"
@@ -700,6 +754,13 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^2.0.0
   checksum: e667d8df54113b527bf5830dd9db8f142618db488894b329fe07724c7020dfacf8a372b144a74e683ae44e66f56117adca9cac165950dda7d83537c46c10dc4b
+  languageName: node
+  linkType: hard
+
+"fs.realpath@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fs.realpath@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ffs.realpath%2F-%2Ffs.realpath-1.0.0.tgz"
+  checksum: 698a91b1695e3926185c9e5b0dd57cf687dceb4eb73799af91e6b2ab741735e2962c366c5af6403ffddae2619914193bd339efa706fdc984d0ffc74b7a3603f4
   languageName: node
   linkType: hard
 
@@ -754,6 +815,20 @@ __metadata:
   version: 6.0.0
   resolution: "get-stream@npm:6.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fget-stream%2F-%2Fget-stream-6.0.0.tgz"
   checksum: 4354a4de78ebfd4340db6c7a3956ad1db7e67dbf718bcc576481697188442156f88d0d79d94b8af2615dad9920d41df85227e0c6b0fe5764d26e0df25f4035f8
+  languageName: node
+  linkType: hard
+
+"glob@npm:^7.1.3":
+  version: 7.1.6
+  resolution: "glob@npm:7.1.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fglob%2F-%2Fglob-7.1.6.tgz"
+  dependencies:
+    fs.realpath: ^1.0.0
+    inflight: ^1.0.4
+    inherits: 2
+    minimatch: ^3.0.4
+    once: ^1.3.0
+    path-is-absolute: ^1.0.0
+  checksum: 789977b52432865bd63846da5c75a6efc2c56abdc0cb5ffcdb8e91eeb67a58fa5594c1195d18b2b4aff99675b0739ed6bd61024b26562e0cca18c8f993efdc82
   languageName: node
   linkType: hard
 
@@ -859,7 +934,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:^2.0.3, inherits@npm:^2.0.4":
+"infer-owner@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "infer-owner@npm:1.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Finfer-owner%2F-%2Finfer-owner-1.0.4.tgz"
+  checksum: 56aa1d87b05936947765b1d9ace5f8d7ccd8cf6ccc1d69b67e8eaaee0e1ee2960d5accd51deb50d884665a5a1af3bcbb80f5d249c01a00280365bba59db9687b
+  languageName: node
+  linkType: hard
+
+"inflight@npm:^1.0.4":
+  version: 1.0.6
+  resolution: "inflight@npm:1.0.6::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Finflight%2F-%2Finflight-1.0.6.tgz"
+  dependencies:
+    once: ^1.3.0
+    wrappy: 1
+  checksum: 17c53fc42cbe7f7f471d2bc41b97a0cde4b79a74d5ff59997d3f75210566fa278e17596da526d43de2bd07e222706240ce50e60097e54f2cde2e64cbbb372638
+  languageName: node
+  linkType: hard
+
+"inherits@npm:2, inherits@npm:^2.0.3, inherits@npm:^2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Finherits%2F-%2Finherits-2.0.4.tgz"
   checksum: 98426da247ddfc3dcd7d7daedd90c3ca32d5b08deca08949726f12d49232aef94772a07b36cf4ff833e105ae2ef931777f6de4a6dd8245a216b9299ad4a50bea
@@ -1093,10 +1185,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "minimatch@npm:3.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminimatch%2F-%2Fminimatch-3.0.4.tgz"
+  dependencies:
+    brace-expansion: ^1.1.7
+  checksum: 47eab9263962cacd5733e274ecad2d8e54b0f8e124ba35ae69189e296058f634a4967b87a98954f86fa5c830ff177caf827ce0136d28717ed3232951fb4fae62
+  languageName: node
+  linkType: hard
+
 "mkdirp-classic@npm:^0.5.2":
   version: 0.5.3
   resolution: "mkdirp-classic@npm:0.5.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp-classic%2F-%2Fmkdirp-classic-0.5.3.tgz"
   checksum: b3c46c62840bdc82c2a5bee417e4e7518a8109d32a85a6dc67bdcfecbe6aff5cfc73cdb98844a61178ddd8ac75743f977857f0badd6e12d14fd18cf1639e41a1
+  languageName: node
+  linkType: hard
+
+"mkdirp-infer-owner@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "mkdirp-infer-owner@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp-infer-owner%2F-%2Fmkdirp-infer-owner-2.0.0.tgz"
+  dependencies:
+    chownr: ^2.0.0
+    infer-owner: ^1.0.4
+    mkdirp: ^1.0.3
+  checksum: f7c72375cfb8ecb9543ea7da1749d9b1bb9a7652f80a0ff34817a315e38f03e3b831c13d3748405fc5cf96c4dd096d1db49ee6416d046a922a0d28c947ee722e
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:^1.0.3":
+  version: 1.0.4
+  resolution: "mkdirp@npm:1.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp%2F-%2Fmkdirp-1.0.4.tgz"
+  bin:
+    mkdirp: bin/cmd.js
+  checksum: 1aa3a6a2d7514f094a91329ec09994f5d32d2955a4985ecbb3d86f2aaeafc4aa11521f98d606144c1d49cd9835004d9a73342709b8c692c92e59eacf37412468
   languageName: node
   linkType: hard
 
@@ -1133,7 +1254,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"once@npm:^1.3.1, once@npm:^1.4.0":
+"npm-normalize-package-bin@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "npm-normalize-package-bin@npm:1.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fnpm-normalize-package-bin%2F-%2Fnpm-normalize-package-bin-1.0.1.tgz"
+  checksum: 495fae761551a765064f6937ed578a1d749c110355b63f5bbf6df9f0237862639de184a5c13fb9982d2a7745b2bd983e427bf16893ad98f20e53a32ad0254fc9
+  languageName: node
+  linkType: hard
+
+"once@npm:^1.3.0, once@npm:^1.3.1, once@npm:^1.4.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fonce%2F-%2Fonce-1.4.0.tgz"
   dependencies:
@@ -1183,6 +1311,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path-is-absolute@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "path-is-absolute@npm:1.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpath-is-absolute%2F-%2Fpath-is-absolute-1.0.1.tgz"
+  checksum: 907e1e3e6ac0aef6e65adffd75b3892191d76a5b94c5cf26b43667c4240531d11872ca6979c209b2e5e1609f7f579d02f64ba9936b48bb59d36cc529f0d965ed
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpretty-format%2F-%2Fpretty-format-26.6.2.tgz"
@@ -1223,6 +1358,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"read-cmd-shim@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "read-cmd-shim@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fread-cmd-shim%2F-%2Fread-cmd-shim-2.0.0.tgz"
+  checksum: c956916e024b3de58a6294a5f01779c471947431a7335819ca92a92b3e61a24551acf1fc01488d29d7162a52abf7c077fd375e80496cc41c201d9279688be736
+  languageName: node
+  linkType: hard
+
 "readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Freadable-stream%2F-%2Freadable-stream-3.6.0.tgz"
@@ -1233,6 +1375,12 @@ __metadata:
   checksum: f178b1daa80d9e58ebba71dbb08486430aa6f0dea3a22a1b7401f3f6983077d0bc0edea43099db06b8d006c9ad48d6383e8fb72c05d5b187670aeaf1b9b44f00
   languageName: node
   linkType: hard
+
+"remove-2ffa0c@workspace:teambit.bvm/remove":
+  version: 0.0.0-use.local
+  resolution: "remove-2ffa0c@workspace:teambit.bvm/remove"
+  languageName: unknown
+  linkType: soft
 
 "remove-d73b1e@workspace:teambit.bvm/commands/remove":
   version: 0.0.0-use.local
@@ -1273,6 +1421,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rimraf@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "rimraf@npm:3.0.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frimraf%2F-%2Frimraf-3.0.2.tgz"
+  dependencies:
+    glob: ^7.1.3
+  bin:
+    rimraf: bin.js
+  checksum: f0de3e445581e64a8a077af476cc30708e659f5779ec2ca2a161556d0792aa318a685923798ae22055b4ecd02b9aff444ef619578f7af53cf8e0e248031e3dee
+  languageName: node
+  linkType: hard
+
 "root-workspace-0b6124@workspace:.":
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
@@ -1294,6 +1453,7 @@ __metadata:
     "@types/semver-sort": 0.0.1
     "@types/tar-fs": 2.0.0
     "@types/yargs": 16.0.0
+    bin-links: 2.2.1
     chalk: 4.1.0
     fs-extra: 9.1.0
     lodash.difference: 4.5.0
@@ -1585,7 +1745,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"write-file-atomic@npm:^3.0.0":
+"write-file-atomic@npm:^3.0.0, write-file-atomic@npm:^3.0.3":
   version: 3.0.3
   resolution: "write-file-atomic@npm:3.0.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fwrite-file-atomic%2F-%2Fwrite-file-atomic-3.0.3.tgz"
   dependencies:
