@@ -61,7 +61,7 @@ async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): P
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    await linkOne(config.getDefaultLinkName(), version);
+    await linkOne(config.getDefaultLinkName(), version, true);
     return true;
   }
   return false;
