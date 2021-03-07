@@ -69,7 +69,7 @@ function getBitBinPath(){
 function validateBinDirInPath(binDir: string){
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) === -1) {
-    const docsLink = 'https://harmony-docs.bit.dev';
+    const docsLink = 'https://harmony-docs.bit.dev/tutorial/install-bit';
     // Join with \n for better visablity in windows
     const errLines = [
       'global Bit install location was not found in your PATH global variable.',
