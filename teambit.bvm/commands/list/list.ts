@@ -36,5 +36,8 @@ export class ListCmd implements CommandModule {
 export const command =  new ListCmd();
 
 function localListOutput(versions: string[]): string {
+  if (!versions || !versions.length){
+    return 'there are no installed version, use bvm install to install new versions';
+  }
   return versions.join('\n');
 }
