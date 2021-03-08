@@ -13,7 +13,7 @@ export async function listRemote(): Promise<RemoteVersionList> {
 }
 
 export async function listLocal(): Promise<LocalVersionList> {
-  const versionsDir = ${config.getBitVersionsDir()};
+  const versionsDir = config.getBitVersionsDir();
   const exists = await fs.pathExists(versionsDir);
   if (!exists) return new LocalVersionList([]);
   const dirEntries = await fs.readdir(versionsDir, { withFileTypes: true });
