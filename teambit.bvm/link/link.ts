@@ -76,7 +76,7 @@ function validateBinDirInPath(binDir: string){
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) === -1) {
     const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
-    throw new BvmError(err);
+    console.log(err);
   }
 }
 
@@ -96,7 +96,7 @@ function macLinuxMissingInPathError(binDir: string, docsLink){
   const errLines = [
     'global Bit install location was not found in your PATH global variable.',
     'please run the following command to your bash/zsh profile then re-open the terminal:',
-    `export PATH=$HOME/bin:$PATH" and re-open your terminal`,
+    `export PATH=$HOME/bin:$PATH`,
     `for more information read here - ${docsLink}`
   ];
   return errLines.join('\n');
