@@ -3,6 +3,7 @@ import path from 'path';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
+import chalk from 'chalk';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://harmony-docs.bit.dev';
@@ -76,7 +77,7 @@ function validateBinDirInPath(binDir: string){
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) === -1) {
     const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
-    console.log(err);
+    console.log(chalk.yellowBright(err));
   }
 }
 
@@ -86,7 +87,8 @@ function windowsMissingInPathError(binDir: string, docsLink){
     'global Bit install location was not found in your PATH global variable.',
     'please run the following command and then re-open the terminal:',
     `setx path "%path%;${binDir}" and re-open your terminal`,
-    `for more information read here - ${docsLink}`
+    `for more information read here - ${docsLink}
+    `
   ];
   return errLines.join('\n');
 }
@@ -97,7 +99,8 @@ function macLinuxMissingInPathError(binDir: string, docsLink){
     'global Bit install location was not found in your PATH global variable.',
     'please run the following command to your bash/zsh profile then re-open the terminal:',
     `export PATH=$HOME/bin:$PATH`,
-    `for more information read here - ${docsLink}`
+    `for more information read here - ${docsLink}
+    `
   ];
   return errLines.join('\n');
 }
