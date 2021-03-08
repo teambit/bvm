@@ -14,6 +14,7 @@ const argv = yargs(hideBin(process.argv))
   .scriptName('bvm')
   .usage('Usage: $0 <cmd> [options]') // usage string of application.
   .version()
+  .completion()
   .option('h', {
     alias: 'help',
     description: 'display help message'
