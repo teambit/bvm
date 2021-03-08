@@ -42,7 +42,10 @@ const argv = yargs(hideBin(process.argv))
   .argv
 
 
-function handleError(msg, err){
+function handleError(msg, err, yargs){
+  if (!msg && !err){
+    return yargs.showHelp()
+  }
   console.log(chalk.red(err?.message || msg));
 
   if (!err?.bvm || argv.verbose) {
