@@ -1,3 +1,4 @@
+import os from 'os';
 import {GcpList} from './gcp';
 import {Config} from '@teambit/bvm.config';
 import semver from 'semver';
@@ -8,7 +9,7 @@ import { LocalVersion } from './version';
 const config = Config.load();
 
 export async function listRemote(): Promise<RemoteVersionList> {
-  const gcpList = GcpList.create('dev');
+  const gcpList = GcpList.create('dev', os.type());
   return gcpList.list();
 }
 
