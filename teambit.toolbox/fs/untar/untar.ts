@@ -21,7 +21,7 @@ export async function untar(filePath: string, folder?: string, opts?: UntarOptio
   let untarLoaderText;
   let untarStartTime;
   if (showLoader){
-    untarLoaderText = `untarring ${filePath}`;
+    untarLoaderText = `extracting ${filePath}`;
     loader.start(untarLoaderText);
     untarStartTime = Date.now();
   }
