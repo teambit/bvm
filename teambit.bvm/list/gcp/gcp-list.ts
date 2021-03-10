@@ -1,15 +1,19 @@
-import { GcpStorage } from '@teambit/gcp.storage';
-import {GcpVersion} from './gcp-version';
-import {RemoteVersionList} from '../version-list';
+import { GcpStorage } from "@teambit/gcp.storage";
+import { GcpVersion } from "./gcp-version";
+import { RemoteVersionList } from "../version-list";
 
 const bucketName = "bvm.bit.dev";
 const prefix = "versions";
 
 export class GcpList {
-  constructor(private gcpStorage: GcpStorage) {}
+  constructor(
+    private gcpStorage: GcpStorage,
+    private osType = "Darwin",
+    private releaseType = "dev"
+  ) {}
 
-  async list(releaseType = "dev"): Promise<RemoteVersionList> {
-    const [files] = await this.rawFiles(releaseType);
+  async list(): Promise<RemoteVersionList> {
+    const [files] = await this.rawFiles();
     const remoteVersions = files.map((file) => {
       const gcpVersion = new GcpVersion(file.metadata.name, file.bucket.name);
       return gcpVersion.toRemoteVersion();
@@ -17,13 +21,13 @@ export class GcpList {
     return new RemoteVersionList(remoteVersions);
   }
 
-  async rawFiles(releaseType = "dev") {
-    const filesPrefix = `${prefix}/${releaseType}/bit-`;
-    return this.gcpStorage.getFiles({prefix: filesPrefix});
+  async rawFiles() {
+    const filesPrefix = `${prefix}/${this.releaseType}/${this.osType}/`;
+    return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
 
-  static create(releaseType = "dev") {
+  static create(releaseType = "dev", osType = "Darwin") {
     const gcpStorage = GcpStorage.create(bucketName);
-    return new GcpList(gcpStorage);
+    return new GcpList(gcpStorage, osType, releaseType);
   }
 }

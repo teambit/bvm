@@ -9,7 +9,7 @@ export class GcpVersion {
 
   get version() {
     return this.fileName
-      .split("/")[2]
+      .split("/")[4]
       .replace(/\.[^/.]+$/, "")
       .replace(/\.[^/.]+$/, "")
       .split("-")[1];
