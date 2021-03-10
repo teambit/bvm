@@ -34,7 +34,6 @@
     "packageManager": "teambit.dependencies/yarn",
     "policy": {
       "dependencies": {
-        "@google-cloud/storage": "5.8.0",
         "@teambit/time.time-format": "0.0.298",
         "@types/chalk": "0.4.31",
         "@types/fs-extra": "9.0.7",
@@ -57,7 +56,6 @@
         "lodash.intersection": "4.4.0",
         "lodash.pick": "4.4.0",
         "lodash.pickby": "4.6.0",
-        // TODO: remove mkdirp-infer-owner once this issue is resolved and a new version is installed https://github.com/npm/bin-links/issues/24
         "mkdirp-infer-owner": "2.0.0",
         "nconf": "0.11.2",
         "node-fetch": "2.6.1",
