@@ -24,6 +24,7 @@ export async function download(url: string, destination: string, opts: DownloadO
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
     hideCursor: true,
+    stopOnComplete: true,
     clearOnComplete: true,
     format: '[{bar}] {percentage}% | ETA: {etah}s | Speed: {speed}',
   });
