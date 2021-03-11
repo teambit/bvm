@@ -20,7 +20,7 @@ export type VersionsResult = {
 export class VersionCmd implements CommandModule {
   aliases = ["version"];
   describe =
-    "show used (current) version, latest installed version and latest remote version";
+    "show used (current) version, latest installed version and latest remote version (bit and bvm)";
   command = ["version"];
   builder(yargs: Argv) {
     yargs
