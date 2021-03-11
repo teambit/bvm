@@ -11,21 +11,23 @@ const config = Config.load();
 
 export type FetchOpts = {
   override?: boolean;
+  overrideDir?: boolean;
+  destination: string;
 };
 
 const defaultOpts = {
   override: false,
+  overrideDir: false,
 };
 
 const loader = ora();
 
 export type FetchResults = {
-  versionDir: string;
   resolvedVersion: string;
   downloadedFile?: string;
 };
 
-export async function fetch(version: string, opts: FetchOpts = defaultOpts): Promise<FetchResults> {
+export async function fetch(version: string, opts: FetchOpts): Promise<FetchResults> {
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const remoteVersionList = await listRemote();
   let resolvedVersion;
@@ -40,15 +42,23 @@ export async function fetch(version: string, opts: FetchOpts = defaultOpts): Pro
   }
 
   const url = resolvedVersion.url;
-  const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion.version);
+  // const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion.version);
   const fileName = url.split('/').pop();
-  const destination = path.join(versionDir, fileName);
-  if (exists) {
-    if (!concreteOpts.override) {
-      return { versionDir, resolvedVersion: resolvedVersion.version };
+  const destination = opts.destination;
+  const destinationDir = path.dirname(destination);
+  const destinationDirExists = await fs.pathExists(destinationDir);
+  if (destinationDirExists) {
+    if (concreteOpts.overrideDir) {
+      await fs.remove(destinationDir);
     }
-    await fs.remove(versionDir);
+  }
+  const destinationExists = await fs.pathExists(destination);
+  if (destinationExists) {
+    if (!concreteOpts.override) {
+      throw new BvmError(`the destination location at ${destination} already exist`);
+    }
+    await fs.remove(destination);
   }
   await fileDownload(url, destination);
-  return { versionDir, downloadedFile: destination, resolvedVersion: resolvedVersion.version };
+  return { downloadedFile: destination, resolvedVersion: resolvedVersion.version };
 }

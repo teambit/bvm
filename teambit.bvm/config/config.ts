@@ -101,6 +101,10 @@ export class Config {
     return this.store.get('BVM_DIR');
   }
 
+  getTempDir(): string {
+    return path.join(this.getBvmDirectory(), 'temp');
+  }
+
   getDefaultLinkName(): string {
     return this.store.get('DEFAULT_LINK');
   }
