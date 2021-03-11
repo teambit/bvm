@@ -4,6 +4,7 @@ import util from "util";
 import { Config } from "@teambit/bvm.config";
 import { listLocal, listRemote } from "@teambit/bvm.list";
 import { exec } from "child_process";
+import path from 'path';
 import semver from "semver";
 const execP = util.promisify(exec);
 
@@ -156,12 +157,18 @@ function getNewerBitAvailableOutput(
   }
 }
 
-function getBvmLocalVersion() {
-  const pjson = require("../package.json");
-  return pjson.version;
+function getBvmLocalVersion(): string | undefined {
+  // const pjson = require("../package.json");
+  // This is a hack to get the bvm local version
+  // consider replacing it by something like like 
+  // await execP("bvm -v");
+  // the reason it's not like this, is because we consider to change the bvm -v 
+  // to show the full output (same as bvm version) which will break it
+  const pjson = require(path.join(__dirname, "../../bvm/package.json"));
+  return pjson?.version;
 }
 
-async function getBvmRemoteVersion() {
+async function getBvmRemoteVersion(): Promise<string | undefined> {
   const { stdout } = await execP("npm view @teambit/bvm version");
   return stdout.toString();
 }
