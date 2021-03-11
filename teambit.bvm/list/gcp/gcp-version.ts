@@ -4,6 +4,7 @@ export class GcpVersion {
   constructor(
     private fileName: string,
     private host: string,
+    private md5hash: string,
     private protocol = "https"
   ) {}
 
@@ -20,7 +21,7 @@ export class GcpVersion {
   }
 
   toRemoteVersion(): RemoteVersion {
-    return new RemoteVersion(this.version, this.url);
+    return new RemoteVersion(this.version, this.url, this.md5hash);
   }
 
   toObject() {
