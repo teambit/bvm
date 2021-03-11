@@ -4,6 +4,8 @@ import path from 'path';
 import userHome from 'user-home';
 import pickBy from 'lodash.pickby';
 import fs from 'fs-extra';
+import {execSync} from 'child_process';
+import semver from 'semver';
 
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
@@ -14,9 +16,12 @@ export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
+const DEFAULT_LINK = 'bit';
+const DEFAULT_ALTERNATIVE_LINK = 'bbit';
+
 const globalDefaults = {
   BVM_DIR: getBvmDirectory(),
-  DEFAULT_LINK: 'bit'
+  DEFAULT_LINK: DEFAULT_LINK
 }
 
 function getBvmDirectory(): string {
@@ -57,7 +62,9 @@ export class Config {
     const configPath = getConfigPath();
     if (!fs.existsSync(configPath)){
       fs.ensureDirSync(path.dirname(configPath));
-      fs.writeJSONSync(configPath, {});
+      const legacyBitExist = checkIfBitLegacyExist();
+      const defaultLink = legacyBitExist ? DEFAULT_ALTERNATIVE_LINK : DEFAULT_LINK;
+      fs.writeJSONSync(configPath, {DEFAULT_LINK: defaultLink});
     }
     const config = new Config(name, configPath, globalDefaults);
     if (!newInstance){
@@ -161,5 +168,17 @@ export class Config {
     const allLinks = this.getLinks();
     const defaultLinkName = this.getDefaultLinkName();
     return allLinks[defaultLinkName];
+  }
+}
+
+function checkIfBitLegacyExist(): boolean {
+  try {
+    const output = execSync('bit -v').toString();
+    if (output && semver.valid(output.trim()) && output.startsWith('14')){
+      return true;
+    }
+    return false;
+  } catch (e){
+    return false;
   }
 }
