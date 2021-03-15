@@ -26,7 +26,7 @@ export async function download(url: string, destination: string, opts: DownloadO
     hideCursor: true,
     stopOnComplete: true,
     clearOnComplete: true,
-    format: '[{bar}] {percentage}% | ETA: {etah}s | Speed: {speed}',
+    format: '[{bar}] {percentage}% | ETA: {etah} | Speed: {speed}',
   });
   const finalOpts = Object.assign({}, defaults, opts);
   const exists = await fs.pathExists(destination);
