@@ -10,8 +10,8 @@ import { BvmError } from '@teambit/bvm.error';
 const streamPipeline = util.promisify(pipeline);
 
 export type DownloadOpts = {
-  ensureDir: boolean;
-  overrideExisting: boolean;
+  ensureDir?: boolean;
+  overrideExisting?: boolean;
 };
 
 const defaults: DownloadOpts = {
@@ -19,15 +19,27 @@ const defaults: DownloadOpts = {
   overrideExisting: false,
 };
 
-export async function download(url: string, destination: string, opts: DownloadOpts = defaults): Promise<void> {
-  const bar = new cliProgress.SingleBar({
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true,
-    stopOnComplete: true,
-    clearOnComplete: true,
-    format: '[{bar}] {percentage}% | ETA: {etah} | Speed: {speed}',
-  });
+export type ProgressBarOpts = {
+  barCompleteChar?: string
+  barIncompleteChar?: string
+  hideCursor?: boolean,
+  stopOnComplete?: boolean,
+  clearOnComplete?: boolean,
+  format?: string
+};
+
+const defaultProgressBarOpts: ProgressBarOpts = {
+  barCompleteChar: '\u2588',
+  barIncompleteChar: '\u2591',
+  hideCursor: true,
+  stopOnComplete: true,
+  clearOnComplete: true,
+  format: '[{bar}] {percentage}% | ETA: {etah} | Speed: {speed}',
+};
+
+export async function download(url: string, destination: string, opts: DownloadOpts = defaults, progressBarOpts: ProgressBarOpts = defaultProgressBarOpts): Promise<void> {
+  const concreteProgressBarOpts = Object.assign({}, defaultProgressBarOpts, progressBarOpts); 
+  const bar = new cliProgress.SingleBar(concreteProgressBarOpts);
   const finalOpts = Object.assign({}, defaults, opts);
   const exists = await fs.pathExists(destination);
   if (exists && !finalOpts.overrideExisting) {
