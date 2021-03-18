@@ -1,4 +1,5 @@
 import {Config} from '@teambit/bvm.config';
+import {listLocal} from '@teambit/bvm.list';
 import path from 'path';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
@@ -19,9 +20,15 @@ export type LinkResult = {
 
 export async function linkAll(): Promise<LinkResult[]>{
   const links = config.getLinks();
+  const defaultLinkVersion = config.getDefaultLinkVersion();
+  const localLatest = (await listLocal()).latest();
   const promises = Object.entries(links).map(([linkName, version]) => {
     return linkOne(linkName, version, false);
   });
+  if (!defaultLinkVersion && localLatest){
+    const defaultLinkName = config.getDefaultLinkName();
+    promises.push(linkOne(defaultLinkName, localLatest.version, true))
+  }
   return Promise.all(promises);
 }
 
