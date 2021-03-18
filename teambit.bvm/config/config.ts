@@ -168,9 +168,11 @@ export class Config {
     return res;
   }
 
-  setLink(linkName: string, value: string){
+  setLink(linkName: string, value: string): string {
     const keyName = `${LINKS_KEY}.${linkName}`;
+    const previousLinkVersion = this.get(keyName);
     this.set(keyName, value);
+    return previousLinkVersion;
   }
 
   getDefaultLinkVersion(): string | undefined {

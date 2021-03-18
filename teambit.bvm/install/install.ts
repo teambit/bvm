@@ -13,10 +13,11 @@ export type InstallOpts = {
   replace?: boolean
 }
 
-type InstallResults = {
+export type InstallResults = {
   installedVersion: string,
   downloadRequired: boolean,
   replacedCurrent: boolean,
+  previousCurrentVersion?: string
   versionPath: string
 }
 
@@ -39,11 +40,12 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
   if (exists) {
     if (!concreteOpts.override){
-      const replacedCurrent = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion);
+      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion);
       return {
         downloadRequired: false,
         installedVersion: resolvedVersion,
-        replacedCurrent,
+        replacedCurrent: replacedCurrentResult.replaced,
+        previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
         versionPath: versionDir
       }
     }
@@ -63,12 +65,13 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     await removeWithLoader(tarFile);
   }
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const replacedCurrent = await replaceCurrentIfNeeded(concreteOpts.replace, downloadResults.resolvedVersion);
+  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, downloadResults.resolvedVersion);
   loader.stop();
   return {
     downloadRequired: !!downloadResults.downloadedFile,
     installedVersion: downloadResults.resolvedVersion,
-    replacedCurrent,
+    replacedCurrent: replacedCurrentResult.replaced,
+    previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     versionPath: versionDir
   }
 }
@@ -93,14 +96,24 @@ async function moveWithLoader(src: string, target: string, opts: MoveOptions): P
   loader.succeed(`${moveLoaderText} in ${moveTimeDiff}`);
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): Promise<boolean> {
+type ReplaceCurrentResult = {
+  replaced: boolean,
+  previousCurrentVersion?: string
+}
+
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    await linkOne(config.getDefaultLinkName(), version, true);
-    return true;
+    const {previousLinkVersion} = await linkOne(config.getDefaultLinkName(), version, true);
+    return {
+      replaced: true,
+      previousCurrentVersion: previousLinkVersion
+    };
   }
-  return false;
+  return {
+    replaced: false
+  };
 }
 
 function getConfig(): Config {

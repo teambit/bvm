@@ -59,6 +59,14 @@ export async function fetch(version: string, opts: FetchOpts): Promise<FetchResu
     }
     await fs.remove(destination);
   }
-  await fileDownload(url, destination);
+  const downloadLoaderText = `downloading version ${resolvedVersion.version}`;
+  const downloadStartTime = Date.now();
+  const progressBarOpts = {
+    format: `downloading version ${resolvedVersion.version} [{bar}] {percentage}% | ETA: {etah} | Speed: {speed}`,
+  }
+  await fileDownload(url, destination, {}, progressBarOpts);
+  const downloadEndTime = Date.now();
+  const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
+  loader.succeed(`${downloadLoaderText} in ${downloadTimeDiff}`);
   return { downloadedFile: destination, resolvedVersion: resolvedVersion.version };
 }

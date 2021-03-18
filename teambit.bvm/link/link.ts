@@ -15,7 +15,8 @@ const config = Config.load();
 
 export type LinkResult = {
   linkName: string,
-  version: string
+  version: string,
+  previousLinkVersion?: string
 }
 
 export async function linkAll(): Promise<LinkResult[]>{
@@ -54,9 +55,9 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
   // console.log('generated links', generatedLinks)
   await binLinks(opts);
 
-
+  let previousLinkVersion;
   if (addToConfig){
-    config.setLink(linkName, version);
+    previousLinkVersion = config.setLink(linkName, version);
   }
   let binDir = path.join(os.homedir(), 'bin');
   if (IS_WINDOWS){
@@ -66,6 +67,7 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
 
   return {
     linkName, 
+    previousLinkVersion,
     version
   }
 }
