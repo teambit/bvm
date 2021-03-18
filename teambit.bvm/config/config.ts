@@ -6,6 +6,7 @@ import pickBy from 'lodash.pickby';
 import fs from 'fs-extra';
 import {execSync} from 'child_process';
 import semver from 'semver';
+import chalk from 'chalk';
 
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
@@ -18,6 +19,10 @@ const CONFIG_KEY_NAME = 'global';
 
 const DEFAULT_LINK = 'bit';
 const DEFAULT_ALTERNATIVE_LINK = 'bbit';
+
+const ALTERNATIVE_LINK_WARNING = `A legacy version of Bit is installed on your machine. 
+Use the 'bbit' command for Bit's latest version and the 'bit' command for Bit's legacy version.
+For more information, see the following link: https://harmony-docs.bit.dev/introduction/installation`
 
 const globalDefaults = {
   BVM_DIR: getBvmDirectory(),
@@ -63,7 +68,11 @@ export class Config {
     if (!fs.existsSync(configPath)){
       fs.ensureDirSync(path.dirname(configPath));
       const legacyBitExist = checkIfBitLegacyExist();
-      const defaultLink = legacyBitExist ? DEFAULT_ALTERNATIVE_LINK : DEFAULT_LINK;
+      let defaultLink = DEFAULT_LINK;
+      if (legacyBitExist){
+        console.log(chalk.yellowBright(ALTERNATIVE_LINK_WARNING));
+        defaultLink = DEFAULT_ALTERNATIVE_LINK;
+      }
       fs.writeJSONSync(configPath, {DEFAULT_LINK: defaultLink});
     }
     const config = new Config(name, configPath, globalDefaults);
