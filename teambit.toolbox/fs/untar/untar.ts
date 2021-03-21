@@ -6,7 +6,6 @@ import util from 'util';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
 import {pipeline} from 'stream';
-import { BvmError } from '@teambit/bvm.error';
 
 const streamPipeline = util.promisify(pipeline);
 
@@ -26,7 +25,7 @@ export async function untar(filePath: string, folder?: string, opts?: UntarOptio
     untarStartTime = Date.now();
   }
   const exists = fs.pathExists(filePath);
-  if (!exists) throw new BvmError(`file ${filePath} does not exist`);
+  if (!exists) throw new Error(`file ${filePath} does not exist`);
   if (folder) fs.ensureDir(folder);
   const finalFolder = folder || path.dirname(filePath);
   // const stream = fs.createReadStream(filePath).pipe(tar.extract(finalFolder));
