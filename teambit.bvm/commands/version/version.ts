@@ -1,4 +1,4 @@
-import type { CommandModule, Argv } from "yargs";
+import { CommandModule, Argv, boolean } from "yargs";
 import chalk from "chalk";
 import util from "util";
 import { Config } from "@teambit/bvm.config";
@@ -17,6 +17,15 @@ export type VersionsResult = {
   latestRemoteVersion?: string;
   latestInstalledVersion?: string;
 };
+
+export type ShowVersionsOptions = {
+  includeRemote?: boolean,
+  overrideLocalVersion?: string
+}
+
+const defaultShowVersionOptions = {
+  includeRemote: true
+}
 
 export class VersionCmd implements CommandModule {
   aliases = ["version"];
@@ -43,36 +52,41 @@ export class VersionCmd implements CommandModule {
     return yargs;
   }
   async handler(args) {
-    const config = Config.load();
-
-    const currentBvmVersion = getBvmLocalVersion();
-    const latestBvmRemoteVersion = args.includeRemote
-      ? await getBvmRemoteVersion()
-      : undefined;
-
-    const currentVersion = config.getDefaultLinkVersion();
-    const latestInstalledVersion = (await listLocal()).latest().version;
-    const latestRemoteVersion = args.includeRemote
-      ? (await listRemote()).latest().version
-      : undefined;
-
-    const output = formatOutput({
-      currentBvmVersion,
-      latestBvmRemoteVersion,
-      currentVersion,
-      latestInstalledVersion,
-      latestRemoteVersion,
-    });
+    const output = await showAllVersions(args);
     return console.log(output);
   }
 }
 
 export const command = new VersionCmd();
 
+export async function showAllVersions(options: ShowVersionsOptions = defaultShowVersionOptions): Promise<string> {
+  const actualOpts = Object.assign({}, defaultShowVersionOptions, options);
+  const config = Config.load();
+  const currentBvmVersion = actualOpts.overrideLocalVersion ? actualOpts.overrideLocalVersion : await getBvmLocalVersion();
+  const latestBvmRemoteVersion = actualOpts.includeRemote
+    ? await getBvmRemoteVersion()
+    : undefined;
+
+  const currentVersion = config.getDefaultLinkVersion();
+  const latestInstalledVersion = (await listLocal()).latest().version;
+  const latestRemoteVersion = actualOpts.includeRemote
+    ? (await listRemote()).latest().version
+    : undefined;
+
+  const output = formatOutput({
+    currentBvmVersion,
+    latestBvmRemoteVersion,
+    currentVersion,
+    latestInstalledVersion,
+    latestRemoteVersion,
+  });
+  return output;
+}
+
 function formatOutput(versions: VersionsResult): string {
   const currentBvmVersionOutput = versions.currentBvmVersion
     ? `current (used) bvm version: ${chalk.green(versions.currentBvmVersion)}`
-    : undefined;
+    : `current (used) bvm version: ${chalk.red('unknown')}`;
   const latestRemoteBvmOutput = versions.latestBvmRemoteVersion
     ? `latest available bvm version: ${chalk.green(
         versions.latestBvmRemoteVersion
@@ -157,15 +171,11 @@ function getNewerBitAvailableOutput(
   }
 }
 
-function getBvmLocalVersion(): string | undefined {
-  // const pjson = require("../package.json");
-  // This is a hack to get the bvm local version
-  // consider replacing it by something like like 
-  // await execP("bvm -v");
-  // the reason it's not like this, is because we consider to change the bvm -v 
-  // to show the full output (same as bvm version) which will break it
-  const pjson = require(path.join(__dirname, "../../bvm/package.json"));
-  return pjson?.version;
+async function getBvmLocalVersion(): Promise<string | undefined> {
+  const {stdout } = await execP("bvm local-version");
+  const stdoutString = stdout.toString();
+  const result = semver.valid(stdoutString) ? stdoutString : undefined;
+  return result;
 }
 
 async function getBvmRemoteVersion(): Promise<string | undefined> {

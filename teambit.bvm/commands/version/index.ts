@@ -1,1 +1,1 @@
-export {VersionCmd, command as versionCmd} from './version';
+export {VersionCmd, command as versionCmd, showAllVersions} from './version';

@@ -8,7 +8,8 @@ import {listCmd} from '@teambit/bvm.commands.list';
 import {upgradeCmd} from '@teambit/bvm.commands.upgrade';
 import {configCmd} from '@teambit/bvm.commands.config';
 import {linkCmd} from '@teambit/bvm.commands.link';
-import {versionCmd} from '@teambit/bvm.commands.version';
+import {versionCmd, showAllVersions} from '@teambit/bvm.commands.version';
+import {localVersionCmd} from './local-version';
 
 const argv = yargs(hideBin(process.argv))
   .scriptName('bvm')
@@ -23,7 +24,11 @@ const argv = yargs(hideBin(process.argv))
     description: 'show verbose output'
   })
   .alias('v', 'version')
+  // TODO: this is a new feature merged recently- https://github.com/yargs/yargs/commit/1a1e2d554dca3566bc174584394419be0120d207
+  // TODO: once it's officially released, uncomment, and test it with bvm -v | --version (should be part of v17.0.0 of yargs)
+  // .showVersion(showVersion)
   .command(versionCmd)
+  .command(localVersionCmd)
   .command(upgradeCmd)
   .command(installCmd)
   .command(listCmd)
@@ -52,3 +57,10 @@ function handleError(msg, err, yargs){
     console.log(err?.stack);
   }
 }
+
+async function showVersion(currentVersion: string ){
+  const allVersions = await showAllVersions({overrideLocalVersion: currentVersion, includeRemote: true});
+  console.log(allVersions);
+}
+
+
