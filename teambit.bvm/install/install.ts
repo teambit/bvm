@@ -1,7 +1,7 @@
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
-import {untar} from '@teambit/toolbox.fs.untar';
+import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
 import { timeFormat } from '@teambit/time.time-format';
 import { Config } from '@teambit/bvm.config';
@@ -58,10 +58,11 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     destination: fetchDestination
   }
   const downloadResults = await fetch(resolvedVersion, fetchOpts);
-  // version already exists, return it's location
+  // TODO: check if version already exists, return it's location
+
   if (downloadResults.downloadedFile) {
     const tarFile = downloadResults.downloadedFile;
-    await untar(tarFile);
+    await extractWithLoader(downloadResults.downloadedFile, downloadResults.resolvedVersion);
     await removeWithLoader(tarFile);
   }
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
@@ -74,6 +75,18 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     versionPath: versionDir
   }
+}
+
+async function extractWithLoader(filePath: string, version) {
+  const extractLoaderText = `extracting version ${version}`;
+  const extractStartTime = Date.now();
+  const progressBarOpts = {
+    format: `extracting version ${version} [{bar}] {percentage}% | ETA: {etah} | Speed: {speed}`,
+  }
+  await extract(filePath, undefined, {}, progressBarOpts);
+  const extractEndTime = Date.now();
+  const extractTimeDiff = timeFormat(extractEndTime - extractStartTime);
+  loader.succeed(`${extractLoaderText} in ${extractTimeDiff}`);
 }
 
 async function removeWithLoader(filePath: string) {
