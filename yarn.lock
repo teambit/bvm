@@ -39,6 +39,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/date-fns@npm:2.5.3":
+  version: 2.5.3
+  resolution: "@types/date-fns@npm:2.5.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fdate-fns%2F-%2Fdate-fns-2.5.3.tgz"
+  checksum: 4ed9d060fc6ae163b44740927f41a859f2c70650142943d4a768c009b6ceb0dfc056020430f0fbc5c150bf8a036dde129cb23327aa72089320355fca5dac5f9b
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:9.0.7":
   version: 9.0.7
   resolution: "@types/fs-extra@npm:9.0.7::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ffs-extra%2F-%2Ffs-extra-9.0.7.tgz"
@@ -126,6 +133,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/minipass@npm:*":
+  version: 2.2.0
+  resolution: "@types/minipass@npm:2.2.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fminipass%2F-%2Fminipass-2.2.0.tgz"
+  dependencies:
+    "@types/node": "*"
+  checksum: 378ca1b93f5761eddbdca13f1870b439a2ecd0e05284f2138b9cf6880bb857d5783f3838439440aca78fcd74460c28a868b35e2ec8109695a22e95c384344f02
+  languageName: node
+  linkType: hard
+
 "@types/nconf@npm:0.10.0":
   version: 0.10.0
   resolution: "@types/nconf@npm:0.10.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fnconf%2F-%2Fnconf-0.10.0.tgz"
@@ -159,6 +175,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pretty-bytes@npm:5.1.0":
+  version: 5.1.0
+  resolution: "@types/pretty-bytes@npm:5.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fpretty-bytes%2F-%2Fpretty-bytes-5.1.0.tgz"
+  checksum: 4d4dc3fcd7504076697a2efe3969fce12d027f0077807a64f28899d9877bd317aabb392ec282eb57f3a33c29481343d5e15f98bb25a6cba34b0c1717e1b8b07b
+  languageName: node
+  linkType: hard
+
 "@types/semver-sort@npm:0.0.1":
   version: 0.0.1
   resolution: "@types/semver-sort@npm:0.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Fsemver-sort%2F-%2Fsemver-sort-0.0.1.tgz"
@@ -189,6 +212,16 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 6faf159b1845e64f425a8efb3a18ccb915a2ca42296e076b09116d1891ab4672d78a212fb25f66a8720c2aed82f8cac884efe54521a88937659ff3347b91f143
+  languageName: node
+  linkType: hard
+
+"@types/tar@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@types/tar@npm:4.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40types%2Ftar%2F-%2Ftar-4.0.4.tgz"
+  dependencies:
+    "@types/minipass": "*"
+    "@types/node": "*"
+  checksum: 69a55c1b7c4240201bcc95c705fdbea8d86abf175cb33b1edc04e294b9e635960cbc0d81240c7db3c778f872a5b92c8880d13d2c6f448371fc367b219e132e81
   languageName: node
   linkType: hard
 
@@ -461,6 +494,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:2.19.0":
+  version: 2.19.0
+  resolution: "date-fns@npm:2.19.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fdate-fns%2F-%2Fdate-fns-2.19.0.tgz"
+  checksum: 99ec34199c3a61cdb7fd27dcd68dd3c0c949ddfc34aa1daba9a6b2e0b5381bf42d8955d28ec2770f72eee429f5e7ab10fadba7b69108379d2545f003461d04f7
+  languageName: node
+  linkType: hard
+
 "date-fns@npm:^1.30.1":
   version: 1.30.1
   resolution: "date-fns@npm:1.30.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fdate-fns%2F-%2Fdate-fns-1.30.1.tgz"
@@ -559,6 +599,15 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^2.0.0
   checksum: e667d8df54113b527bf5830dd9db8f142618db488894b329fe07724c7020dfacf8a372b144a74e683ae44e66f56117adca9cac165950dda7d83537c46c10dc4b
+  languageName: node
+  linkType: hard
+
+"fs-minipass@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "fs-minipass@npm:2.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ffs-minipass%2F-%2Ffs-minipass-2.1.0.tgz"
+  dependencies:
+    minipass: ^3.0.0
+  checksum: e14a490658621cf1f7d8cbf9e92a9cc4dc7ce050418e4817e877e4531c438223db79f7a1774668087428d665a3de95f87014ce36c8afdc841fea42bcb782abcb
   languageName: node
   linkType: hard
 
@@ -823,6 +872,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minipass@npm:^3.0.0":
+  version: 3.1.3
+  resolution: "minipass@npm:3.1.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminipass%2F-%2Fminipass-3.1.3.tgz"
+  dependencies:
+    yallist: ^4.0.0
+  checksum: d12b95a845f15950bce7a77730c89400cf0c4f55e7066338da1d201ac148ece4ea8efa79e45a2c07c868c61bcaf9e996c4c3d6bf6b85c038ffa454521fc6ecd5
+  languageName: node
+  linkType: hard
+
+"minizlib@npm:^2.1.1":
+  version: 2.1.2
+  resolution: "minizlib@npm:2.1.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fminizlib%2F-%2Fminizlib-2.1.2.tgz"
+  dependencies:
+    minipass: ^3.0.0
+    yallist: ^4.0.0
+  checksum: 5a45b57b3467e5a743d87a96d7be57598a6f72eb3b7eeac237074c566bd04278766ae03bb523c32f34581c565a19e74e54ec90c6ce0630a540787c755b4c4b4e
+  languageName: node
+  linkType: hard
+
 "mkdirp-classic@npm:^0.5.2":
   version: 0.5.3
   resolution: "mkdirp-classic@npm:0.5.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp-classic%2F-%2Fmkdirp-classic-0.5.3.tgz"
@@ -935,6 +1003,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pretty-bytes@npm:5.6.0":
+  version: 5.6.0
+  resolution: "pretty-bytes@npm:5.6.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpretty-bytes%2F-%2Fpretty-bytes-5.6.0.tgz"
+  checksum: 2a2db3daaee5c7271dbc68cc875118f4e2b6697e9e4e73b4ea5d5639f50cff2c1f1f7db4775119974eff86fdbd1fac2a5d9f16bc41d90626821a9f6a0e6e26cf
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fpretty-format%2F-%2Fpretty-format-26.6.2.tgz"
@@ -950,6 +1025,12 @@ __metadata:
 "progress-bar-file-downloader-664139@workspace:teambit.toolbox/network/progress-bar-file-downloader":
   version: 0.0.0-use.local
   resolution: "progress-bar-file-downloader-664139@workspace:teambit.toolbox/network/progress-bar-file-downloader"
+  languageName: unknown
+  linkType: soft
+
+"progress-bar-file-extractor-394d16@workspace:teambit.toolbox/fs/progress-bar-file-extractor":
+  version: 0.0.0-use.local
+  resolution: "progress-bar-file-extractor-394d16@workspace:teambit.toolbox/fs/progress-bar-file-extractor"
   languageName: unknown
   linkType: soft
 
@@ -1034,6 +1115,7 @@ __metadata:
   dependencies:
     "@teambit/time.time-format": 0.0.298
     "@types/chalk": 0.4.31
+    "@types/date-fns": 2.5.3
     "@types/fs-extra": 9.0.7
     "@types/jest": 26.0.20
     "@types/lodash.difference": 4.5.6
@@ -1044,13 +1126,16 @@ __metadata:
     "@types/node": 14.14.31
     "@types/node-fetch": 2.5.8
     "@types/ora": 3.1.0
+    "@types/pretty-bytes": 5.1.0
     "@types/semver": 7.3.4
     "@types/semver-sort": 0.0.1
+    "@types/tar": 4.0.4
     "@types/tar-fs": 2.0.0
     "@types/yargs": 16.0.0
     bin-links: 2.2.1
     chalk: 4.1.0
     cli-progress: 3.9.0
+    date-fns: 2.19.0
     fs-extra: 9.1.0
     lodash.difference: 4.5.0
     lodash.intersection: 4.4.0
@@ -1061,8 +1146,10 @@ __metadata:
     node-fetch: 2.6.1
     node-fetch-progress: 1.0.2
     ora: 5.3.0
+    pretty-bytes: 5.6.0
     semver: 7.3.4
     semver-sort: 0.0.4
+    tar: 6.1.0
     tar-fs: 2.1.1
     user-home: 2.0.0
     yargs: 16.2.0
@@ -1193,6 +1280,20 @@ __metadata:
     inherits: ^2.0.3
     readable-stream: ^3.1.1
   checksum: 7eec0a7fc8d0337729c1c2356d567a7527141d6ba0dd4804db979e17fc6389163e70fd4abdb855fc5ab54b944aeff7988e35e95ab6cee34a4156ca2d42980576
+  languageName: node
+  linkType: hard
+
+"tar@npm:6.1.0":
+  version: 6.1.0
+  resolution: "tar@npm:6.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Ftar%2F-%2Ftar-6.1.0.tgz"
+  dependencies:
+    chownr: ^2.0.0
+    fs-minipass: ^2.0.0
+    minipass: ^3.0.0
+    minizlib: ^2.1.1
+    mkdirp: ^1.0.3
+    yallist: ^4.0.0
+  checksum: d1d988eceb1ad2ecfaaf6fc5ecfe0c46fa005d04fe4c283355ccc52d3ffb4b6bf459a62f9ac7e36fd35251ab020399bdf527ab48b968120e06b4f61906a87d62
   languageName: node
   linkType: hard
 
