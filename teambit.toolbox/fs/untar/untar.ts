@@ -24,7 +24,7 @@ export async function untar(filePath: string, folder?: string, opts?: UntarOptio
     loader.start(untarLoaderText);
     untarStartTime = Date.now();
   }
-  const exists = fs.pathExists(filePath);
+  const exists = await fs.pathExists(filePath);
   if (!exists) throw new Error(`file ${filePath} does not exist`);
   if (folder) fs.ensureDir(folder);
   const finalFolder = folder || path.dirname(filePath);
