@@ -67,6 +67,12 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch"
     },
+    "fs/progress-bar-file-extractor": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.toolbox/fs/progress-bar-file-extractor"
+    },
     "fs/untar": {
         "scope": "teambit.toolbox",
         "version": "0.0.5",
@@ -115,5 +121,5 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
-    "version": "1.0.36"
+    "version": "1.0.39"
 }
