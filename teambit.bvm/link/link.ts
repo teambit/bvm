@@ -16,7 +16,13 @@ const config = Config.load();
 export type LinkResult = {
   linkName: string,
   version: string,
-  previousLinkVersion?: string
+  previousLinkVersion?: string,
+  generatedLink: GeneratedLink
+}
+
+export type GeneratedLink = {
+  source: string,
+  target: string
 }
 
 export async function linkAll(): Promise<LinkResult[]>{
@@ -51,8 +57,11 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
     top: true,
     force: true,
   }
-  // const generatedLinks = binLinks.getPaths(opts);
-  // console.log('generated links', generatedLinks)
+  const rawGeneratedLinks = binLinks.getPaths(opts);
+  const generatedLink = {
+    source: versionDir,
+    target: rawGeneratedLinks[0]
+  }
   await binLinks(opts);
 
   let previousLinkVersion;
@@ -68,7 +77,8 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
   return {
     linkName, 
     previousLinkVersion,
-    version
+    version,
+    generatedLink
   }
 }
 

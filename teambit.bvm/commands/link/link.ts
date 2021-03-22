@@ -1,6 +1,6 @@
 import type {CommandModule, Argv} from 'yargs';
 import chalk from 'chalk';
-import {linkAll, linkOne} from '@teambit/bvm.link';
+import {linkAll, linkOne, LinkResult} from '@teambit/bvm.link';
 
 export class LinkCmd implements CommandModule {
   aliases = ['link'];
@@ -29,12 +29,27 @@ export class LinkCmd implements CommandModule {
     } else {
       results = [await linkOne(args.name, args.bitVersion)]
     }
-    results.map(result => {
-      console.log(`name ${chalk.green(result.linkName)} points to version ${chalk.green(result.version)}`);
-    })
-    console.log(`successfully linked binaries`);
+    printOutput(results, args.verbose);
     return;
   };
+}
+
+function formatOutput(linkResults: LinkResult[], verbose = false): string {
+  const links = linkResults.map(result => {
+    const linkTarget = verbose ? chalk.cyan(`(${result.generatedLink.target})`) : '';
+    const linkSource = verbose ? chalk.cyan(`(${result.generatedLink.source})`) : '';
+
+    return(`name ${chalk.green(result.linkName)}${linkTarget} points to version ${chalk.green(result.version)}${linkSource}`);
+  });
+
+  const summery = `successfully linked binaries`;
+  return [links, summery].filter(msg => msg).join('\n');
+}
+
+function printOutput(linkResults: LinkResult[], verbose = false): string {
+  const output = formatOutput(linkResults, verbose);
+  console.log(output);
+  return output;
 }
 
 export const command =  new LinkCmd();
