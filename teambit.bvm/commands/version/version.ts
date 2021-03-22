@@ -173,7 +173,7 @@ function getNewerBitAvailableOutput(
 
 async function getBvmLocalVersion(): Promise<string | undefined> {
   const {stdout } = await execP("bvm local-version");
-  const stdoutString = stdout.toString();
+  const stdoutString = stdout.toString().trim();
   const result = semver.valid(stdoutString) ? stdoutString : undefined;
   return result;
 }
