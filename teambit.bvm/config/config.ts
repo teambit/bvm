@@ -184,7 +184,8 @@ export class Config {
 
 function checkIfBitLegacyExist(): boolean {
   try {
-    const output = execSync('bit -v').toString();
+    // Ignore errors to prevent printing the error to the console. in case of error we just treat it as it doesn't exists
+    const output = execSync('bit -v', {stdio: ['pipe', 'pipe', 'ignore']}).toString();
     if (output && semver.valid(output.trim()) && output.startsWith('14')){
       return true;
     }
