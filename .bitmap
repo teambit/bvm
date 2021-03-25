@@ -3,7 +3,7 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.0.19",
+        "version": "0.0.20",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
@@ -15,13 +15,13 @@
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
@@ -39,7 +39,7 @@
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
@@ -81,13 +81,13 @@
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
@@ -121,5 +121,5 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
-    "version": "1.0.42"
+    "version": "1.0.43"
 }
