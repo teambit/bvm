@@ -27,7 +27,7 @@ export class LinkCmd implements CommandModule {
     if (!args.name){
       results = await linkAll();
     } else {
-      results = [await linkOne(args.name, args.bitVersion)]
+      results = [await linkOne(args.name, args.bitVersion, true)]
     }
     printOutput(results, args.verbose);
     return;

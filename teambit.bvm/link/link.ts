@@ -39,11 +39,16 @@ export async function linkAll(): Promise<LinkResult[]>{
   return Promise.all(promises);
 }
 
-export async function linkOne(linkName: string, version: string, addToConfig = false): Promise<LinkResult> {
+export async function linkOne(linkName: string, version: string | undefined, addToConfig = false): Promise<LinkResult> {
   const source = getLinkSource();
-  const {versionDir, exists} = config.getSpecificVersionDir(version, true);
+  let concreteVersion = version;
+  if (!concreteVersion || concreteVersion === 'latest'){
+    const localLatest = (await listLocal()).latest();
+    concreteVersion = localLatest.version;
+  }
+  const {versionDir, exists} = config.getSpecificVersionDir(concreteVersion, true);
   if (!exists){
-    throw new BvmError(`version ${version} is not installed`);
+    throw new BvmError(`version ${concreteVersion} is not installed`);
   }
   const pkg = {
     bin: {
@@ -66,7 +71,7 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
 
   let previousLinkVersion;
   if (addToConfig){
-    previousLinkVersion = config.setLink(linkName, version);
+    previousLinkVersion = config.setLink(linkName, concreteVersion);
   }
   let binDir = path.join(os.homedir(), 'bin');
   if (IS_WINDOWS){
@@ -77,7 +82,7 @@ export async function linkOne(linkName: string, version: string, addToConfig = f
   return {
     linkName, 
     previousLinkVersion,
-    version,
+    version: concreteVersion,
     generatedLink
   }
 }
