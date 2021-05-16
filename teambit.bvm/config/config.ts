@@ -17,6 +17,15 @@ export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
+
+export const CFG_PROXY = 'proxy';
+export const CFG_HTTPS_PROXY = 'https_proxy';
+export const CFG_PROXY_CA = 'proxy.ca';
+export const CFG_PROXY_STRICT_SSL = 'proxy.strict_ssl';
+export const CFG_PROXY_CERT = 'proxy.cert';
+export const CFG_PROXY_KEY = 'proxy.key';
+export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
+
 const DEFAULT_LINK = 'bit';
 const DEFAULT_ALTERNATIVE_LINK = 'bbit';
 
@@ -180,6 +189,25 @@ export class Config {
     const defaultLinkName = this.getDefaultLinkName();
     return allLinks[defaultLinkName];
   }
+
+  proxyConfig() {
+    const httpProxy = this.get(CFG_PROXY);
+    const httpsProxy = this.get(CFG_HTTPS_PROXY) ?? this.get(CFG_PROXY);
+
+    // If check is true, return the proxy config only case there is actual proxy server defined
+    if (!httpProxy && !httpsProxy) return {};
+  
+    return {
+      ca: this.get(CFG_PROXY_CA),
+      cert: this.get(CFG_PROXY_CERT),
+      httpProxy,
+      httpsProxy,
+      key: this.get(CFG_PROXY_KEY),
+      noProxy: this.get(CFG_PROXY_NO_PROXY),
+      strictSSL: this.get(CFG_PROXY_STRICT_SSL),
+    };
+  }
+
 }
 
 function checkIfBitLegacyExist(): boolean {
