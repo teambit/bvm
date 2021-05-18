@@ -22,8 +22,8 @@ export class GcpList {
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
 
-  static create(releaseType = 'dev', osType = 'Darwin') {
-    const gcpStorage = GcpStorage.create(bucketName);
+  static create(releaseType = 'dev', osType = 'Darwin', proxyConfig?: {}) {
+    const gcpStorage = GcpStorage.create(bucketName, proxyConfig);
     return new GcpList(gcpStorage, osType, releaseType);
   }
 }
