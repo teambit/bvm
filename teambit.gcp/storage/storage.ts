@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
-import { getProxyAgent } from '@teambit/network.proxy-agent';
+import { getAgent } from '@teambit/network.agent';
+
 
 export class GcpStorage {
   constructor(
@@ -10,7 +11,7 @@ export class GcpStorage {
 
   async getFiles(opts: { prefix: string }) {
     const res = await fetch(`${this.storageAPI}/storage/v1/b/${this.bucketName}/o?prefix=${opts.prefix}`, {
-      agent: getProxyAgent(this.storageAPI, this.proxyConfig),
+      agent: getAgent(this.storageAPI, this.proxyConfig),
     });
     const json = await res.json();
     return json.items;

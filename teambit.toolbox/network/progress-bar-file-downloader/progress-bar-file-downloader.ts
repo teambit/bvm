@@ -5,7 +5,8 @@ import Progress from 'node-fetch-progress';
 import cliProgress from 'cli-progress';
 import util from 'util';
 import { pipeline } from 'stream';
-import { getProxyAgent } from '@teambit/network.proxy-agent';
+import { getAgent } from '@teambit/network.agent';
+
 
 const streamPipeline = util.promisify(pipeline);
 
@@ -49,7 +50,7 @@ export async function download(url: string, destination: string, opts: DownloadO
   if (finalOpts.ensureDir) {
     await fs.ensureDir(dirname);
   }
-  const response = await fetch(url, {agent: getProxyAgent(url ,proxyConfig)});
+  const response = await fetch(url, {agent: getAgent(url ,proxyConfig)});
   const progress = new Progress(response, { throttle: 100 });
 
   bar.start(1, 0, { speed: 'N/A' });
