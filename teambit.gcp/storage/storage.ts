@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import { getAgent } from '@teambit/network.agent';
 
+
 export class GcpStorage {
   constructor(
     private bucketName: string,

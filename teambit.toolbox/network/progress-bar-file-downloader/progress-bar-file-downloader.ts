@@ -7,6 +7,7 @@ import util from 'util';
 import { pipeline } from 'stream';
 import { getAgent } from '@teambit/network.agent';
 
+
 const streamPipeline = util.promisify(pipeline);
 
 export type DownloadOpts = {
