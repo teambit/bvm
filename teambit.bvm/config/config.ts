@@ -208,15 +208,29 @@ export class Config {
 
     // If check is true, return the proxy config only case there is actual proxy server defined
     if (!httpProxy && !httpsProxy) return {};
-  
+
+    const strictSslConfig = this.get(CFG_PROXY_STRICT_SSL);
+    const strictSSL =
+      strictSslConfig && typeof strictSslConfig === "string"
+        ? strictSslConfig === "true"
+        : strictSslConfig;
+
+    let noProxy = this.get(CFG_PROXY_NO_PROXY);
+    if (noProxy && typeof noProxy === "string") {
+      if (noProxy === "true") {
+        noProxy = true;
+      } else if (noProxy === "false") {
+        noProxy = false;
+      }
+    }
     return {
       ca: this.get(CFG_PROXY_CA),
       cert: this.get(CFG_PROXY_CERT),
       httpProxy,
       httpsProxy,
       key: this.get(CFG_PROXY_KEY),
-      noProxy: this.get(CFG_PROXY_NO_PROXY),
-      strictSSL: this.get(CFG_PROXY_STRICT_SSL),
+      noProxy,
+      strictSSL,
     };
   }
 
