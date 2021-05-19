@@ -10,9 +10,13 @@ export class GcpStorage {
   ) {}
 
   async getFiles(opts: { prefix: string }) {
-    const res = await fetch(`${this.storageAPI}/storage/v1/b/${this.bucketName}/o?prefix=${opts.prefix}`, {
-      agent: getAgent(this.storageAPI, this.proxyConfig),
-    });
+    const agent = getAgent(this.storageAPI, this.proxyConfig);
+    const res = await fetch(
+      `${this.storageAPI}/storage/v1/b/${this.bucketName}/o?prefix=${opts.prefix}`,
+      {
+        agent,
+      }
+    );
     const json = await res.json();
     return json.items;
   }

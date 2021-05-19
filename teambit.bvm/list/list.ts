@@ -9,7 +9,7 @@ import { LocalVersion } from './version';
 const config = Config.load();
 
 export async function listRemote(): Promise<RemoteVersionList> {
-  const proxyConfig = config.proxyConfig()
+  const proxyConfig = config.proxyConfig();
   const gcpList = GcpList.create('dev', os.type(), proxyConfig);
   return gcpList.list();
 }

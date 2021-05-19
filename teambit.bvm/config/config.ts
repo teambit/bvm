@@ -10,8 +10,7 @@ import chalk from 'chalk';
 
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
-export const CONFIG_FILENAME = 'config.json';
-export const KNOWN_KEYS = ['BVM_DIR', 'DEFAULT_LINK'];
+export const CONFIG_FILENAME = "config.json";
 export const ALIASES_KEY = 'aliases';
 export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
@@ -25,6 +24,19 @@ export const CFG_PROXY_STRICT_SSL = 'proxy.strict_ssl';
 export const CFG_PROXY_CERT = 'proxy.cert';
 export const CFG_PROXY_KEY = 'proxy.key';
 export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
+
+export const KNOWN_KEYS = [
+  "BVM_DIR",
+  "DEFAULT_LINK",
+  CFG_PROXY,
+  CFG_HTTPS_PROXY,
+  CFG_PROXY_CA,
+  CFG_PROXY_STRICT_SSL,
+  CFG_PROXY_CERT,
+  CFG_PROXY_KEY,
+  CFG_PROXY_NO_PROXY,
+];
+
 
 const DEFAULT_LINK = 'bit';
 const DEFAULT_ALTERNATIVE_LINK = 'bbit';
