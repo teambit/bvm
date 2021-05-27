@@ -52,7 +52,7 @@
         "@types/semver-sort": "0.0.1",
         "@types/tar": "4.0.4",
         "@types/tar-fs": "2.0.0",
-        "@types/yargs": "16.0.0",
+        "@types/yargs": "17.0.0",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",
         "cli-progress": "3.9.0",
@@ -73,7 +73,7 @@
         "tar": "6.1.0",
         "tar-fs": "2.1.1",
         "user-home": "2.0.0",
-        "yargs": "16.2.0"
+        "yargs": "17.0.1"
       },
       "peerDependencies": {}
     },
