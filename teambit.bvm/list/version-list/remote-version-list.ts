@@ -1,14 +1,56 @@
-import {RemoteVersion } from '../version';
-import {VersionList} from './version-list';
+import Table from 'tty-table';
+import { RemoteVersion } from '../version';
+import { VersionList } from './version-list';
 
 export class RemoteVersionList extends VersionList {
-  constructor(public entries: RemoteVersion[]){
+  constructor(public entries: RemoteVersion[]) {
     super(entries);
-  };
+  }
 
-  stableVersions(){
+  toTable() {
+    const options = {
+      borderStyle: 'solid',
+      paddingBottom: 0,
+      headerAlign: 'center',
+      align: 'left',
+      headerColor: 'cyan',
+    };
+
+    const versions = VersionList.sortList<RemoteVersion>(this.entries);
+    const headers = [
+      {
+        value: 'version',
+        item: 'version',
+        width: 35,
+      },
+      {
+        value: 'url',
+        item: 'url',
+      },
+      {
+        value: 'md5Hash',
+        item: 'md5Hash',
+        width: 35,
+      },
+      {
+        value: 'stable',
+        item: 'stable',
+        width: 8,
+        formatter: function (value) {
+          if (value == true) return this.style(value, 'green', 'underline');
+          return 'false'
+        },
+      },
+    ];
+
+    // @ts-ignore
+    const table = new Table(headers, versions, options);
+    return table.render();
+  }
+
+  stableVersions() {
     const sorted = VersionList.sortList<RemoteVersion>(this.entries);
-    const stableVersions = sorted.filter((version) => version.stable)
+    const stableVersions = sorted.filter((version) => version.stable);
     return new RemoteVersionList(stableVersions);
   }
 
