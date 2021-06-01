@@ -6,6 +6,12 @@ export class RemoteVersionList extends VersionList {
     super(entries);
   };
 
+  stableVersions(){
+    const sorted = VersionList.sortList<RemoteVersion>(this.entries);
+    const stableVersions = sorted.filter((version) => version.stable)
+    return new RemoteVersionList(stableVersions);
+  }
+
   sortBySemver(order: 'asc' | 'desc' = 'desc'): RemoteVersionList {
     const sorted = VersionList.sortList<RemoteVersion>(this.entries, order);
     return new RemoteVersionList(sorted);

@@ -11,7 +11,7 @@ export class GcpList {
   async list(): Promise<RemoteVersionList> {
     const files = await this.rawFiles();
     const remoteVersions = files.map((file) => {
-      const gcpVersion = new GcpVersion(file.name, file.bucket, file.md5Hash);
+      const gcpVersion = new GcpVersion(file.name, file.bucket, file.md5Hash, file.metadata);
       return gcpVersion.toRemoteVersion();
     });
     return new RemoteVersionList(remoteVersions);

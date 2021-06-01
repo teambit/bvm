@@ -15,6 +15,12 @@ export class ListCmd implements CommandModule {
         describe: 'show versions exist in the remote server',
         default: false,
         type: 'boolean'
+      },
+      'release-type': {
+        alias: ['t'],
+        describe: 'show only the stable versions',
+        default: true,
+        type: 'boolean'
       }
     })
     .example('$0 list', 'show all installed versions')
@@ -23,7 +29,7 @@ export class ListCmd implements CommandModule {
   }
   async handler(args) {
     if (args.remote){
-      const list = await listRemote();
+      const list = await listRemote({stable: args['release-type']});
       console.log(list);
       return;
     }
