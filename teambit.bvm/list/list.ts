@@ -6,8 +6,12 @@ import fs from 'fs-extra';
 import { LocalVersionList, RemoteVersionList } from './version-list';
 import { LocalVersion } from './version';
 
+export enum ReleaseType {
+  STABLE = 'stable',
+}
+
 export type ListOptions = {
-  stable?: boolean;
+  'release-type'?: ReleaseType;
 };
 
 const config = Config.load();
@@ -16,7 +20,7 @@ export async function listRemote(options?: ListOptions): Promise<RemoteVersionLi
   const proxyConfig = config.proxyConfig();
   const gcpList = GcpList.create('dev', os.type(), proxyConfig);
   const list = await gcpList.list();
-  return options.stable ? list.stableVersions() : list;
+  return options['release-type'] === ReleaseType.STABLE ? list.stableVersions() : list;
 }
 
 export async function listLocal(): Promise<LocalVersionList> {

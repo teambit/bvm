@@ -17,8 +17,8 @@ export class ListCmd implements CommandModule {
         'release-type': {
           alias: ['t'],
           describe: 'show only the stable versions',
-          default: true,
-          type: 'boolean',
+          default: 'stable',
+          type: 'string',
         },
       })
       .example('$0 list', 'show all installed versions')
@@ -27,7 +27,7 @@ export class ListCmd implements CommandModule {
   }
   async handler(args) {
     if (args.remote) {
-      const list = await listRemote({ stable: args['release-type'] });
+      const list = await listRemote({ 'release-type': args['release-type'] });
       console.log(list.toTable());
       return;
     }
