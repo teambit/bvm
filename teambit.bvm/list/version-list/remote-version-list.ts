@@ -24,21 +24,12 @@ export class RemoteVersionList extends VersionList {
         width: 35,
       },
       {
-        value: 'url',
-        item: 'url',
-      },
-      {
-        value: 'md5Hash',
-        item: 'md5Hash',
-        width: 35,
-      },
-      {
         value: 'stable',
         item: 'stable',
         width: 8,
         formatter: function (value) {
-          if (value == true) return this.style(value, 'green', 'underline');
-          return 'false'
+          if (value == true) return this.style(value, 'green');
+          return 'false';
         },
       },
     ];
