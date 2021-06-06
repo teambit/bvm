@@ -1,10 +1,41 @@
+import Table from 'tty-table';
 import type { CommandModule, Argv } from 'yargs';
-import { listRemote, listLocal } from '@teambit/bvm.list';
+import { listRemote, listLocal, RemoteVersionList } from '@teambit/bvm.list';
 
 export class ListCmd implements CommandModule {
   aliases = ['l', 'list'];
   describe = 'list installed bit versions';
   command = ['list'];
+  static toTable(list: RemoteVersionList) {
+    const options = {
+      borderStyle: 'solid',
+      paddingBottom: 0,
+      headerAlign: 'center',
+      align: 'left',
+      headerColor: 'cyan',
+    };
+    const headers = [
+      {
+        value: 'version',
+        item: 'version',
+        width: 10,
+      },
+      {
+        value: 'stable',
+        item: 'stable',
+        width: 8,
+        formatter: function (value) {
+          if (value == true) return this.style(value, 'green');
+          return 'false';
+        },
+      },
+    ];
+
+    // @ts-ignore
+    const table = new Table(headers, list.entries, options);
+    return table.render();
+  }
+
   builder(yargs: Argv) {
     yargs
       .option({
@@ -19,6 +50,7 @@ export class ListCmd implements CommandModule {
           describe: 'show only the stable versions',
           default: 'stable',
           type: 'string',
+          choices: ['stable', 'nightly'],
         },
       })
       .example('$0 list', 'show all installed versions')
@@ -28,7 +60,7 @@ export class ListCmd implements CommandModule {
   async handler(args) {
     if (args.remote) {
       const list = await listRemote({ 'release-type': args['release-type'] });
-      console.log(list.toTable());
+      console.log(ListCmd.toTable(list));
       return;
     }
     const list = await listLocal();
