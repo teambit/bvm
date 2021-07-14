@@ -3,121 +3,121 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.0.24",
+        "version": "0.0.25",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
     "commands/config": {
         "scope": "teambit.bvm",
-        "version": "0.0.20",
+        "version": "0.0.21",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/config"
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
     "commands/list": {
         "scope": "teambit.bvm",
-        "version": "0.0.21",
+        "version": "0.0.22",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list"
     },
     "commands/remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.21",
+        "version": "0.0.22",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/remove"
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/version": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/version"
     },
     "config": {
         "scope": "teambit.bvm",
-        "version": "0.0.20",
+        "version": "0.0.21",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config"
     },
     "error": {
         "scope": "teambit.bvm",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/error"
     },
     "fetch": {
         "scope": "teambit.bvm",
-        "version": "0.0.22",
+        "version": "0.0.23",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch"
     },
     "fs/progress-bar-file-extractor": {
         "scope": "teambit.toolbox",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/progress-bar-file-extractor"
     },
     "fs/untar": {
         "scope": "teambit.toolbox",
-        "version": "0.0.6",
+        "version": "0.0.7",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/untar"
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
     "list": {
         "scope": "teambit.bvm",
-        "version": "0.0.21",
+        "version": "0.0.22",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/list"
     },
     "network/file-downloader": {
         "scope": "teambit.toolbox",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/file-downloader"
     },
     "network/progress-bar-file-downloader": {
         "scope": "teambit.toolbox",
-        "version": "0.0.18",
+        "version": "0.0.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },
     "remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.21",
+        "version": "0.0.22",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/remove"
     },
     "storage": {
         "scope": "teambit.gcp",
-        "version": "0.0.17",
+        "version": "0.0.18",
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
