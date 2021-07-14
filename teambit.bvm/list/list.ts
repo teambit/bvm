@@ -1,17 +1,26 @@
 import os from 'os';
 import { GcpList } from './gcp';
-import { Config,  } from '@teambit/bvm.config';
+import { Config } from '@teambit/bvm.config';
 import semver from 'semver';
 import fs from 'fs-extra';
 import { LocalVersionList, RemoteVersionList } from './version-list';
 import { LocalVersion } from './version';
 
+export enum ReleaseType {
+  STABLE = 'stable',
+}
+
+export type ListOptions = {
+  'release-type'?: ReleaseType;
+};
+
 const config = Config.load();
 
-export async function listRemote(): Promise<RemoteVersionList> {
+export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
   const proxyConfig = config.proxyConfig();
   const gcpList = GcpList.create('dev', os.type(), proxyConfig);
-  return gcpList.list();
+  const list = await gcpList.list();
+  return options['release-type'] === ReleaseType.STABLE ? list.stableVersions() : list;
 }
 
 export async function listLocal(): Promise<LocalVersionList> {
