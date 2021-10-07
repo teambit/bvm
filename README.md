@@ -171,4 +171,3 @@ If you're running VSCODE - restart it (learn why [here](https://github.com/micro
 ## License 💮
 
 Apache License, Version 2.0
-![Analytics](https://ga-beacon.appspot.com/UA-96032224-1/bit/readme)
