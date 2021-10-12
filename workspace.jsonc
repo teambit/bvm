@@ -104,6 +104,7 @@
         "packageJson": {
           "name": "@teambit/bvm.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -126,6 +127,7 @@
         "packageJson": {
           "name": "@teambit/toolbox.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -148,6 +150,7 @@
         "packageJson": {
           "name": "@teambit/gcp.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -169,6 +172,7 @@
         "packageJson": {
           "name": "@teambit/bvm",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
