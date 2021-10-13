@@ -27,43 +27,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teambit/network.agent@npm:0.0.90":
-  version: 0.0.90
-  resolution: "@teambit/network.agent@npm:0.0.90::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Fnetwork.agent%2F-%2Fnetwork.agent-0.0.90.tgz"
+"@teambit/toolbox.network.agent@npm:0.0.245":
+  version: 0.0.245
+  resolution: "@teambit/toolbox.network.agent@npm:0.0.245::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Ftoolbox.network.agent%2F-%2Ftoolbox.network.agent-0.0.245.tgz"
   dependencies:
-    "@teambit/network.proxy-agent": 0.0.90
+    "@teambit/toolbox.network.proxy-agent": 0.0.245
     agentkeepalive: 4.1.4
   peerDependencies:
-    "@teambit/legacy": 1.0.84
-  checksum: ba5c871e0613cba785ea19573eb4130b4bcaf842976003c95899fc64b22778f060a798497a7faf5fe55c85b54845311a243e667f1e5b024ce15dbcdd7902bbc7
+    "@teambit/legacy": 1.0.160
+  checksum: 365e803191a6011820c512c12f0e06a1eeeeaa0f541e221b16e7674ea000056672840a0e8188990322070d3662f7a17a6b3310c455f61e30a75253f314e1b804
   languageName: node
   linkType: hard
 
-"@teambit/network.proxy-agent@npm:0.0.90":
-  version: 0.0.90
-  resolution: "@teambit/network.proxy-agent@npm:0.0.90::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Fnetwork.proxy-agent%2F-%2Fnetwork.proxy-agent-0.0.90.tgz"
+"@teambit/toolbox.network.proxy-agent@npm:0.0.245":
+  version: 0.0.245
+  resolution: "@teambit/toolbox.network.proxy-agent@npm:0.0.245::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Ftoolbox.network.proxy-agent%2F-%2Ftoolbox.network.proxy-agent-0.0.245.tgz"
   dependencies:
-    "@teambit/network.agent": 0.0.90
+    "@teambit/toolbox.network.agent": 0.0.245
     http-proxy-agent: 4.0.1
     https-proxy-agent: 5.0.0
     socks-proxy-agent: 5.0.0
   peerDependencies:
-    "@teambit/legacy": 1.0.84
-  checksum: 9a16aeea7a1ac5f2f1fe845665454f4922888b283948f4b92beedd0962696aba77877f8969ed15726e82d1cf286c5654ae7f8375b93092efa42ef0476feeccf6
+    "@teambit/legacy": 1.0.160
+  checksum: 2aafd51dfa5fe28aac5133f7d388f8161b19bdcdaf54f0b710442eecc4acd90616550295304ab90691aa5827d0b269c51f3e9779634db6275c3adfb592708d0e
   languageName: node
   linkType: hard
 
-"@teambit/time.time-format@npm:0.0.298":
-  version: 0.0.298
-  resolution: "@teambit/time.time-format@npm:0.0.298::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Ftime.time-format%2F-%2Ftime.time-format-0.0.298.tgz"
+"@teambit/toolbox.time.time-format@npm:0.0.443":
+  version: 0.0.443
+  resolution: "@teambit/toolbox.time.time-format@npm:0.0.443::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40teambit%2Ftoolbox.time.time-format%2F-%2Ftoolbox.time.time-format-0.0.443.tgz"
   dependencies:
-    core-js: 3.8.3
     humanize-duration: 3.23.1
   peerDependencies:
-    "@teambit/legacy": 1.0.17
-    react: 16.13.1
-    react-dom: 16.13.1
-  checksum: 3039f18e2c5e4982408ae620d2bcdce72a2f53c66e5c32cb3cb6fdea669037f159201a298585ce9ad1aeac73b3a45a64ddfb93d81f8a4cbee49586e28333b121
+    "@teambit/legacy": 1.0.160
+  checksum: 70d5775f5408356bef4025f33350b13fbfd67b5eec1746ea9dada33cb55a7873baf7e92739381c22a5af0da69810702f1a85cd66e07675c263b67cac2200d84e
   languageName: node
   linkType: hard
 
@@ -555,13 +552,6 @@ __metadata:
   resolution: "config-dce5c2@workspace:teambit.bvm/commands/config"
   languageName: unknown
   linkType: soft
-
-"core-js@npm:3.8.3":
-  version: 3.8.3
-  resolution: "core-js@npm:3.8.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcore-js%2F-%2Fcore-js-3.8.3.tgz"
-  checksum: 6b5225d81658e7e555fd14a749f2b8e0a817a9eb1c25ef1b46b28bbb9956d0ea4b8cd34f8752161e131fc8fa02d26cf6afb9fb73a41591e40261482b4ffc6f03
-  languageName: node
-  linkType: hard
 
 "date-fns@npm:2.19.0":
   version: 2.19.0
@@ -1260,8 +1250,8 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@babel/runtime": 7.12.18
-    "@teambit/network.agent": 0.0.90
-    "@teambit/time.time-format": 0.0.298
+    "@teambit/toolbox.network.agent": 0.0.245
+    "@teambit/toolbox.time.time-format": 0.0.443
     "@types/chalk": 0.4.31
     "@types/date-fns": 2.5.3
     "@types/fs-extra": 9.0.7

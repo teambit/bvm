@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import tar from 'tar-fs';
 import util from 'util';
 import ora from 'ora';
-import { timeFormat } from '@teambit/time.time-format';
+import { timeFormat } from '@teambit/toolbox.time.time-format';
 import {pipeline} from 'stream';
 
 const streamPipeline = util.promisify(pipeline);

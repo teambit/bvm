@@ -3,7 +3,7 @@ import path from 'path';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
-import { timeFormat } from '@teambit/time.time-format';
+import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
 import {linkOne} from '@teambit/bvm.link';
 import { listRemote } from '@teambit/bvm.list';

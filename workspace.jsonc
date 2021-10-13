@@ -34,8 +34,8 @@
     "packageManager": "teambit.dependencies/yarn",
     "policy": {
       "dependencies": {
-        "@teambit/network.agent": "0.0.90",
-        "@teambit/time.time-format": "0.0.298",
+        "@teambit/toolbox.network.agent": "0.0.245",
+        "@teambit/toolbox.time.time-format": "0.0.443",
         "@types/chalk": "0.4.31",
         "@types/date-fns": "2.5.3",
         "@types/fs-extra": "9.0.7",

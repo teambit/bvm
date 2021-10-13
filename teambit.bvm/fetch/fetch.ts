@@ -4,7 +4,7 @@ import { listRemote } from '@teambit/bvm.list';
 import { Config } from '@teambit/bvm.config';
 import { download as fileDownload } from '@teambit/toolbox.network.progress-bar-file-downloader';
 import ora from 'ora';
-import { timeFormat } from '@teambit/time.time-format';
+import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { BvmError } from '@teambit/bvm.error';
 
 const config = Config.load();
