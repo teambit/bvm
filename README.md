@@ -44,9 +44,15 @@ bvm upgrade
 bvm -v
 ```
 
-#### List all versions of BVM available to be installed
+#### List all versions of Bit available to be installed
 ```shell
 bvm list --remote
+```
+
+#### Switch to another bit version
+Switch the currently used bit version
+```shell
+bvm use <bit-version>
 ```
 
 #### Get the local and remote versions of Bit and BVM

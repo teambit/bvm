@@ -8,6 +8,7 @@ import {listCmd} from '@teambit/bvm.commands.list';
 import {upgradeCmd} from '@teambit/bvm.commands.upgrade';
 import {configCmd} from '@teambit/bvm.commands.config';
 import {linkCmd} from '@teambit/bvm.commands.link';
+import {useCmd} from '@teambit/bvm.commands.use';
 import {versionCmd, showAllVersions} from '@teambit/bvm.commands.version';
 import {localVersionCmd} from './local-version';
 
@@ -36,6 +37,7 @@ async function main() {
     .command(installCmd)
     .command(listCmd)
     .command(linkCmd)
+    .command(useCmd)
     .command(removeCmd)
     .command(configCmd)
     .example(
@@ -45,6 +47,7 @@ async function main() {
     .example("$0 upgrade", "install the latest version of bit")
     .example("$0 install 0.0.200", "install version 0.0.200 of bit")
     .example("$0 list", "show all installed versions")
+    .example("$0 use 0.0.522", "switch to version 0.0522 of bit")
     .example(
       "$0 remove all --keep-latest-versions 3",
       "remove all installed versions except the last 3 installed versions"

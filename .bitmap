@@ -93,6 +93,12 @@
             }
         ]
     },
+    "commands/use": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/commands/use"
+    },
     "commands/version": {
         "scope": "teambit.bvm",
         "version": "0.0.26",
