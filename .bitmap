@@ -11,7 +11,7 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.0.28",
+        "version": "0.0.29",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app",
         "lanes": [
@@ -23,7 +23,7 @@
     },
     "commands/config": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/config",
         "lanes": [
@@ -35,7 +35,7 @@
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install",
         "lanes": [
@@ -47,7 +47,7 @@
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link",
         "lanes": [
@@ -59,7 +59,7 @@
     },
     "commands/list": {
         "scope": "teambit.bvm",
-        "version": "0.0.25",
+        "version": "0.0.26",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list",
         "lanes": [
@@ -71,7 +71,7 @@
     },
     "commands/remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.25",
+        "version": "0.0.26",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/remove",
         "lanes": [
@@ -83,7 +83,7 @@
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade",
         "lanes": [
@@ -95,13 +95,13 @@
     },
     "commands/use": {
         "scope": "teambit.bvm",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
     "commands/version": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/version",
         "lanes": [
@@ -113,7 +113,7 @@
     },
     "config": {
         "scope": "teambit.bvm",
-        "version": "0.0.23",
+        "version": "0.0.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config",
         "lanes": [
@@ -131,7 +131,7 @@
     },
     "fetch": {
         "scope": "teambit.bvm",
-        "version": "0.0.26",
+        "version": "0.0.27",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch",
         "lanes": [
@@ -155,7 +155,7 @@
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install",
         "lanes": [
@@ -167,7 +167,7 @@
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link",
         "lanes": [
@@ -179,7 +179,7 @@
     },
     "list": {
         "scope": "teambit.bvm",
-        "version": "0.0.25",
+        "version": "0.0.26",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/list",
         "lanes": [
@@ -203,7 +203,7 @@
     },
     "remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.25",
+        "version": "0.0.26",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/remove",
         "lanes": [
