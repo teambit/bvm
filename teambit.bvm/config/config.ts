@@ -8,6 +8,7 @@ import {execSync} from 'child_process';
 import semver from 'semver';
 import chalk from 'chalk';
 
+export const BVM_GLOBALS_DIR_ENV_VARIABLE = 'BVM_GLOBALS_DIR';
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
 export const CONFIG_FILENAME = "config.json";
@@ -51,6 +52,11 @@ const globalDefaults = {
 }
 
 function getBvmDirectory(): string {
+  const fromEnvVar = process.env[BVM_GLOBALS_DIR_ENV_VARIABLE];
+  console.log("fromEnvVar", fromEnvVar);
+  if (fromEnvVar && typeof fromEnvVar === "string") {
+    return fromEnvVar;
+  }
   if (IS_WINDOWS && process.env.LOCALAPPDATA) {
     return path.join(process.env.LOCALAPPDATA, '.bvm');
   }

@@ -97,12 +97,17 @@ BVM will automatically link the latest version to `bbit` (instead of `bit`) to a
 
 ### BVM configurations
 
+#### Change BVM dir via environment variable
+
+Make sure to set an env variable named `BVM_GLOBALS_DIR`.
+Bvm will create its config in this folder, and will set the `BVM_DIR` inside the config to this folder as well. 
 #### Get BVM configurations
 
 - `DEFAULT_LINK` -  The default command name to be linked to BVM's latest version.  
 `bit` is linked by default unless a legacy version of Bit is installed. In that case, `bbit` will be linked, instead.
 
-- `BVM_DIR` -  The location for BVM
+- `BVM_DIR` -  The location for BVM (this will no apply for the config of bvm itself, as it's configured inside the config)
+In order to change the entire folder include config, use the `BVM_GLOBALS_DIR` env variable described above.
 
 ```shell
 bvm config
