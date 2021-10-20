@@ -53,7 +53,6 @@ const globalDefaults = {
 
 function getBvmDirectory(): string {
   const fromEnvVar = process.env[BVM_GLOBALS_DIR_ENV_VARIABLE];
-  console.log("fromEnvVar", fromEnvVar);
   if (fromEnvVar && typeof fromEnvVar === "string") {
     return fromEnvVar;
   }
