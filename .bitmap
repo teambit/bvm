@@ -11,7 +11,7 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.0.30",
+        "version": "0.0.31",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app",
         "lanes": [
@@ -35,7 +35,7 @@
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.0.29",
+        "version": "0.0.30",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install",
         "lanes": [
@@ -83,7 +83,7 @@
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.0.29",
+        "version": "0.0.30",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade",
         "lanes": [
@@ -131,7 +131,7 @@
     },
     "fetch": {
         "scope": "teambit.bvm",
-        "version": "0.0.28",
+        "version": "0.0.29",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch",
         "lanes": [
@@ -143,7 +143,7 @@
     },
     "fs/progress-bar-file-extractor": {
         "scope": "teambit.toolbox",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/progress-bar-file-extractor"
     },
@@ -155,7 +155,7 @@
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.0.29",
+        "version": "0.0.30",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install",
         "lanes": [
@@ -197,7 +197,7 @@
     },
     "network/progress-bar-file-downloader": {
         "scope": "teambit.toolbox",
-        "version": "0.0.22",
+        "version": "0.0.23",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },

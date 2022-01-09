@@ -55,7 +55,7 @@
         "@types/yargs": "17.0.0",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",
-        "cli-progress": "3.9.0",
+        "cli-progress": "3.10.0",
         "date-fns": "2.19.0",
         "fs-extra": "9.1.0",
         "lodash.difference": "4.5.0",

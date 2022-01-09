@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 4
+  version: 5
   cacheKey: 8
 
 "@babel/runtime@npm:7.12.18":
@@ -435,7 +435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chownr@npm:^1.1.1":
+"chownr@npm:^1.1.1, chownr@npm:^1.1.3":
   version: 1.1.4
   resolution: "chownr@npm:1.1.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fchownr%2F-%2Fchownr-1.1.4.tgz"
   checksum: 115648f8eb38bac5e41c3857f3e663f9c39ed6480d1349977c4d96c95a47266fcacc5a5aabf3cb6c481e22d72f41992827db47301851766c4fd77ac21a4f081d
@@ -458,13 +458,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cli-progress@npm:3.9.0":
-  version: 3.9.0
-  resolution: "cli-progress@npm:3.9.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcli-progress%2F-%2Fcli-progress-3.9.0.tgz"
+"cli-progress@npm:3.10.0":
+  version: 3.10.0
+  resolution: "cli-progress@npm:3.10.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcli-progress%2F-%2Fcli-progress-3.10.0.tgz"
   dependencies:
-    colors: ^1.1.2
     string-width: ^4.2.0
-  checksum: 96f3a8a9caac61dbe05d0fa3cc44fa74b0dccee0da7e4841abc126dae605af82e4da1f3f00b48587cfed3efd45e285a9cc89fcbab92986288ea3605c2d58e16b
+  checksum: 8e22c6265f95598002986c6508d05004bd9f5ee17c06f239d8d59e14f5a7e5605055f5d705a3a7d69f6072ea0752b1c094f28c48a704f9fd00378d7d16f0b46d
   languageName: node
   linkType: hard
 
@@ -515,13 +514,6 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcolor-name%2F-%2Fcolor-name-1.1.4.tgz"
   checksum: b0445859521eb4021cd0fb0cc1a75cecf67fceecae89b63f62b201cca8d345baf8b952c966862a9d9a2632987d4f6581f0ec8d957dfacece86f0a7919316f610
-  languageName: node
-  linkType: hard
-
-"colors@npm:^1.1.2":
-  version: 1.4.0
-  resolution: "colors@npm:1.4.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fcolors%2F-%2Fcolors-1.4.0.tgz"
-  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
   languageName: node
   linkType: hard
 
@@ -1024,6 +1016,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mkdirp-infer-owner@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "mkdirp-infer-owner@npm:1.0.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp-infer-owner%2F-%2Fmkdirp-infer-owner-1.0.2.tgz"
+  dependencies:
+    chownr: ^1.1.3
+    infer-owner: ^1.0.4
+    mkdirp: ^1.0.3
+  checksum: 759dbc3c4266e25028bb051ca0d5003860bf68249a0d2c3417dc26a0d0f1b883936866e19840f93a0ffceaf8d3c1982cc0fad6667e55418d63eed0af684bcb54
+  languageName: node
+  linkType: hard
+
 "mkdirp@npm:^1.0.3":
   version: 1.0.4
   resolution: "mkdirp@npm:1.0.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Fmkdirp%2F-%2Fmkdirp-1.0.4.tgz"
@@ -1272,7 +1275,7 @@ __metadata:
     "@types/yargs": 17.0.0
     bin-links: 2.2.1
     chalk: 4.1.0
-    cli-progress: 3.9.0
+    cli-progress: 3.10.0
     date-fns: 2.19.0
     fs-extra: 9.1.0
     lodash.difference: 4.5.0
@@ -1495,6 +1498,12 @@ __metadata:
 "upgrade-ab3d1f@workspace:teambit.bvm/commands/upgrade":
   version: 0.0.0-use.local
   resolution: "upgrade-ab3d1f@workspace:teambit.bvm/commands/upgrade"
+  languageName: unknown
+  linkType: soft
+
+"use-151dbb@workspace:teambit.bvm/commands/use":
+  version: 0.0.0-use.local
+  resolution: "use-151dbb@workspace:teambit.bvm/commands/use"
   languageName: unknown
   linkType: soft
 
