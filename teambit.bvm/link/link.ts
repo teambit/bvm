@@ -39,6 +39,14 @@ export async function linkAll(): Promise<LinkResult[]>{
   return Promise.all(promises);
 }
 
+export async function linkDefault(
+  version: string | undefined,
+  addToConfig = true
+): Promise<LinkResult> {
+  const defaultLinkName = config.getDefaultLinkName();
+  return linkOne(defaultLinkName, version, addToConfig);
+}
+
 export async function linkOne(linkName: string, version: string | undefined, addToConfig = false): Promise<LinkResult> {
   const source = getLinkSource();
   let concreteVersion = version;

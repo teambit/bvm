@@ -5,8 +5,7 @@ import Progress from 'node-fetch-progress';
 import cliProgress from 'cli-progress';
 import util from 'util';
 import { pipeline } from 'stream';
-import { getAgent } from '@teambit/network.agent';
-
+import { getAgent } from '@teambit/toolbox.network.agent';
 
 const streamPipeline = util.promisify(pipeline);
 

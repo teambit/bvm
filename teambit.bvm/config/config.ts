@@ -8,6 +8,7 @@ import {execSync} from 'child_process';
 import semver from 'semver';
 import chalk from 'chalk';
 
+export const BVM_GLOBALS_DIR_ENV_VARIABLE = 'BVM_GLOBALS_DIR';
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
 export const CONFIG_FILENAME = "config.json";
@@ -41,7 +42,7 @@ export const KNOWN_KEYS = [
 const DEFAULT_LINK = 'bit';
 const DEFAULT_ALTERNATIVE_LINK = 'bbit';
 
-const ALTERNATIVE_LINK_WARNING = `A legacy version of Bit is installed on your machine. 
+const ALTERNATIVE_LINK_WARNING = `A legacy version of Bit is installed on your machine.
 Use the 'bbit' command for Bit's latest version and the 'bit' command for Bit's legacy version.
 For more information, see the following link: https://harmony-docs.bit.dev/introduction/installation`
 
@@ -51,6 +52,10 @@ const globalDefaults = {
 }
 
 function getBvmDirectory(): string {
+  const fromEnvVar = process.env[BVM_GLOBALS_DIR_ENV_VARIABLE];
+  if (fromEnvVar && typeof fromEnvVar === "string") {
+    return fromEnvVar;
+  }
   if (IS_WINDOWS && process.env.LOCALAPPDATA) {
     return path.join(process.env.LOCALAPPDATA, '.bvm');
   }
@@ -81,6 +86,12 @@ export class Config {
   }
 
   static load(newInstance = false): Config {
+    if (process.argv.includes('--get-yargs-completions') || process.argv.includes('--help')) {
+      // this is a workaround to get the completion and `bvm --help` working.
+      // otherwise, the `new Config()` later on, calls `store.env().argv()`, and for some reason,
+      // nconf doesn't play nice with yargs
+      return;
+    }
     if (!newInstance && configSingleton){
       return configSingleton;
     }
@@ -160,7 +171,7 @@ export class Config {
     return {
       versionDir,
       exists
-    } 
+    }
   }
 
   getAliases(): Record<string, string> {

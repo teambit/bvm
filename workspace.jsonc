@@ -34,8 +34,8 @@
     "packageManager": "teambit.dependencies/yarn",
     "policy": {
       "dependencies": {
-        "@teambit/network.agent": "0.0.90",
-        "@teambit/time.time-format": "0.0.298",
+        "@teambit/toolbox.network.agent": "0.0.245",
+        "@teambit/toolbox.time.time-format": "0.0.443",
         "@types/chalk": "0.4.31",
         "@types/date-fns": "2.5.3",
         "@types/fs-extra": "9.0.7",
@@ -52,10 +52,10 @@
         "@types/semver-sort": "0.0.1",
         "@types/tar": "4.0.4",
         "@types/tar-fs": "2.0.0",
-        "@types/yargs": "16.0.0",
+        "@types/yargs": "17.0.0",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",
-        "cli-progress": "3.9.0",
+        "cli-progress": "3.10.0",
         "date-fns": "2.19.0",
         "fs-extra": "9.1.0",
         "lodash.difference": "4.5.0",
@@ -74,7 +74,7 @@
         "tar-fs": "2.1.1",
         "tty-table": "4.1.3",
         "user-home": "2.0.0",
-        "yargs": "16.2.0"
+        "yargs": "17.0.1"
       },
       "peerDependencies": {}
     },
@@ -105,6 +105,7 @@
         "packageJson": {
           "name": "@teambit/bvm.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -127,6 +128,7 @@
         "packageJson": {
           "name": "@teambit/toolbox.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -149,6 +151,7 @@
         "packageJson": {
           "name": "@teambit/gcp.{name}",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },
@@ -170,6 +173,7 @@
         "packageJson": {
           "name": "@teambit/bvm",
           "private": false,
+          "license": "Apache-2.0",
           "engines": {
             "node": ">=12.15.0"
           },

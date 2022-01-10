@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { getAgent } from '@teambit/network.agent';
+import { getAgent } from '@teambit/toolbox.network.agent';
 
 
 export class GcpStorage {
