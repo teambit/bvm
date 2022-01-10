@@ -21,14 +21,29 @@ export class ListCmd implements CommandModule {
         width: 10,
       },
       {
-        value: 'stable',
-        item: 'stable',
-        width: 8,
-        formatter: function (value) {
-          if (value == true) return this.style(value, 'green');
-          return 'false';
-        },
+        value: 'url',
+        item: 'url',
+        width: 70,
+        // formatter: function (value) {
+        //   if (value == true) return this.style(value, 'green');
+        //   return 'false';
+        // },
       },
+      { value: 'released', item: 'released' },
+      // {
+      //   value: 'md5Hash',
+      //   item: 'md5Hash',
+      //   width: 20,
+      // },
+      // {
+      //   value: 'stable',
+      //   item: 'stable',
+      //   width: 8,
+      //   formatter: function (value) {
+      //     if (value == true) return this.style(value, 'green');
+      //     return 'false';
+      //   },
+      // },
     ];
 
     // @ts-ignore
@@ -45,12 +60,11 @@ export class ListCmd implements CommandModule {
           default: false,
           type: 'boolean',
         },
-        'release-type': {
-          alias: ['t'],
-          describe: 'show only the stable versions',
-          default: 'stable',
-          type: 'string',
-          choices: ['stable', 'nightly'],
+        limit: {
+          alias: ['l'],
+          describe: 'limit the number shown bit version',
+          default: 20,
+          type: 'number',
         },
       })
       .example('$0 list', 'show all installed versions')
@@ -59,7 +73,7 @@ export class ListCmd implements CommandModule {
   }
   async handler(args) {
     if (args.remote) {
-      const list = await listRemote({ 'release-type': args['release-type'] });
+      const list = await listRemote({ 'limit': args['limit'] });
       console.log(ListCmd.toTable(list));
       return;
     }
