@@ -6,12 +6,12 @@ const bucketName = 'bvm.bit.dev';
 const prefix = 'versions';
 
 export class GcpList {
-  constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private releaseType = 'dev') {}
+  constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private releaseType = 'dev') { }
 
   async list(): Promise<RemoteVersionList> {
     const files = await this.rawFiles();
     const remoteVersions = files.map((file) => {
-      const gcpVersion = new GcpVersion(file.name, file.bucket, file.md5Hash);
+      const gcpVersion = new GcpVersion(file.name, file.bucket, file.md5Hash, file.timeCreated, file.metadata);
       return gcpVersion.toRemoteVersion();
     });
     return new RemoteVersionList(remoteVersions);
