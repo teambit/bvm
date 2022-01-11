@@ -21,7 +21,7 @@ export async function listRemote(options?: ListOptions): Promise<RemoteVersionLi
   const proxyConfig = config.proxyConfig();
   const gcpList = GcpList.create('dev', os.type(), proxyConfig);
   const list = await gcpList.list();
-  return list.slice(options.limit);
+  return list.slice(options?.limit);
   // return options['release-type'] === ReleaseType.STABLE ? list.sortBySemver('desc') : list;
 }
 
