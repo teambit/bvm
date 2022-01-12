@@ -73,19 +73,42 @@ function getConfigPath(): string {
 
 let configSingleton;
 
+export type ConfigSource = 'env' | 'argv' | 'file';
+export type ConfigSources = ConfigSource[];
+
 export class Config {
   private store: Provider;
   private fsStore: Provider;
 
-  constructor(private name: string, private filePath: string, defaults: any ={}){
-    const store = new Provider();
-    store.env().argv().file(name, filePath).defaults(defaults);
+  constructor(private name: string, private filePath: string, defaults: any ={}, _sources: ConfigSources = ['env', 'file']){
+    let store = new Provider();
+    // TODO: implement
+    // sources.forEach((source) => {
+    //   // TODO: replace this with store.add / store.use (there is some special case with env/argv when using these methods)
+    //   switch (source) {
+    //     case 'env':
+    //       store.env();
+    //       break;
+    //     case 'argv':
+    //       store.argv();
+    //       break;
+    //     case 'file':
+    //       store.add(name, { type: 'file', file: filePath });
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // });
+    // store.defaults(defaults);
+    
+    // store.env().argv().file(name, filePath).defaults(defaults);
+    store.env().file(name, filePath).defaults(defaults);
     const fsStore = new Provider().file(name, filePath);
     this.store = store;
     this.fsStore = fsStore;
   }
 
-  static load(newInstance = false): Config {
+  static load(newInstance = false, sources: ConfigSources = ['env', 'file']): Config {
     if (process.argv.includes('--get-yargs-completions') || process.argv.includes('--help')) {
       // this is a workaround to get the completion and `bvm --help` working.
       // otherwise, the `new Config()` later on, calls `store.env().argv()`, and for some reason,
@@ -107,7 +130,7 @@ export class Config {
       }
       fs.writeJSONSync(configPath, {DEFAULT_LINK: defaultLink});
     }
-    const config = new Config(name, configPath, globalDefaults);
+    const config = new Config(name, configPath, globalDefaults, sources);
     if (!newInstance){
       configSingleton = config;
     }
