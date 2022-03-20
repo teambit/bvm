@@ -6,7 +6,7 @@ const bucketName = 'bvm.bit.dev';
 const prefix = 'versions';
 
 export class GcpList {
-  constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private releaseType = 'dev') { }
+  constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private releaseType = 'dev') {}
 
   async list(): Promise<RemoteVersionList> {
     const files = await this.rawFiles();
@@ -18,6 +18,7 @@ export class GcpList {
   }
 
   async rawFiles() {
+    // TODO: get it from the index.json file
     const filesPrefix = `${prefix}/${this.releaseType}/${this.osType}/`;
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
