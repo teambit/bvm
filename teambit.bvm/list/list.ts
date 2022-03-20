@@ -18,9 +18,11 @@ export type ListOptions = {
 const config = Config.load();
 
 export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
+  console.log(options)
   const proxyConfig = config.proxyConfig();
   const gcpList = GcpList.create('dev', os.type(), proxyConfig);
   const list = await gcpList.list();
+  if (!options?.limit) return list;
   return list.slice(options?.limit);
   // return options['release-type'] === ReleaseType.STABLE ? list.sortBySemver('desc') : list;
 }
