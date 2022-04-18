@@ -47,7 +47,7 @@ export class ListCmd implements CommandModule {
     ];
 
     // @ts-ignore
-    const table = new Table(headers, list.entries, options);
+    const table = new Table(headers, list.entries.reverse(), options);
     return table.render();
   }
 
@@ -73,7 +73,7 @@ export class ListCmd implements CommandModule {
   }
   async handler(args) {
     if (args.remote) {
-      const list = await listRemote({ 'limit': args['limit'] });
+      const list = await listRemote({ limit: args['limit'] });
       console.log(ListCmd.toTable(list));
       return;
     }
