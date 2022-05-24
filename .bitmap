@@ -141,6 +141,12 @@
             }
         ]
     },
+    "fs-tar-version": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/fs-tar-version"
+    },
     "fs/progress-bar-file-extractor": {
         "scope": "teambit.toolbox",
         "version": "0.0.5",
