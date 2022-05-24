@@ -22,6 +22,13 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
+      file: {
+        alias: ['f'],
+        describe: 'install a version from a path to a file',
+        type: 'string'
+      }
+    })
+    .option({
       replace: {
         describe: 'replace current version',
         default: true,
@@ -29,12 +36,14 @@ export class InstallCmd implements CommandModule {
       }
     })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
+    .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
     return yargs;
   }
   async handler(args) {
     const opts: InstallOpts = {
       override: args.override,
-      replace: args.replace
+      replace: args.replace,
+      file: args.file,
     }
     const installStartTime = Date.now();
     const {versionPath, installedVersion} = await installVersion(args.bitVersion, opts);

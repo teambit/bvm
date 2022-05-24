@@ -6,13 +6,14 @@ import { download as fileDownload } from '@teambit/toolbox.network.progress-bar-
 import ora from 'ora';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { BvmError } from '@teambit/bvm.error';
+import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
 const config = Config.load();
 
 export type FetchOpts = {
   override?: boolean;
   overrideDir?: boolean;
-  destination: string;
+  destinationDir: string;
 };
 
 const defaultOpts = {
@@ -27,7 +28,7 @@ export type FetchResults = {
   downloadedFile?: string;
 };
 
-export async function fetch(version: string, opts: FetchOpts): Promise<FetchResults> {
+export async function fetch(version: string, opts: FetchOpts): Promise<FsTarVersion> {
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const remoteVersionList = await listRemote();
   let resolvedVersion;
@@ -44,8 +45,8 @@ export async function fetch(version: string, opts: FetchOpts): Promise<FetchResu
   const url = resolvedVersion.url;
   // const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion.version);
   const fileName = url.split('/').pop();
-  const destination = opts.destination;
-  const destinationDir = path.dirname(destination);
+  const destinationDir = opts.destinationDir
+  const destination = path.join(destinationDir, fileName);
   const destinationDirExists = await fs.pathExists(destinationDir);
   if (destinationDirExists) {
     if (concreteOpts.overrideDir) {
@@ -68,5 +69,6 @@ export async function fetch(version: string, opts: FetchOpts): Promise<FetchResu
   const downloadEndTime = Date.now();
   const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
   loader.succeed(`${downloadLoaderText} in ${downloadTimeDiff}`);
-  return { downloadedFile: destination, resolvedVersion: resolvedVersion.version };
+  // return { downloadedFile: destination, resolvedVersion: resolvedVersion.version };
+  return new FsTarVersion(destination);
 }

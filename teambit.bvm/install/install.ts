@@ -7,10 +7,12 @@ import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
 import {linkOne} from '@teambit/bvm.link';
 import { listRemote } from '@teambit/bvm.list';
+import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
 export type InstallOpts = {
   override?: boolean,
-  replace?: boolean
+  replace?: boolean,
+  file?: string
 }
 
 export type InstallResults = {
@@ -52,25 +54,32 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     await removeWithLoader(versionDir);
   }
   const tempDir = config.getTempDir();
-  const fetchDestination = path.join(tempDir, resolvedVersion);
-  const fetchOpts: FetchOpts = {
-    overrideDir: true,
-    destination: fetchDestination
+  let fsTarVersion;
+  if (opts.file){
+    fsTarVersion = new FsTarVersion(opts.file);
+    fsTarVersion = await fsTarVersion.copyToDir(tempDir, {loader});
+    
+  } else {
+    const fetchOpts: FetchOpts = {
+      overrideDir: true,
+      destinationDir: tempDir
+    }
+    fsTarVersion = await fetch(resolvedVersion, fetchOpts);
+    // TODO: check if version already exists, return it's location
   }
-  const downloadResults = await fetch(resolvedVersion, fetchOpts);
-  // TODO: check if version already exists, return it's location
 
-  if (downloadResults.downloadedFile) {
-    const tarFile = downloadResults.downloadedFile;
-    await extractWithLoader(downloadResults.downloadedFile, downloadResults.resolvedVersion);
+  if (fsTarVersion.path) {
+    const tarFile = fsTarVersion.path;
+    await extractWithLoader(fsTarVersion.path, fsTarVersion.version);
     await removeWithLoader(tarFile);
   }
+
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, downloadResults.resolvedVersion);
+  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version);
   loader.stop();
   return {
-    downloadRequired: !!downloadResults.downloadedFile,
-    installedVersion: downloadResults.resolvedVersion,
+    downloadRequired: !!fsTarVersion.path,
+    installedVersion: fsTarVersion.version,
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     versionPath: versionDir
