@@ -10,6 +10,7 @@ import { listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
 export type InstallOpts = {
+  updatePath?: boolean,
   override?: boolean,
   replace?: boolean,
   file?: string
@@ -42,7 +43,9 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
   if (exists) {
     if (!concreteOpts.override){
-      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion);
+      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
+        updatePath: opts.updatePath,
+      });
       return {
         downloadRequired: false,
         installedVersion: resolvedVersion,
@@ -123,11 +126,14 @@ type ReplaceCurrentResult = {
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { updatePath?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    const {previousLinkVersion} = await linkOne(config.getDefaultLinkName(), version, true);
+    const {previousLinkVersion} = await linkOne(config.getDefaultLinkName(), version, {
+      addToConfig: true,
+      updatePath: opts.updatePath,
+    });
     return {
       replaced: true,
       previousCurrentVersion: previousLinkVersion

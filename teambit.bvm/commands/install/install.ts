@@ -15,6 +15,13 @@ export class InstallCmd implements CommandModule {
       type: 'string'
     })
     .option({
+      updatePath: {
+        describe: 'add the bvm directory to the system PATH',
+        default: true,
+        type: 'boolean',
+      }
+    })
+    .option({
       override: {
         describe: 'download the version again even if it is already exist in file system',
         default: false,
@@ -41,6 +48,7 @@ export class InstallCmd implements CommandModule {
   }
   async handler(args) {
     const opts: InstallOpts = {
+      updatePath: args.updatePath,
       override: args.override,
       replace: args.replace,
       file: args.file,

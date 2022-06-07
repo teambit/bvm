@@ -13,6 +13,13 @@ export class LinkCmd implements CommandModule {
       describe: 'name of the link',
       type: 'string'
     })
+    .option({
+      updatePath: {
+        describe: 'add the bvm directory to the system PATH',
+        default: true,
+        type: 'boolean',
+      }
+    })
     .positional('bit-version', {
       describe: 'version to link',
       type: 'string',
@@ -25,9 +32,9 @@ export class LinkCmd implements CommandModule {
   async handler(args) {
     let results;
     if (!args.name){
-      results = await linkAll();
+      results = await linkAll({ updatePath: args.updatePath });
     } else {
-      results = [await linkOne(args.name, args.bitVersion, true)]
+      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, updatePath: args.updatePath })]
     }
     printOutput(results, args.verbose);
     return;
