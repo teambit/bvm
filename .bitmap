@@ -219,6 +219,13 @@
             }
         ]
     },
+    "reporter": {
+        "scope": "",
+        "version": "",
+        "defaultScope": "teambit.bvm",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/reporter"
+    },
     "storage": {
         "scope": "teambit.gcp",
         "version": "0.0.21",

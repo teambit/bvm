@@ -5,7 +5,7 @@ import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
-import {linkOne} from '@teambit/bvm.link';
+import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
@@ -21,7 +21,8 @@ export type InstallResults = {
   downloadRequired: boolean,
   replacedCurrent: boolean,
   previousCurrentVersion?: string
-  versionPath: string
+  versionPath: string,
+  pathExtenderReport?: PathExtenderReport,
 }
 
 const defaultOpts = {
@@ -51,6 +52,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
         installedVersion: resolvedVersion,
         replacedCurrent: replacedCurrentResult.replaced,
         previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+        pathExtenderReport: replacedCurrentResult.pathExtenderReport,
         versionPath: versionDir
       }
     }
@@ -85,6 +87,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     installedVersion: fsTarVersion.version,
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+    pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     versionPath: versionDir
   }
 }
@@ -123,6 +126,7 @@ async function moveWithLoader(src: string, target: string, opts: MoveOptions): P
 
 type ReplaceCurrentResult = {
   replaced: boolean,
+  pathExtenderReport?: PathExtenderReport,
   previousCurrentVersion?: string
 }
 
@@ -130,13 +134,14 @@ async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, op
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    const {previousLinkVersion} = await linkOne(config.getDefaultLinkName(), version, {
+    const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       updatePath: opts.updatePath,
     });
     return {
       replaced: true,
-      previousCurrentVersion: previousLinkVersion
+      previousCurrentVersion: previousLinkVersion,
+      pathExtenderReport,
     };
   }
   return {

@@ -1,6 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallOpts} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
+import { renderPathExtenderReport } from '@teambit/bvm.reporter';
 import chalk from 'chalk';
 export class InstallCmd implements CommandModule {
   aliases = ['i', 'install'];
@@ -54,11 +55,15 @@ export class InstallCmd implements CommandModule {
       file: args.file,
     }
     const installStartTime = Date.now();
-    const {versionPath, installedVersion} = await installVersion(args.bitVersion, opts);
+    const {versionPath, installedVersion, pathExtenderReport} = await installVersion(args.bitVersion, opts);
     const installEndTime = Date.now();
     const installTimeDiff = timeFormat(installEndTime - installStartTime);
     console.log(`version ${chalk.green(installedVersion)} installed on ${chalk.green(versionPath)} in ${chalk.cyan(installTimeDiff)}`);
-    return;
+    if (!pathExtenderReport) return; 
+    const output = renderPathExtenderReport(pathExtenderReport);
+    if (output) {
+      console.log(`\n${output}`);
+    }
   };
 }
 

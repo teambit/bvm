@@ -1,4 +1,4 @@
-import { addDirToEnvPath, ConfigReport, PathExtenderReport } from '@pnpm/os.env.path-extender';
+import { addDirToEnvPath, ConfigFileChangeType, ConfigReport, PathExtenderReport } from '@pnpm/os.env.path-extender';
 import {Config} from '@teambit/bvm.config';
 import {listLocal} from '@teambit/bvm.list';
 import path from 'path';
@@ -19,7 +19,10 @@ export type LinkResult = {
   version: string,
   previousLinkVersion?: string,
   generatedLink: GeneratedLink
+  pathExtenderReport?: PathExtenderReport,
 }
+
+export { PathExtenderReport, ConfigReport, ConfigFileChangeType }
 
 export type GeneratedLink = {
   source: string,
@@ -90,17 +93,18 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (opts.addToConfig){
     previousLinkVersion = config.setLink(linkName, concreteVersion);
   }
-  let binDir = path.join(os.homedir(), 'bin');
+  let binDir = path.join(os.homedir(), 'bin2');
   if (IS_WINDOWS){
     binDir = config.getBvmDirectory();
   }
-  await validateBinDirInPath(binDir, opts);
+  const pathExtenderReport = await validateBinDirInPath(binDir, opts);
 
   return {
     linkName, 
     previousLinkVersion,
     version: concreteVersion,
-    generatedLink
+    generatedLink,
+    pathExtenderReport,
   }
 }
 
@@ -114,46 +118,18 @@ function getBitBinPath(){
   return path.join('@teambit', 'bit', 'bin', 'bit');
 }
 
-async function validateBinDirInPath(binDir: string, opts: { updatePath?: boolean } = { updatePath: true }) {
+async function validateBinDirInPath(binDir: string, opts: { updatePath?: boolean } = { updatePath: true }): Promise<PathExtenderReport | undefined> {
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) !== -1) return;
   if (!opts.updatePath) {
     const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
     console.log(chalk.yellowBright(err));
   } else {
-    const report = await addDirToEnvPath(binDir, {
+    return await addDirToEnvPath(binDir, {
       overwrite: true,
       position: 'end',
       configSectionName: 'bit',
     })
-    const output = renderSetupOutput(report)
-    if (output) {
-      console.log(output)
-    }
-  }
-}
-
-function renderSetupOutput (report: PathExtenderReport): string | undefined {
-  if (report.oldSettings === report.newSettings) {
-    return undefined
-  }
-  const output = []
-  if (report.configFile) {
-    output.push(reportConfigChange(report.configFile))
-  }
-  output.push(`Next configuration changes were made:
-${report.newSettings}
-${chalk.blueBright('Setup complete. Open a new terminal to start using Bit.')}
-`)
-  return output.join('\n')
-}
-
-function reportConfigChange (configReport: ConfigReport): string {
-  switch (configReport.changeType) {
-  case 'created': return `Created ${configReport.path}`
-  case 'appended': return `Appended new lines to ${configReport.path}`
-  case 'modified': return `Replaced configuration in ${configReport.path}`
-  case 'skipped': return `Configuration already up-to-date in ${configReport.path}`
   }
 }
 
