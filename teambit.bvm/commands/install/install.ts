@@ -16,9 +16,9 @@ export class InstallCmd implements CommandModule {
       type: 'string'
     })
     .option({
-      updatePath: {
-        describe: 'add the bvm directory to the system PATH',
-        default: true,
+      skipUpdatePath: {
+        describe: "don't add the bvm directory to the system PATH",
+        default: false,
         type: 'boolean',
       }
     })
@@ -49,7 +49,7 @@ export class InstallCmd implements CommandModule {
   }
   async handler(args) {
     const opts: InstallOpts = {
-      updatePath: args.updatePath,
+      addToPathIfMissing: !args.skipUpdatePath,
       override: args.override,
       replace: args.replace,
       file: args.file,

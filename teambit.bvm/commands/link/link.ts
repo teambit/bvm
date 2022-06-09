@@ -15,9 +15,9 @@ export class LinkCmd implements CommandModule {
       type: 'string'
     })
     .option({
-      updatePath: {
-        describe: 'add the bvm directory to the system PATH',
-        default: true,
+      skipUpdatePath: {
+        describe: "don't add the bvm directory to the system PATH",
+        default: false,
         type: 'boolean',
       }
     })
@@ -33,9 +33,9 @@ export class LinkCmd implements CommandModule {
   async handler(args) {
     let results;
     if (!args.name){
-      results = await linkAll({ updatePath: args.updatePath });
+      results = await linkAll({ addToPathIfMissing: !args.skipUpdatePath });
     } else {
-      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, updatePath: args.updatePath })]
+      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, addToPathIfMissing: !args.skipUpdatePath })]
     }
     printOutput(results, args.verbose);
     return;

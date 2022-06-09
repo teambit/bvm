@@ -29,23 +29,23 @@ export type GeneratedLink = {
   target: string
 }
 
-export async function linkAll(opts: { updatePath?: boolean }): Promise<LinkResult[]>{
+export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<LinkResult[]>{
   const links = config.getLinks();
   const defaultLinkVersion = config.getDefaultLinkVersion();
   const localLatest = (await listLocal()).latest();
   const promises = Object.entries(links).map(([linkName, version]) => {
-    return linkOne(linkName, version, { addToConfig: false, updatePath: opts.updatePath });
+    return linkOne(linkName, version, { addToConfig: false, addToPathIfMissing: opts.addToPathIfMissing });
   });
   if (!defaultLinkVersion && localLatest){
     const defaultLinkName = config.getDefaultLinkName();
-    promises.push(linkOne(defaultLinkName, localLatest.version, { addToConfig: true, updatePath: opts.updatePath }))
+    promises.push(linkOne(defaultLinkName, localLatest.version, { addToConfig: true, addToPathIfMissing: opts.addToPathIfMissing }))
   }
   return Promise.all(promises);
 }
 
 export interface LinkOptions {
   addToConfig?: boolean
-  updatePath?: boolean
+  addToPathIfMissing?: boolean
 }
 
 export async function linkDefault(
@@ -118,10 +118,10 @@ function getBitBinPath(){
   return path.join('@teambit', 'bit', 'bin', 'bit');
 }
 
-async function validateBinDirInPath(binDir: string, opts: { updatePath?: boolean } = { updatePath: true }): Promise<PathExtenderReport | undefined> {
+async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<PathExtenderReport | undefined> {
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) !== -1) return;
-  if (!opts.updatePath) {
+  if (!opts.addToPathIfMissing) {
     const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
     console.log(chalk.yellowBright(err));
   } else {
