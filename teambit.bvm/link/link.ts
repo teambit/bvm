@@ -93,7 +93,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (opts.addToConfig){
     previousLinkVersion = config.setLink(linkName, concreteVersion);
   }
-  let binDir = path.join(os.homedir(), 'bin2');
+  let binDir = path.join(os.homedir(), 'bin');
   if (IS_WINDOWS){
     binDir = config.getBvmDirectory();
   }
