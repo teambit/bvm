@@ -25,7 +25,7 @@ export class UseCmd implements CommandModule {
       const currentVersion = config.getDefaultLinkVersion();
       return console.log(chalk.cyan(`currently use ${currentVersion} version`));
     }
-    results = [await linkDefault(args.bitVersion, true)];
+    results = [await linkDefault(args.bitVersion, {addToConfig: true})];
     printOutput(results, args.verbose);
     return;
   };

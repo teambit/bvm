@@ -80,7 +80,9 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version);
+  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
+    addToPathIfMissing: opts.addToPathIfMissing,
+  });
   loader.stop();
   return {
     downloadRequired: !!fsTarVersion.path,
