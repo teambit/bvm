@@ -7,9 +7,9 @@ import os from 'os';
 import chalk from 'chalk';
 
 const IS_WINDOWS = os.platform() === 'win32';
-const DOCS_BASE_URL = 'https://harmony-docs.bit.dev';
-const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/introduction/installation`;
-const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/introduction/installation`;
+const DOCS_BASE_URL = 'https://bit.dev/docs';
+const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/reference/using-bvm#troubleshooting`;
+const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/reference/using-bvm#troubleshooting`;
 
 const config = Config.load();
 
