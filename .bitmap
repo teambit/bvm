@@ -11,7 +11,7 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.0.39",
+        "version": "0.0.40",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app",
         "lanes": [
@@ -35,7 +35,7 @@
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.0.38",
+        "version": "0.0.39",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install",
         "lanes": [
@@ -47,7 +47,7 @@
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.0.36",
+        "version": "0.0.37",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link",
         "lanes": [
@@ -83,7 +83,7 @@
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.0.38",
+        "version": "0.0.39",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade",
         "lanes": [
@@ -95,7 +95,7 @@
     },
     "commands/use": {
         "scope": "teambit.bvm",
-        "version": "0.0.10",
+        "version": "0.0.11",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
@@ -161,7 +161,7 @@
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.0.38",
+        "version": "0.0.39",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install",
         "lanes": [
@@ -173,7 +173,7 @@
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.0.36",
+        "version": "0.0.37",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link",
         "lanes": [
@@ -221,7 +221,7 @@
     },
     "reporter": {
         "scope": "teambit.bvm",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/reporter"
     },
