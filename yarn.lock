@@ -1889,6 +1889,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"reporter-e61646@workspace:teambit.bvm/reporter":
+  version: 0.0.0-use.local
+  resolution: "reporter-e61646@workspace:teambit.bvm/reporter"
+  languageName: unknown
+  linkType: soft
+
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2Frequire-directory%2F-%2Frequire-directory-2.1.1.tgz"
