@@ -5,11 +5,12 @@ import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
-import {linkOne} from '@teambit/bvm.link';
+import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
 export type InstallOpts = {
+  addToPathIfMissing?: boolean,
   override?: boolean,
   replace?: boolean,
   file?: string
@@ -20,7 +21,8 @@ export type InstallResults = {
   downloadRequired: boolean,
   replacedCurrent: boolean,
   previousCurrentVersion?: string
-  versionPath: string
+  versionPath: string,
+  pathExtenderReport?: PathExtenderReport,
 }
 
 const defaultOpts = {
@@ -42,12 +44,15 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
   if (exists) {
     if (!concreteOpts.override){
-      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion);
+      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
+        addToPathIfMissing: opts.addToPathIfMissing,
+      });
       return {
         downloadRequired: false,
         installedVersion: resolvedVersion,
         replacedCurrent: replacedCurrentResult.replaced,
         previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+        pathExtenderReport: replacedCurrentResult.pathExtenderReport,
         versionPath: versionDir
       }
     }
@@ -82,6 +87,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     installedVersion: fsTarVersion.version,
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+    pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     versionPath: versionDir
   }
 }
@@ -120,17 +126,22 @@ async function moveWithLoader(src: string, target: string, opts: MoveOptions): P
 
 type ReplaceCurrentResult = {
   replaced: boolean,
+  pathExtenderReport?: PathExtenderReport,
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    const {previousLinkVersion} = await linkOne(config.getDefaultLinkName(), version, true);
+    const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
+      addToConfig: true,
+      addToPathIfMissing: opts.addToPathIfMissing,
+    });
     return {
       replaced: true,
-      previousCurrentVersion: previousLinkVersion
+      previousCurrentVersion: previousLinkVersion,
+      pathExtenderReport,
     };
   }
   return {

@@ -1,6 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import chalk from 'chalk';
 import {linkAll, linkOne, LinkResult} from '@teambit/bvm.link';
+import { renderPathExtenderReport } from '@teambit/bvm.reporter';
 
 export class LinkCmd implements CommandModule {
   aliases = ['link'];
@@ -12,6 +13,13 @@ export class LinkCmd implements CommandModule {
     yargs.positional('name', {
       describe: 'name of the link',
       type: 'string'
+    })
+    .option({
+      skipUpdatePath: {
+        describe: "don't add the bvm directory to the system PATH",
+        default: false,
+        type: 'boolean',
+      }
     })
     .positional('bit-version', {
       describe: 'version to link',
@@ -25,9 +33,9 @@ export class LinkCmd implements CommandModule {
   async handler(args) {
     let results;
     if (!args.name){
-      results = await linkAll();
+      results = await linkAll({ addToPathIfMissing: !args.skipUpdatePath });
     } else {
-      results = [await linkOne(args.name, args.bitVersion, true)]
+      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, addToPathIfMissing: !args.skipUpdatePath })]
     }
     printOutput(results, args.verbose);
     return;
@@ -41,9 +49,16 @@ function formatOutput(linkResults: LinkResult[], verbose = false): string {
 
     return(`name ${chalk.green(result.linkName)}${linkTarget} points to version ${chalk.green(result.version)}${linkSource}`);
   });
+  links.push(`successfully linked binaries\n`)
 
-  const summery = `successfully linked binaries`;
-  return [links, summery].filter(msg => msg).join('\n');
+  const pathExtenderReport = linkResults.find((result) => result.pathExtenderReport)?.pathExtenderReport
+  if (pathExtenderReport) {
+    const output = renderPathExtenderReport(pathExtenderReport)
+    if (output) {
+      links.push(output)
+    }
+  }
+  return links.filter(msg => msg).join('\n');
 }
 
 function printOutput(linkResults: LinkResult[], verbose = false): string {
