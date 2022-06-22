@@ -1,6 +1,7 @@
 import { addDirToEnvPath, ConfigFileChangeType, ConfigReport, PathExtenderReport } from '@pnpm/os.env.path-extender';
 import {Config} from '@teambit/bvm.config';
 import {listLocal} from '@teambit/bvm.list';
+import cmdShim from '@zkochan/cmd-shim';
 import path from 'path';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
@@ -46,6 +47,7 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<L
 export interface LinkOptions {
   addToConfig?: boolean
   addToPathIfMissing?: boolean
+  nodeExecPath?: string
 }
 
 export async function linkDefault(
@@ -83,11 +85,14 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     force: true,
   }
   const rawGeneratedLinks = binLinks.getPaths(binOpts);
+  await cmdShim(path.join(versionDir, source), rawGeneratedLinks[0], {
+    createPwshFile: false,
+    nodeExecPath: opts.nodeExecPath,
+  });
   const generatedLink = {
     source: versionDir,
     target: rawGeneratedLinks[0]
   }
-  await binLinks(binOpts);
 
   let previousLinkVersion;
   if (opts.addToConfig){

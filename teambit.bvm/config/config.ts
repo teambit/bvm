@@ -17,6 +17,7 @@ export const CONFIG_FILENAME = "config.json";
 export const ALIASES_KEY = 'aliases';
 export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
+export const NODE_VERSIONS_FOLDER_NAME = 'nodejs';
 const CONFIG_KEY_NAME = 'global';
 
 
@@ -198,6 +199,24 @@ export class Config {
       versionDir,
       exists
     }
+  }
+
+  getNodeVersionsDir(): string {
+    return path.join(this.getBvmDirectory(), NODE_VERSIONS_FOLDER_NAME);
+  }
+
+  getSpecificNodeVersionDir(version: string): {versionDir: string, exists: boolean} {
+    const versionsDir = this.getNodeVersionsDir();
+    let versionDir = path.join(versionsDir, version);
+    const exists = fs.pathExistsSync(versionDir);
+    return {
+      versionDir,
+      exists
+    };
+  }
+
+  getCafsDir() {
+    return path.join(this.getNodeVersionsDir(), '.store');
   }
 
   getAliases(): Record<string, string> {

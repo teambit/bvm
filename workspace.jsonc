@@ -35,6 +35,9 @@
     "nodeLinker": "hoisted",
     "policy": {
       "dependencies": {
+        "@pnpm/fetch": "4",
+        "@pnpm/logger": "4.0.0",
+        "@pnpm/node.fetcher": "0.1.0",
         "@pnpm/os.env.path-extender": "0.2.4",
         "@teambit/toolbox.network.agent": "0.0.245",
         "@teambit/toolbox.time.time-format": "0.0.443",
@@ -55,6 +58,7 @@
         "@types/tar": "4.0.4",
         "@types/tar-fs": "2.0.0",
         "@types/yargs": "17.0.0",
+        "@zkochan/cmd-shim": "5.2.2",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",
         "cli-progress": "3.10.0",
