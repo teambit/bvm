@@ -207,7 +207,7 @@ export class Config {
 
   getSpecificNodeVersionDir(version: string): {versionDir: string, exists: boolean} {
     const versionsDir = this.getNodeVersionsDir();
-    let versionDir = path.join(versionsDir, version);
+    const versionDir = path.join(versionsDir, version);
     const exists = fs.pathExistsSync(versionDir);
     return {
       versionDir,
@@ -215,6 +215,12 @@ export class Config {
     };
   }
 
+  /**
+   * We use a pnpm component for downloading Node.js.
+   * pnpm writes the Node.js files to a content-addressable store.
+   * We could use pnpm's global store location as well but its location may vary on different systems.
+   * So we just create a dedicated content-addressable store for Node.js artifacts in the bvm directory.
+   */
   getCafsDir() {
     return path.join(this.getNodeVersionsDir(), '.store');
   }

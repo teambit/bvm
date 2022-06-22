@@ -86,6 +86,8 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   }
   const rawGeneratedLinks = binLinks.getPaths(binOpts);
   await cmdShim(path.join(versionDir, source), rawGeneratedLinks[0], {
+    // Unsigned PowerShell scripts are not allowed on Windows with default settings,
+    // so it is better to not use them.
     createPwshFile: false,
     nodeExecPath: opts.nodeExecPath,
   });
