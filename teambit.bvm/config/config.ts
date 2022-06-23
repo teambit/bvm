@@ -302,7 +302,6 @@ function transformEnvVariable({key, value}: {key: string, value:string}):{key: s
     // do not remove BVM_ prefix from the BVM dir config, as this is it's name
     return {key, value};
   }
-  console.log('key', key, value)
   return {
     key: key.replace(BVM_ENV_VARS_PREFIX, ''),
     value
