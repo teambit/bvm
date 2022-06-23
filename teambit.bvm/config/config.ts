@@ -8,6 +8,8 @@ import {execSync} from 'child_process';
 import semver from 'semver';
 import chalk from 'chalk';
 
+export const BVM_ENV_VARS_PREFIX = 'BVM_';
+
 export const BVM_GLOBALS_DIR_ENV_VARIABLE = 'BVM_GLOBALS_DIR';
 export const IS_WINDOWS = os.platform() === 'win32';
 export const CONFIG_DIR = 'config';
@@ -18,6 +20,7 @@ export const BIT_VERSIONS_FOLDER_NAME = 'versions';
 const CONFIG_KEY_NAME = 'global';
 
 
+export const CFG_BVM_DIR = 'BVM_DIR';
 export const CFG_PROXY = 'proxy';
 export const CFG_HTTPS_PROXY = 'https_proxy';
 export const CFG_PROXY_CA = 'proxy.ca';
@@ -27,7 +30,7 @@ export const CFG_PROXY_KEY = 'proxy.key';
 export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
 
 export const KNOWN_KEYS = [
-  "BVM_DIR",
+  CFG_BVM_DIR,
   "DEFAULT_LINK",
   CFG_PROXY,
   CFG_HTTPS_PROXY,
@@ -102,7 +105,7 @@ export class Config {
     // store.defaults(defaults);
     
     // store.env().argv().file(name, filePath).defaults(defaults);
-    store.env().file(name, filePath).defaults(defaults);
+    store.env({transform: transformEnvVariable}).file(name, filePath).defaults(defaults);
     const fsStore = new Provider().file(name, filePath);
     this.store = store;
     this.fsStore = fsStore;
@@ -280,5 +283,28 @@ function checkIfBitLegacyExist(): boolean {
     return false;
   } catch (e){
     return false;
+  }
+}
+
+/**
+ * This function will transform the env variable to only get env variable starts with the BVM_ENV_VARS_PREFIX
+ * it will also remove this prefix from the env var name so we don't need to treat it with this prefix 
+ * in rest of the code
+ * 
+ * @param param0 
+ * @returns 
+ */
+function transformEnvVariable({key, value}: {key: string, value:string}):{key: string, value:string} | undefined {
+  if(!key.startsWith(BVM_ENV_VARS_PREFIX)){
+    return undefined;
+  }
+  if (key === CFG_BVM_DIR){
+    // do not remove BVM_ prefix from the BVM dir config, as this is it's name
+    return {key, value};
+  }
+  console.log('key', key, value)
+  return {
+    key: key.replace(BVM_ENV_VARS_PREFIX, ''),
+    value
   }
 }
