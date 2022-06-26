@@ -1,4 +1,7 @@
+import fs from 'fs-extra';
 import { addDirToEnvPath, ConfigFileChangeType, ConfigReport, PathExtenderReport } from '@pnpm/os.env.path-extender';
+import { createFetchFromRegistry } from '@pnpm/fetch';
+import { fetchNode } from '@pnpm/node.fetcher';
 import {Config} from '@teambit/bvm.config';
 import {listLocal} from '@teambit/bvm.list';
 import cmdShim from '@zkochan/cmd-shim';
@@ -47,7 +50,6 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<L
 export interface LinkOptions {
   addToConfig?: boolean
   addToPathIfMissing?: boolean
-  nodeExecPath?: string
 }
 
 export async function linkDefault(
@@ -85,11 +87,13 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     force: true,
   }
   const rawGeneratedLinks = binLinks.getPaths(binOpts);
+  const nodeExecPath = await tryGetWantedNodeExecPath(config, versionDir);
   await cmdShim(path.join(versionDir, source), rawGeneratedLinks[0], {
     // Unsigned PowerShell scripts are not allowed on Windows with default settings,
     // so it is better to not use them.
     createPwshFile: false,
-    nodeExecPath: opts.nodeExecPath,
+    nodeExecPath,
+    prependToPath: nodeExecPath ? path.dirname(nodeExecPath) : undefined,
   });
   const generatedLink = {
     source: versionDir,
@@ -113,6 +117,33 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     generatedLink,
     pathExtenderReport,
   }
+}
+
+/**
+ * Returns the path to the Node.js executable that is required by the installed Bit CLI.
+ * If the given Node.js is not available in the bvm directory, also downloads it.
+ */
+async function tryGetWantedNodeExecPath(config: Config, versionDir: string): Promise<string | undefined> {
+  const bitManifest = fs.readJsonSync(path.join(versionDir, `node_modules/@teambit/bit/package.json`));
+  if (!bitManifest.bvm || !bitManifest.bvm.node) return undefined;
+  const nodeDir = await installNode(config, bitManifest.bvm.node);
+  return  path.join(nodeDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
+}
+
+/**
+ * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
+ */
+async function installNode(config: Config, version: string): Promise<string> {
+  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
+  if (exists) return versionDir;
+  const proxyConfig = config.proxyConfig();
+  const fetch = createFetchFromRegistry({
+    ...proxyConfig,
+    strictSsl: proxyConfig.strictSSL,
+  });
+  const cafsDir = config.getCafsDir();
+  await fetchNode(fetch, version, versionDir, { cafsDir });
+  return versionDir;
 }
 
 function getLinkSource(): string {

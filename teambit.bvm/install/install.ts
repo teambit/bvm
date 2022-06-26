@@ -1,7 +1,4 @@
 import fs, { MoveOptions } from 'fs-extra';
-import path from 'path';
-import { createFetchFromRegistry } from '@pnpm/fetch';
-import { fetchNode } from '@pnpm/node.fetcher';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
@@ -82,10 +79,8 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const nodeExecPath = await tryGetWantedNodeExecPath(config, versionDir, resolvedVersion);
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
-    nodeExecPath,
   });
   loader.stop();
   return {
@@ -96,33 +91,6 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     versionPath: versionDir
   }
-}
-
-/**
- * Returns the path to the Node.js executable that is required by the installed Bit CLI.
- * If the given Node.js is not available in the bvm directory, also downloads it.
- */
-async function tryGetWantedNodeExecPath(config: Config, versionDir: string, resolvedVersion: string): Promise<string | undefined> {
-  const bitManifest = fs.readJsonSync(path.join(versionDir, `bit-${resolvedVersion}/node_modules/@teambit/bit/package.json`));
-  if (!bitManifest.bvm || !bitManifest.bvm.node) return undefined;
-  const nodeDir = await installNode(config, bitManifest.bvm.node);
-  return  path.join(nodeDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
-}
-
-/**
- * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
- */
-async function installNode(config: Config, version: string): Promise<string> {
-  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
-  if (exists) return versionDir;
-  const proxyConfig = config.proxyConfig();
-  const fetch = createFetchFromRegistry({
-    ...proxyConfig,
-    strictSsl: proxyConfig.strictSSL,
-  });
-  const cafsDir = config.getCafsDir();
-  await fetchNode(fetch, version, versionDir, { cafsDir });
-  return versionDir;
 }
 
 async function extractWithLoader(filePath: string, version) {
@@ -163,14 +131,13 @@ type ReplaceCurrentResult = {
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, nodeExecPath?: string }): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
     const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
-      nodeExecPath: opts.nodeExecPath,
     });
     return {
       replaced: true,
