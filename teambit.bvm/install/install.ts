@@ -82,7 +82,10 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  await tryGetWantedNodeExecPath(config, versionDir, resolvedVersion);
+  const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
+  if (wantedNodeVersion) {
+    await installNode(config, wantedNodeVersion);
+  }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
   });
@@ -95,16 +98,6 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     versionPath: versionDir
   }
-}
-
-/**
- * Returns the path to the Node.js executable that is required by the installed Bit CLI.
- * If the given Node.js is not available in the bvm directory, also downloads it.
- */
-async function tryGetWantedNodeExecPath(config: Config, versionDir: string, resolvedVersion: string): Promise<void> {
-  const requiredNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
-  if (!requiredNodeVersion) return undefined;
-  await installNode(config, requiredNodeVersion);
 }
 
 /**
