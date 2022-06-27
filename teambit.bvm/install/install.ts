@@ -119,7 +119,10 @@ async function installNode(config: Config, version: string): Promise<string> {
     strictSsl: proxyConfig.strictSSL,
   });
   const cafsDir = config.getCafsDir();
+  const loaderText = `downloading Node.js ${version}`
+  loader.start(loaderText);
   await fetchNode(fetch, version, versionDir, { cafsDir });
+  loader.succeed(loaderText);
   return versionDir;
 }
 
