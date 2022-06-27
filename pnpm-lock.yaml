@@ -29,7 +29,7 @@ importers:
       '@types/tar': 4.0.4
       '@types/tar-fs': 2.0.0
       '@types/yargs': 17.0.0
-      '@zkochan/cmd-shim': 5.3.0
+      '@zkochan/cmd-shim': 5.2.2
       bin-links: 2.2.1
       chalk: 4.1.0
       cli-progress: 3.10.0
@@ -60,7 +60,7 @@ importers:
       '@teambit/toolbox.network.agent': registry.npmjs.org/@teambit/toolbox.network.agent/0.0.245
       '@teambit/toolbox.time.time-format': registry.npmjs.org/@teambit/toolbox.time.time-format/0.0.443
       '@types/lodash.pick': registry.npmjs.org/@types/lodash.pick/4.4.6
-      '@zkochan/cmd-shim': registry.npmjs.org/@zkochan/cmd-shim/5.3.0
+      '@zkochan/cmd-shim': registry.npmjs.org/@zkochan/cmd-shim/5.2.2
       bin-links: registry.npmjs.org/bin-links/2.2.1
       chalk: registry.npmjs.org/chalk/4.1.0
       cli-progress: registry.npmjs.org/cli-progress/3.10.0
@@ -848,10 +848,10 @@ packages:
       '@types/yargs-parser': registry.npmjs.org/@types/yargs-parser/21.0.0
     dev: true
 
-  registry.npmjs.org/@zkochan/cmd-shim/5.3.0:
-    resolution: {integrity: sha512-hWY9wIl0fGbYk6W0/qkm+DIhXXn5xOPuI7DXH8v9IfD9ftXPqHY41839Sa5Xz35Hm+a6Amdf4spG4/1jpvjVrQ==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@zkochan/cmd-shim/-/cmd-shim-5.3.0.tgz}
+  registry.npmjs.org/@zkochan/cmd-shim/5.2.2:
+    resolution: {integrity: sha512-uNWpBESHNlerKPs34liL43S14y1j3G39dpSf/wzkyP+axOzqvQTr4i+Nz/4shyS5FIL4fTi/ejHCDMT0ZneNWQ==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@zkochan/cmd-shim/-/cmd-shim-5.2.2.tgz}
     name: '@zkochan/cmd-shim'
-    version: 5.3.0
+    version: 5.2.2
     engines: {node: '>=10.13'}
     dependencies:
       cmd-extension: registry.npmjs.org/cmd-extension/1.0.2
