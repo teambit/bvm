@@ -82,10 +82,9 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const nodeExecPath = await tryGetWantedNodeExecPath(config, versionDir, resolvedVersion);
+  await tryGetWantedNodeExecPath(config, versionDir, resolvedVersion);
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
-    nodeExecPath,
   });
   loader.stop();
   return {
@@ -102,11 +101,10 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
  * Returns the path to the Node.js executable that is required by the installed Bit CLI.
  * If the given Node.js is not available in the bvm directory, also downloads it.
  */
-async function tryGetWantedNodeExecPath(config: Config, versionDir: string, resolvedVersion: string): Promise<string | undefined> {
-  const bitManifest = fs.readJsonSync(path.join(versionDir, `bit-${resolvedVersion}/node_modules/@teambit/bit/package.json`));
-  if (!bitManifest.bvm || !bitManifest.bvm.node) return undefined;
-  const nodeDir = await installNode(config, bitManifest.bvm.node);
-  return  path.join(nodeDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
+async function tryGetWantedNodeExecPath(config: Config, versionDir: string, resolvedVersion: string): Promise<void> {
+  const requiredNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
+  if (!requiredNodeVersion) return undefined;
+  await installNode(config, requiredNodeVersion);
 }
 
 /**
@@ -163,14 +161,13 @@ type ReplaceCurrentResult = {
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, nodeExecPath?: string }): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
     const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
-      nodeExecPath: opts.nodeExecPath,
     });
     return {
       replaced: true,

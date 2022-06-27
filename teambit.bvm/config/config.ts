@@ -216,6 +216,14 @@ export class Config {
   }
 
   /**
+   * Returns the Node.js version which is required by the given Bit CLI.
+   */
+  getWantedNodeVersion(innerVersionDir: string): string | undefined {
+    const bitManifest = fs.readJsonSync(path.join(innerVersionDir, 'node_modules/@teambit/bit/package.json'));
+    return bitManifest.bvm && bitManifest.bvm.node;
+  }
+
+  /**
    * We use a pnpm component for downloading Node.js.
    * pnpm writes the Node.js files to a content-addressable store.
    * We could use pnpm's global store location as well but its location may vary on different systems.

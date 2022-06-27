@@ -47,7 +47,6 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<L
 export interface LinkOptions {
   addToConfig?: boolean
   addToPathIfMissing?: boolean
-  nodeExecPath?: string
 }
 
 export async function linkDefault(
@@ -72,6 +71,15 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (!exists){
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
+  const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
+  let nodeExecPath: string;
+  if (wantedNodeVersion) {
+    const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
+    if (!node.exists) {
+      throw new BvmError(`Node.js version ${wantedNodeVersion} is not installed. Try to reinstall the wanted bit CLI version with the --override option`);
+    }
+    nodeExecPath = path.join(node.versionDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
+  }
   const pkg = {
     bin: {
       [linkName]: source
@@ -89,7 +97,8 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     // Unsigned PowerShell scripts are not allowed on Windows with default settings,
     // so it is better to not use them.
     createPwshFile: false,
-    nodeExecPath: opts.nodeExecPath,
+    nodeExecPath,
+    prependToPath: nodeExecPath ? path.dirname(nodeExecPath) : undefined,
   });
   const generatedLink = {
     source: versionDir,
