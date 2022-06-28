@@ -174,6 +174,13 @@
       }
     },
     "teambit.bvm/cli/app": {
+      "teambit.dependencies/dependency-resolver": {
+        "policy": {
+          "dependencies": {
+            "@pnpm/logger": "^4.0.0"
+          }
+        }
+      },
       "teambit.pkg/pkg": {
         "packageManagerPublishArgs": [
           "--access public"
