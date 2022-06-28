@@ -1,5 +1,7 @@
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
+import { createFetchFromRegistry } from '@pnpm/fetch';
+import { fetchNode } from '@pnpm/node.fetcher';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
@@ -80,6 +82,10 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
+  const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
+  if (wantedNodeVersion) {
+    await installNode(config, wantedNodeVersion);
+  }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
   });
@@ -92,6 +98,25 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     versionPath: versionDir
   }
+}
+
+/**
+ * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
+ */
+async function installNode(config: Config, version: string): Promise<string> {
+  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
+  if (exists) return versionDir;
+  const proxyConfig = config.proxyConfig();
+  const fetch = createFetchFromRegistry({
+    ...proxyConfig,
+    strictSsl: proxyConfig.strictSSL,
+  });
+  const cafsDir = config.getCafsDir();
+  const loaderText = `downloading Node.js ${version}`
+  loader.start(loaderText);
+  await fetchNode(fetch, version, versionDir, { cafsDir });
+  loader.succeed(loaderText);
+  return versionDir;
 }
 
 async function extractWithLoader(filePath: string, version) {

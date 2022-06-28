@@ -17,6 +17,7 @@ export const CONFIG_FILENAME = "config.json";
 export const ALIASES_KEY = 'aliases';
 export const LINKS_KEY = 'links';
 export const BIT_VERSIONS_FOLDER_NAME = 'versions';
+export const NODE_VERSIONS_FOLDER_NAME = 'nodejs';
 const CONFIG_KEY_NAME = 'global';
 
 
@@ -198,6 +199,38 @@ export class Config {
       versionDir,
       exists
     }
+  }
+
+  getNodeVersionsDir(): string {
+    return path.join(this.getBvmDirectory(), NODE_VERSIONS_FOLDER_NAME);
+  }
+
+  getSpecificNodeVersionDir(version: string): {versionDir: string, exists: boolean} {
+    const versionsDir = this.getNodeVersionsDir();
+    const versionDir = path.join(versionsDir, version);
+    const exists = fs.pathExistsSync(versionDir);
+    return {
+      versionDir,
+      exists
+    };
+  }
+
+  /**
+   * Returns the Node.js version which is required by the given Bit CLI.
+   */
+  getWantedNodeVersion(innerVersionDir: string): string | undefined {
+    const bitManifest = fs.readJsonSync(path.join(innerVersionDir, 'node_modules/@teambit/bit/package.json'));
+    return bitManifest.bvm && bitManifest.bvm.node;
+  }
+
+  /**
+   * We use a pnpm component for downloading Node.js.
+   * pnpm writes the Node.js files to a content-addressable store.
+   * We could use pnpm's global store location as well but its location may vary on different systems.
+   * So we just create a dedicated content-addressable store for Node.js artifacts in the bvm directory.
+   */
+  getCafsDir() {
+    return path.join(this.getNodeVersionsDir(), '.store');
   }
 
   getAliases(): Record<string, string> {
