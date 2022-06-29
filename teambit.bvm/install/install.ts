@@ -16,6 +16,7 @@ export type InstallOpts = {
   override?: boolean,
   replace?: boolean,
   file?: string
+  skipNodeInstall?: boolean
 }
 
 export type InstallResults = {
@@ -48,6 +49,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     if (!concreteOpts.override){
       const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
         addToPathIfMissing: opts.addToPathIfMissing,
+        skipNodeInstall: opts.skipNodeInstall,
       });
       return {
         downloadRequired: false,
@@ -82,12 +84,15 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
-  if (wantedNodeVersion) {
-    await installNode(config, wantedNodeVersion);
+  if (!opts.skipNodeInstall) {
+    const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
+    if (wantedNodeVersion) {
+      await installNode(config, wantedNodeVersion);
+    }
   }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
+    skipNodeInstall: opts.skipNodeInstall,
   });
   loader.stop();
   return {
@@ -157,13 +162,14 @@ type ReplaceCurrentResult = {
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean }): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, skipNodeInstall?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
     const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
+      skipNodeInstall: opts.skipNodeInstall,
     });
     return {
       replaced: true,

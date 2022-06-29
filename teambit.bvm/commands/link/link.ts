@@ -21,6 +21,13 @@ export class LinkCmd implements CommandModule {
         type: 'boolean',
       }
     })
+    .option({
+      file: {
+        describe: "don't link Node.js",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .positional('bit-version', {
       describe: 'version to link',
       type: 'string',
@@ -33,9 +40,16 @@ export class LinkCmd implements CommandModule {
   async handler(args) {
     let results;
     if (!args.name){
-      results = await linkAll({ addToPathIfMissing: !args.skipUpdatePath });
+      results = await linkAll({
+        addToPathIfMissing: !args.skipUpdatePath,
+        skipNodeInstall: args.skipNodeInstall,
+      });
     } else {
-      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, addToPathIfMissing: !args.skipUpdatePath })]
+      results = [await linkOne(args.name, args.bitVersion, {
+        addToConfig: true,
+        addToPathIfMissing: !args.skipUpdatePath,
+        skipNodeInstall: args.skipNodeInstall,
+      })]
     }
     printOutput(results, args.verbose);
     return;

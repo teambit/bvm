@@ -30,16 +30,24 @@ export type GeneratedLink = {
   target: string
 }
 
-export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<LinkResult[]>{
+export async function linkAll(opts: { addToPathIfMissing?: boolean, skipNodeInstall?: boolean }): Promise<LinkResult[]>{
   const links = config.getLinks();
   const defaultLinkVersion = config.getDefaultLinkVersion();
   const localLatest = (await listLocal()).latest();
   const promises = Object.entries(links).map(([linkName, version]) => {
-    return linkOne(linkName, version, { addToConfig: false, addToPathIfMissing: opts.addToPathIfMissing });
+    return linkOne(linkName, version, {
+      addToConfig: false,
+      addToPathIfMissing: opts.addToPathIfMissing,
+      skipNodeInstall: opts.skipNodeInstall,
+    });
   });
   if (!defaultLinkVersion && localLatest){
     const defaultLinkName = config.getDefaultLinkName();
-    promises.push(linkOne(defaultLinkName, localLatest.version, { addToConfig: true, addToPathIfMissing: opts.addToPathIfMissing }))
+    promises.push(linkOne(defaultLinkName, localLatest.version, {
+      addToConfig: true,
+      addToPathIfMissing: opts.addToPathIfMissing,
+      skipNodeInstall: opts.skipNodeInstall,
+    }))
   }
   return Promise.all(promises);
 }
@@ -47,6 +55,7 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean }): Promise<L
 export interface LinkOptions {
   addToConfig?: boolean
   addToPathIfMissing?: boolean
+  skipNodeInstall?: boolean
 }
 
 export async function linkDefault(
@@ -71,14 +80,16 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (!exists){
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
-  const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
   let nodeExecPath: string;
-  if (wantedNodeVersion) {
-    const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
-    if (!node.exists) {
-      throw new BvmError(`Node.js version ${wantedNodeVersion} is not installed. Try to reinstall the wanted bit CLI version with the --override option`);
+  if (!opts.skipNodeInstall) {
+    const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
+    if (wantedNodeVersion) {
+      const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
+      if (!node.exists) {
+        throw new BvmError(`Node.js version ${wantedNodeVersion} is not installed. Try to reinstall the wanted bit CLI version with the --override option`);
+      }
+      nodeExecPath = path.join(node.versionDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
     }
-    nodeExecPath = path.join(node.versionDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
   }
   const pkg = {
     bin: {
