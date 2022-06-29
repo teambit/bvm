@@ -22,8 +22,8 @@ export class LinkCmd implements CommandModule {
       }
     })
     .option({
-      file: {
-        describe: "don't link Node.js",
+      useSystemNode: {
+        describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
         type: 'boolean'
       }
@@ -42,13 +42,13 @@ export class LinkCmd implements CommandModule {
     if (!args.name){
       results = await linkAll({
         addToPathIfMissing: !args.skipUpdatePath,
-        skipNodeInstall: args.skipNodeInstall,
+        useSystemNode: args.useSystemNode,
       });
     } else {
       results = [await linkOne(args.name, args.bitVersion, {
         addToConfig: true,
         addToPathIfMissing: !args.skipUpdatePath,
-        skipNodeInstall: args.skipNodeInstall,
+        useSystemNode: args.useSystemNode,
       })]
     }
     printOutput(results, args.verbose);

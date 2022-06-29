@@ -44,8 +44,8 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
-      file: {
-        describe: "don't install Node.js",
+      useSystemNode: {
+        describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
         type: 'boolean'
       }
@@ -60,7 +60,7 @@ export class InstallCmd implements CommandModule {
       override: args.override,
       replace: args.replace,
       file: args.file,
-      skipNodeInstall: args.skipNodeInstall,
+      useSystemNode: args.useSystemNode,
     }
     const installStartTime = Date.now();
     const {versionPath, installedVersion, pathExtenderReport} = await installVersion(args.bitVersion, opts);

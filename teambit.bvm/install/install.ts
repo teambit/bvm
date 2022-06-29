@@ -16,7 +16,7 @@ export type InstallOpts = {
   override?: boolean,
   replace?: boolean,
   file?: string
-  skipNodeInstall?: boolean
+  useSystemNode?: boolean
 }
 
 export type InstallResults = {
@@ -49,7 +49,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     if (!concreteOpts.override){
       const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
         addToPathIfMissing: opts.addToPathIfMissing,
-        skipNodeInstall: opts.skipNodeInstall,
+        useSystemNode: opts.useSystemNode,
       });
       return {
         downloadRequired: false,
@@ -84,7 +84,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  if (!opts.skipNodeInstall) {
+  if (!opts.useSystemNode) {
     const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
     if (wantedNodeVersion) {
       await installNode(config, wantedNodeVersion);
@@ -92,7 +92,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
-    skipNodeInstall: opts.skipNodeInstall,
+    useSystemNode: opts.useSystemNode,
   });
   loader.stop();
   return {
@@ -162,14 +162,14 @@ type ReplaceCurrentResult = {
   previousCurrentVersion?: string
 }
 
-async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, skipNodeInstall?: boolean }): Promise<ReplaceCurrentResult> {
+async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, useSystemNode?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
     const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
-      skipNodeInstall: opts.skipNodeInstall,
+      useSystemNode: opts.useSystemNode,
     });
     return {
       replaced: true,

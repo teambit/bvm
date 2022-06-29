@@ -30,7 +30,7 @@ export type GeneratedLink = {
   target: string
 }
 
-export async function linkAll(opts: { addToPathIfMissing?: boolean, skipNodeInstall?: boolean }): Promise<LinkResult[]>{
+export async function linkAll(opts: { addToPathIfMissing?: boolean, useSystemNode?: boolean }): Promise<LinkResult[]>{
   const links = config.getLinks();
   const defaultLinkVersion = config.getDefaultLinkVersion();
   const localLatest = (await listLocal()).latest();
@@ -38,7 +38,7 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean, skipNodeInst
     return linkOne(linkName, version, {
       addToConfig: false,
       addToPathIfMissing: opts.addToPathIfMissing,
-      skipNodeInstall: opts.skipNodeInstall,
+      useSystemNode: opts.useSystemNode,
     });
   });
   if (!defaultLinkVersion && localLatest){
@@ -46,7 +46,7 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean, skipNodeInst
     promises.push(linkOne(defaultLinkName, localLatest.version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
-      skipNodeInstall: opts.skipNodeInstall,
+      useSystemNode: opts.useSystemNode,
     }))
   }
   return Promise.all(promises);
@@ -55,7 +55,7 @@ export async function linkAll(opts: { addToPathIfMissing?: boolean, skipNodeInst
 export interface LinkOptions {
   addToConfig?: boolean
   addToPathIfMissing?: boolean
-  skipNodeInstall?: boolean
+  useSystemNode?: boolean
 }
 
 export async function linkDefault(
@@ -81,7 +81,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
   let nodeExecPath: string;
-  if (!opts.skipNodeInstall) {
+  if (!opts.useSystemNode) {
     const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
     if (wantedNodeVersion) {
       const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
