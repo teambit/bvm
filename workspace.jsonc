@@ -37,7 +37,7 @@
       "dependencies": {
         "@pnpm/fetch": "4",
         "@pnpm/logger": "4.0.0",
-        "@pnpm/node.fetcher": "0.1.0",
+        "@pnpm/node.fetcher": "0.1.1",
         "@pnpm/os.env.path-extender": "0.2.4",
         "@teambit/toolbox.network.agent": "0.0.245",
         "@teambit/toolbox.time.time-format": "0.0.443",

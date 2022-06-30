@@ -7,7 +7,7 @@ importers:
       '@babel/runtime': 7.12.18
       '@pnpm/fetch': '4'
       '@pnpm/logger': ^4.0.0
-      '@pnpm/node.fetcher': 0.1.0
+      '@pnpm/node.fetcher': 0.1.1
       '@pnpm/os.env.path-extender': 0.2.4
       '@teambit/toolbox.network.agent': 0.0.245
       '@teambit/toolbox.time.time-format': 0.0.443
@@ -55,7 +55,7 @@ importers:
     dependencies:
       '@pnpm/fetch': registry.npmjs.org/@pnpm/fetch/4.2.7_@pnpm+logger@4.0.0
       '@pnpm/logger': registry.npmjs.org/@pnpm/logger/4.0.0
-      '@pnpm/node.fetcher': registry.npmjs.org/@pnpm/node.fetcher/0.1.0_@pnpm+logger@4.0.0
+      '@pnpm/node.fetcher': registry.npmjs.org/@pnpm/node.fetcher/0.1.1_@pnpm+logger@4.0.0
       '@pnpm/os.env.path-extender': registry.npmjs.org/@pnpm/os.env.path-extender/0.2.4
       '@teambit/toolbox.network.agent': registry.npmjs.org/@teambit/toolbox.network.agent/0.0.245
       '@teambit/toolbox.time.time-format': registry.npmjs.org/@teambit/toolbox.time.time-format/0.0.443
@@ -388,18 +388,20 @@ packages:
       - supports-color
     dev: false
 
-  registry.npmjs.org/@pnpm/node.fetcher/0.1.0_@pnpm+logger@4.0.0:
-    resolution: {integrity: sha512-gVhUhw0hEIPDNj67WadnlR3N6QQm1XDlntaUjkDlACICuBUOF9mrjOg0goyY2Xmey30umZiyn04tH7VmrykYmw==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/node.fetcher/-/node.fetcher-0.1.0.tgz}
-    id: registry.npmjs.org/@pnpm/node.fetcher/0.1.0
+  registry.npmjs.org/@pnpm/node.fetcher/0.1.1_@pnpm+logger@4.0.0:
+    resolution: {integrity: sha512-jTIp2VSeBlfOSvmp407NxXextQwM2omhhnGDcMX4IPtPULDPEsXInncGxgFsjiqhH9Ld8k1+g6L53fBG2tc7PA==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/node.fetcher/-/node.fetcher-0.1.1.tgz}
+    id: registry.npmjs.org/@pnpm/node.fetcher/0.1.1
     name: '@pnpm/node.fetcher'
-    version: 0.1.0
+    version: 0.1.1
     engines: {node: '>=12.17'}
     dependencies:
+      '@pnpm/error': registry.npmjs.org/@pnpm/error/2.1.0
       '@pnpm/fetcher-base': registry.npmjs.org/@pnpm/fetcher-base/11.2.0
       '@pnpm/fetching-types': registry.npmjs.org/@pnpm/fetching-types/2.2.1
       '@pnpm/package-store': registry.npmjs.org/@pnpm/package-store/12.2.0_@pnpm+logger@4.0.0
       '@pnpm/tarball-fetcher': registry.npmjs.org/@pnpm/tarball-fetcher/9.3.19_@pnpm+logger@4.0.0
       adm-zip: registry.npmjs.org/adm-zip/0.5.9
+      detect-libc: registry.npmjs.org/detect-libc/2.0.1
       rename-overwrite: registry.npmjs.org/rename-overwrite/4.0.2
       tempy: registry.npmjs.org/tempy/1.0.1
     transitivePeerDependencies:
@@ -1479,6 +1481,13 @@ packages:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/detect-indent/-/detect-indent-6.1.0.tgz}
     name: detect-indent
     version: 6.1.0
+    engines: {node: '>=8'}
+    dev: false
+
+  registry.npmjs.org/detect-libc/2.0.1:
+    resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.1.tgz}
+    name: detect-libc
+    version: 2.0.1
     engines: {node: '>=8'}
     dev: false
 

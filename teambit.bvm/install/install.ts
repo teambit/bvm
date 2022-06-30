@@ -84,15 +84,17 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  if (!opts.useSystemNode) {
+  let useSystemNode = opts.useSystemNode;
+  if (!useSystemNode) {
     const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
     if (wantedNodeVersion) {
-      await installNode(config, wantedNodeVersion);
+      // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+      useSystemNode = !(await installNode(config, wantedNodeVersion));
     }
   }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
-    useSystemNode: opts.useSystemNode,
+    useSystemNode,
   });
   loader.stop();
   return {
@@ -119,7 +121,12 @@ async function installNode(config: Config, version: string): Promise<string> {
   const cafsDir = config.getCafsDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
-  await fetchNode(fetch, version, versionDir, { cafsDir });
+  try {
+    await fetchNode(fetch, version, versionDir, { cafsDir });
+  } catch (err) {
+    loader.fail('Could not install Node.js, using the system Node.js instead');
+    return undefined;
+  }
   loader.succeed(loaderText);
   return versionDir;
 }
