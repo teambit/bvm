@@ -22,7 +22,7 @@ export type LinkResult = {
   previousLinkVersion?: string,
   generatedLink: GeneratedLink
   pathExtenderReport?: PathExtenderReport,
-  warning?: string,
+  warnings?: string[],
 }
 
 export { PathExtenderReport, ConfigReport, ConfigFileChangeType }
@@ -84,7 +84,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   }
   let nodeExecPath: string;
   const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
-  let warning: string
+  const warnings: string[] = []
   if (!opts.useSystemNode) {
     if (wantedNodeVersion) {
       const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
@@ -94,7 +94,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
       nodeExecPath = path.join(node.versionDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
     }
   } else if (semver.lt(process.version, wantedNodeVersion)) {
-    warning = `The system Node.js is ${process.version} while Bit CLI requires at least Node.js ${wantedNodeVersion}!`
+    warnings.push(`The system Node.js is ${process.version} while Bit CLI requires at least Node.js ${wantedNodeVersion}!`)
   }
   const pkg = {
     bin: {
@@ -137,7 +137,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     version: concreteVersion,
     generatedLink,
     pathExtenderReport,
-    warning,
+    warnings,
   }
 }
 

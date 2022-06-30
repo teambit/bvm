@@ -26,7 +26,7 @@ export type InstallResults = {
   previousCurrentVersion?: string
   versionPath: string,
   pathExtenderReport?: PathExtenderReport,
-  warning?: string,
+  warnings?: string[],
 }
 
 const defaultOpts = {
@@ -58,7 +58,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
         replacedCurrent: replacedCurrentResult.replaced,
         previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
         pathExtenderReport: replacedCurrentResult.pathExtenderReport,
-        warning: replacedCurrentResult.warning,
+        warnings: replacedCurrentResult.warnings,
         versionPath: versionDir
       }
     }
@@ -105,7 +105,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
-    warning: replacedCurrentResult.warning,
+    warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
 }
@@ -170,14 +170,14 @@ type ReplaceCurrentResult = {
   replaced: boolean,
   pathExtenderReport?: PathExtenderReport,
   previousCurrentVersion?: string,
-  warning?: string,
+  warnings?: string[],
 }
 
 async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, useSystemNode?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    const {previousLinkVersion, pathExtenderReport, warning} = await linkOne(config.getDefaultLinkName(), version, {
+    const {previousLinkVersion, pathExtenderReport, warnings} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
       useSystemNode: opts.useSystemNode,
@@ -186,7 +186,7 @@ async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, op
       replaced: true,
       previousCurrentVersion: previousLinkVersion,
       pathExtenderReport,
-      warning,
+      warnings,
     };
   }
   return {
