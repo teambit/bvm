@@ -16,7 +16,7 @@ export class InstallCmd implements CommandModule {
       type: 'string'
     })
     .option({
-      skipUpdatePath: {
+      'skip-update-path': {
         describe: "don't add the bvm directory to the system PATH",
         default: false,
         type: 'boolean',
@@ -44,7 +44,7 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
-      useSystemNode: {
+      'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
         type: 'boolean'
