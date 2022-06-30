@@ -65,7 +65,10 @@ export async function fetch(version: string, opts: FetchOpts): Promise<FsTarVers
   const progressBarOpts = {
     format: `downloading version ${resolvedVersion.version} [{bar}] {percentage}% | ETA: {etah} | Speed: {speed}`,
   }
-  await fileDownload(url, destination, {}, progressBarOpts, config.proxyConfig());
+  await fileDownload(url, destination, {}, progressBarOpts, {
+    ...config.networkConfig(),
+    ...config.proxyConfig(),
+  });
   const downloadEndTime = Date.now();
   const downloadTimeDiff = timeFormat(downloadEndTime - downloadStartTime);
   loader.succeed(`${downloadLoaderText} in ${downloadTimeDiff}`);

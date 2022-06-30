@@ -18,8 +18,10 @@ export type ListOptions = {
 const config = Config.load();
 
 export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
-  const proxyConfig = config.proxyConfig();
-  const gcpList = GcpList.create('dev', os.type(), process.arch, proxyConfig);
+  const gcpList = GcpList.create('dev', os.type(), process.arch, {
+    ...config.networkConfig(),
+    ...config.proxyConfig(),
+  });
   const list = await gcpList.list();
   if (!options?.limit) return list;
   return list.slice(options?.limit);

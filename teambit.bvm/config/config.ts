@@ -25,10 +25,19 @@ export const CFG_BVM_DIR = 'BVM_DIR';
 export const CFG_PROXY = 'proxy';
 export const CFG_HTTPS_PROXY = 'https_proxy';
 export const CFG_PROXY_CA = 'proxy.ca';
+export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
+
+export const CFG_NETWORK_LOCAL_ADDRESS = 'network.local_address';
+export const CFG_NETWORK_MAX_SOCKETS = 'network.max_sockets';
+export const CFG_NETWORK_CA = 'network.ca';
+export const CFG_NETWORK_STRICT_SSL = 'network.strict-ssl';
+export const CFG_NETWORK_CERT = 'network.cert';
+export const CFG_NETWORK_KEY = 'network.key';
+
+// For backward compatibility
 export const CFG_PROXY_STRICT_SSL = 'proxy.strict_ssl';
 export const CFG_PROXY_CERT = 'proxy.cert';
 export const CFG_PROXY_KEY = 'proxy.key';
-export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
 
 export const KNOWN_KEYS = [
   CFG_BVM_DIR,
@@ -272,18 +281,29 @@ export class Config {
     return allLinks[defaultLinkName];
   }
 
+  networkConfig() {
+    const strictSslConfig = this.get(CFG_NETWORK_STRICT_SSL) ?? this.get(CFG_PROXY_STRICT_SSL);
+    const strictSSL =
+      strictSslConfig && typeof strictSslConfig === "string"
+        ? strictSslConfig === "true"
+        : strictSslConfig;
+
+    return {
+      ca: this.get(CFG_NETWORK_CA) ?? this.get(CFG_PROXY_CA),
+      cert: this.get(CFG_NETWORK_CERT) ?? this.get(CFG_PROXY_CERT),
+      key: this.get(CFG_NETWORK_KEY) ?? this.get(CFG_PROXY_KEY),
+      localAddress: this.get(CFG_NETWORK_LOCAL_ADDRESS),
+      maxSockets: this.get(CFG_NETWORK_MAX_SOCKETS),
+      strictSSL,
+    }
+  }
+
   proxyConfig() {
     const httpProxy = this.get(CFG_PROXY);
     const httpsProxy = this.get(CFG_HTTPS_PROXY) ?? this.get(CFG_PROXY);
 
     // If check is true, return the proxy config only case there is actual proxy server defined
     if (!httpProxy && !httpsProxy) return {};
-
-    const strictSslConfig = this.get(CFG_PROXY_STRICT_SSL);
-    const strictSSL =
-      strictSslConfig && typeof strictSslConfig === "string"
-        ? strictSslConfig === "true"
-        : strictSslConfig;
 
     let noProxy = this.get(CFG_PROXY_NO_PROXY);
     if (noProxy && typeof noProxy === "string") {
@@ -294,13 +314,9 @@ export class Config {
       }
     }
     return {
-      ca: this.get(CFG_PROXY_CA),
-      cert: this.get(CFG_PROXY_CERT),
       httpProxy,
       httpsProxy,
-      key: this.get(CFG_PROXY_KEY),
       noProxy,
-      strictSSL,
     };
   }
 

@@ -111,10 +111,11 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
 async function installNode(config: Config, version: string): Promise<string> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
-  const proxyConfig = config.proxyConfig();
+  const networkConfig = config.networkConfig();
   const fetch = createFetchFromRegistry({
-    ...proxyConfig,
-    strictSsl: proxyConfig.strictSSL,
+    ...networkConfig,
+    ...config.proxyConfig(),
+    strictSsl: networkConfig.strictSSL,
   });
   const cafsDir = config.getCafsDir();
   const loaderText = `downloading Node.js ${version}`
