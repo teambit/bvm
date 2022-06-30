@@ -43,6 +43,13 @@ export class InstallCmd implements CommandModule {
         type: 'boolean'
       }
     })
+    .option({
+      useSystemNode: {
+        describe: "use the Node.js installed on the system to run Bit CLI",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
     return yargs;
@@ -53,6 +60,7 @@ export class InstallCmd implements CommandModule {
       override: args.override,
       replace: args.replace,
       file: args.file,
+      useSystemNode: args.useSystemNode,
     }
     const installStartTime = Date.now();
     const {versionPath, installedVersion, pathExtenderReport} = await installVersion(args.bitVersion, opts);

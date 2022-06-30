@@ -21,6 +21,13 @@ export class LinkCmd implements CommandModule {
         type: 'boolean',
       }
     })
+    .option({
+      useSystemNode: {
+        describe: "use the Node.js installed on the system to run Bit CLI",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .positional('bit-version', {
       describe: 'version to link',
       type: 'string',
@@ -33,9 +40,16 @@ export class LinkCmd implements CommandModule {
   async handler(args) {
     let results;
     if (!args.name){
-      results = await linkAll({ addToPathIfMissing: !args.skipUpdatePath });
+      results = await linkAll({
+        addToPathIfMissing: !args.skipUpdatePath,
+        useSystemNode: args.useSystemNode,
+      });
     } else {
-      results = [await linkOne(args.name, args.bitVersion, { addToConfig: true, addToPathIfMissing: !args.skipUpdatePath })]
+      results = [await linkOne(args.name, args.bitVersion, {
+        addToConfig: true,
+        addToPathIfMissing: !args.skipUpdatePath,
+        useSystemNode: args.useSystemNode,
+      })]
     }
     printOutput(results, args.verbose);
     return;

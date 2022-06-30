@@ -10,11 +10,18 @@ export class UpgradeCmd implements CommandModule {
   ];
   builder(yargs: Argv) {
     yargs
+    .option({
+      useSystemNode: {
+        describe: "use the Node.js installed on the system to run Bit CLI",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .example('$0 upgrade', 'install latest bit version from the server, update the current version, and delete the previous installed version')
     return yargs;
   }
   async handler(args) {
-    const upgradeResults = await installVersion('latest', {override: false, replace: true});
+    const upgradeResults = await installVersion('latest', {override: false, replace: true, useSystemNode: args.useSystemNode});
     return printOutput(upgradeResults);
   };
 }

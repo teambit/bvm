@@ -6,7 +6,7 @@ importers:
     specifiers:
       '@babel/runtime': 7.12.18
       '@pnpm/fetch': '4'
-      '@pnpm/logger': 4.0.0
+      '@pnpm/logger': ^4.0.0
       '@pnpm/node.fetcher': 0.1.0
       '@pnpm/os.env.path-extender': 0.2.4
       '@teambit/toolbox.network.agent': 0.0.245
