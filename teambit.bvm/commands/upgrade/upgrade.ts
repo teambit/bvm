@@ -11,7 +11,14 @@ export class UpgradeCmd implements CommandModule {
   builder(yargs: Argv) {
     yargs
     .option({
-      useSystemNode: {
+      'skip-update-path': {
+        describe: "don't add the bvm directory to the system PATH",
+        default: false,
+        type: 'boolean',
+      }
+    })
+    .option({
+      'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
         type: 'boolean'
@@ -21,7 +28,7 @@ export class UpgradeCmd implements CommandModule {
     return yargs;
   }
   async handler(args) {
-    const upgradeResults = await installVersion('latest', {override: false, replace: true, useSystemNode: args.useSystemNode});
+    const upgradeResults = await installVersion('latest', {override: false, replace: true, useSystemNode: args.useSystemNode, addToPathIfMissing: !args.skipUpdatePath});
     return printOutput(upgradeResults);
   };
 }
