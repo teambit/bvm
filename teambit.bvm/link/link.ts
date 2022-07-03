@@ -7,6 +7,7 @@ import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 import chalk from 'chalk';
+import semver from 'semver';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://bit.dev/docs';
@@ -21,6 +22,7 @@ export type LinkResult = {
   previousLinkVersion?: string,
   generatedLink: GeneratedLink
   pathExtenderReport?: PathExtenderReport,
+  warnings?: string[],
 }
 
 export { PathExtenderReport, ConfigReport, ConfigFileChangeType }
@@ -81,8 +83,9 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
   let nodeExecPath: string;
+  const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
+  const warnings: string[] = []
   if (!opts.useSystemNode) {
-    const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
     if (wantedNodeVersion) {
       const node = config.getSpecificNodeVersionDir(wantedNodeVersion);
       if (!node.exists) {
@@ -90,6 +93,8 @@ export async function linkOne(linkName: string, version: string | undefined, opt
       }
       nodeExecPath = path.join(node.versionDir, process.platform === 'win32' ? 'node.exe' : 'bin/node');
     }
+  } else if (semver.lt(process.version, wantedNodeVersion)) {
+    warnings.push(`The system Node.js is ${process.version} while Bit CLI requires at least Node.js ${wantedNodeVersion}!`)
   }
   const pkg = {
     bin: {
@@ -132,6 +137,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     version: concreteVersion,
     generatedLink,
     pathExtenderReport,
+    warnings,
   }
 }
 

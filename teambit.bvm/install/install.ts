@@ -26,6 +26,7 @@ export type InstallResults = {
   previousCurrentVersion?: string
   versionPath: string,
   pathExtenderReport?: PathExtenderReport,
+  warnings?: string[],
 }
 
 const defaultOpts = {
@@ -57,6 +58,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
         replacedCurrent: replacedCurrentResult.replaced,
         previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
         pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+        warnings: replacedCurrentResult.warnings,
         versionPath: versionDir
       }
     }
@@ -84,15 +86,17 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 
   await moveWithLoader(tempDir, versionDir, {overwrite: true});
-  if (!opts.useSystemNode) {
+  let useSystemNode = opts.useSystemNode;
+  if (!useSystemNode) {
     const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
     if (wantedNodeVersion) {
-      await installNode(config, wantedNodeVersion);
+      // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+      useSystemNode = !(await installNode(config, wantedNodeVersion));
     }
   }
   const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
     addToPathIfMissing: opts.addToPathIfMissing,
-    useSystemNode: opts.useSystemNode,
+    useSystemNode,
   });
   loader.stop();
   return {
@@ -101,6 +105,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+    warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
 }
@@ -120,7 +125,12 @@ async function installNode(config: Config, version: string): Promise<string> {
   const cafsDir = config.getCafsDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
-  await fetchNode(fetch, version, versionDir, { cafsDir });
+  try {
+    await fetchNode(fetch, version, versionDir, { cafsDir });
+  } catch (err) {
+    loader.fail('Could not install Node.js, using the system Node.js instead');
+    return undefined;
+  }
   loader.succeed(loaderText);
   return versionDir;
 }
@@ -160,14 +170,15 @@ async function moveWithLoader(src: string, target: string, opts: MoveOptions): P
 type ReplaceCurrentResult = {
   replaced: boolean,
   pathExtenderReport?: PathExtenderReport,
-  previousCurrentVersion?: string
+  previousCurrentVersion?: string,
+  warnings?: string[],
 }
 
 async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, opts: { addToPathIfMissing?: boolean, useSystemNode?: boolean }): Promise<ReplaceCurrentResult> {
   const config = getConfig();
   const currentLink = config.getDefaultLinkVersion();
   if (forceReplace || !currentLink){
-    const {previousLinkVersion, pathExtenderReport} = await linkOne(config.getDefaultLinkName(), version, {
+    const {previousLinkVersion, pathExtenderReport, warnings} = await linkOne(config.getDefaultLinkName(), version, {
       addToConfig: true,
       addToPathIfMissing: opts.addToPathIfMissing,
       useSystemNode: opts.useSystemNode,
@@ -176,6 +187,7 @@ async function replaceCurrentIfNeeded(forceReplace: boolean, version: string, op
       replaced: true,
       previousCurrentVersion: previousLinkVersion,
       pathExtenderReport,
+      warnings,
     };
   }
   return {

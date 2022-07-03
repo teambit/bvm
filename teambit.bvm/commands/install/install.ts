@@ -63,10 +63,13 @@ export class InstallCmd implements CommandModule {
       useSystemNode: args.useSystemNode,
     }
     const installStartTime = Date.now();
-    const {versionPath, installedVersion, pathExtenderReport} = await installVersion(args.bitVersion, opts);
+    const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
     const installEndTime = Date.now();
     const installTimeDiff = timeFormat(installEndTime - installStartTime);
     console.log(`version ${chalk.green(installedVersion)} installed on ${chalk.green(versionPath)} in ${chalk.cyan(installTimeDiff)}`);
+    if (warnings && warnings.length) {
+      console.log(chalk.yellowBright(warnings.join('\n')));
+    }
     if (!pathExtenderReport) return; 
     const output = renderPathExtenderReport(pathExtenderReport);
     if (output) {
