@@ -2,6 +2,7 @@ import { RemoteVersion } from '../version';
 
 export class GcpVersion {
   constructor(
+    public version: string,
     private fileName: string,
     private host: string,
     private md5hash: string,
@@ -9,14 +10,6 @@ export class GcpVersion {
     private metadata: { [key: string]: string },
     private protocol = 'https'
   ) { }
-
-  get version() {
-    return this.fileName
-      .split('/')[4]
-      .replace(/\.[^/.]+$/, '')
-      .replace(/\.[^/.]+$/, '')
-      .split('-')[1];
-  }
 
   get url() {
     return `${this.protocol}://${this.host}/${this.fileName}`;
