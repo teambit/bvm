@@ -1,5 +1,6 @@
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
+import semver from 'semver';
 import { createFetchFromRegistry } from '@pnpm/fetch';
 import { fetchNode } from '@pnpm/node.fetcher';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
@@ -7,6 +8,7 @@ import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
+import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
@@ -42,8 +44,16 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
 
   let resolvedVersion = version;
   if (!version || version === 'latest') {
-    const remoteVersionList = await listRemote();
-    resolvedVersion = remoteVersionList.latest().version;
+    if (opts.file) {
+      const versionFromFileName = getBitVersionFromFilePath(opts.file);
+      if (!versionFromFileName) {
+        throw new BvmError(`Could not detect bit version from file name "${opts.file}"`);
+      }
+      resolvedVersion = versionFromFileName;
+    } else {
+      const remoteVersionList = await listRemote();
+      resolvedVersion = remoteVersionList.latest().version;
+    }
   }
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
   if (exists) {
@@ -107,6 +117,20 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
+}
+
+/*
+ * Reads Bit's version from a tarball filename like "bit-0.0.778-linux-x64.tar.gz"
+ * Returns null if a version is not found.
+ */
+function getBitVersionFromFilePath(filePath: string): string | null {
+  const fileName = path.basename(filePath);
+  const parts = fileName.split('-');
+  if (parts.length < 4) return null;
+  const versionParts = parts.slice(1, parts.length - 2);
+  const version = versionParts.join('');
+  if (!semver.valid(version)) return null;
+  return version;
 }
 
 /**
