@@ -39,10 +39,10 @@ const loader = ora();
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const config = getConfig();
-  const remoteVersionList = await listRemote();
 
   let resolvedVersion = version;
   if (!version || version === 'latest') {
+    const remoteVersionList = await listRemote();
     resolvedVersion = remoteVersionList.latest().version;
   }
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
@@ -69,7 +69,6 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   if (opts.file){
     fsTarVersion = new FsTarVersion(opts.file);
     fsTarVersion = await fsTarVersion.copyToDir(tempDir, {loader});
-    
   } else {
     const fetchOpts: FetchOpts = {
       overrideDir: true,
