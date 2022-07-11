@@ -2,6 +2,7 @@ import { GcpStorage } from '@teambit/gcp.storage';
 import fetch from 'node-fetch';
 import { GcpVersion } from './gcp-version';
 import { RemoteVersionList } from '../version-list';
+import { RemoteVersion } from '../version';
 
 const bucketName = 'bvm.bit.dev';
 const prefix = 'versions';
@@ -13,18 +14,20 @@ export enum ReleaseType {
   STABLE = 'stable',
 }
 
+type Release = {
+  version: string;
+  date: string;
+} & Record<ReleaseType, true>
+
 export class GcpList {
   constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private arch = 'x64', private releaseType: ReleaseType = ReleaseType.NIGHTLY_FROM_OLD_LOCATION) { }
 
   async list(): Promise<RemoteVersionList> {
     if (this.releaseType !== ReleaseType.NIGHTLY_FROM_OLD_LOCATION) {
-      const releases = await (await fetch('https://bvm.bit.dev/bit/index.json')).json();
+      const releases = await (await fetch('https://bvm.bit.dev/bit/index.json')).json() as Release[];
       const remoteVersions = releases
         .filter((release) => release[this.releaseType] === true)
-        .map((release) => {
-          const gcpVersion = new GcpVersion(release.version, `bit/versions/${release.version}/bit-${release.version}-${this.osType.toLowerCase()}-${this.arch}.tar.gz`, bucketName, '', release.date, {});
-          return gcpVersion.toRemoteVersion();
-        });
+        .map((release) => this._createRemoteVersion(release));
       return new RemoteVersionList(remoteVersions);
     }
     const files = (await this.rawFiles()).filter(file => file.contentType === 'application/x-tar');
@@ -33,6 +36,12 @@ export class GcpList {
       return gcpVersion.toRemoteVersion();
     });
     return new RemoteVersionList(remoteVersions);
+  }
+
+  _createRemoteVersion(release: Release): RemoteVersion {
+    const fileName = `bit/versions/${release.version}/bit-${release.version}-${this.osType.toLowerCase()}-${this.arch}.tar.gz`;
+    const gcpVersion = new GcpVersion(release.version, fileName, bucketName, '', release.date, {});
+    return gcpVersion.toRemoteVersion();
   }
 
   async rawFiles() {
