@@ -14,10 +14,10 @@ export enum ReleaseType {
   STABLE = 'stable',
 }
 
-type Release = {
+export type Release = {
   version: string;
   date: string;
-} & Record<ReleaseType, true>
+} & Partial<Record<ReleaseType, true>>
 
 export class GcpList {
   constructor(private gcpStorage: GcpStorage, private osType = 'Darwin', private arch = 'x64', private releaseType: ReleaseType = ReleaseType.NIGHTLY_FROM_OLD_LOCATION) { }
