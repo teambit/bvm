@@ -24,7 +24,7 @@ export class GcpList {
 
   async list(): Promise<RemoteVersionList> {
     if (this.releaseType !== ReleaseType.NIGHTLY_FROM_OLD_LOCATION) {
-      const releases = await (await fetch('https://bvm.bit.dev/bit/index.json')).json() as Release[];
+      const releases = await fetchReleasesList();
       const remoteVersions = releases
         .filter((release) => release[this.releaseType] === true)
         .map((release) => this._createRemoteVersion(release));
@@ -56,6 +56,11 @@ export class GcpList {
     const gcpStorage = GcpStorage.create(bucketName, proxyConfig);
     return new GcpList(gcpStorage, osType, arch, releaseType);
   }
+}
+
+async function fetchReleasesList(): Promise<Release[]> {
+  const response = await fetch('https://bvm.bit.dev/bit/index.json');
+  return await response.json() as Release[];
 }
 
 function getVersionFromFileName(fileName: string) {
