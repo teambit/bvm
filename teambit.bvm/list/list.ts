@@ -1,5 +1,5 @@
 import os from 'os';
-import { GcpList, ReleaseType } from './gcp';
+import { GcpList } from './gcp';
 import { Config } from '@teambit/bvm.config';
 import semver from 'semver';
 import fs from 'fs-extra';
