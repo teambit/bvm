@@ -6,7 +6,6 @@ import path from 'path';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
-import chalk from 'chalk';
 import semver from 'semver';
 
 const IS_WINDOWS = os.platform() === 'win32';
@@ -129,7 +128,10 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (IS_WINDOWS){
     binDir = config.getBvmDirectory();
   }
-  const pathExtenderReport = await validateBinDirInPath(binDir, opts);
+  const { pathExtenderReport, warning } = await validateBinDirInPath(binDir, opts);
+  if (warning) {
+    warnings.push(warning);
+  }
 
   return {
     linkName, 
@@ -151,42 +153,48 @@ function getBitBinPath(){
   return path.join('@teambit', 'bit', 'bin', 'bit');
 }
 
-async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<PathExtenderReport | undefined> {
+async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<{ pathExtenderReport?: PathExtenderReport | undefined, warning?: string }> {
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
   if (osPaths.indexOf(binDir) !== -1) return;
   if (!opts.addToPathIfMissing) {
-    const err = IS_WINDOWS ? windowsMissingInPathError(binDir, WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL) : macLinuxMissingInPathError(binDir, MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL);
-    console.log(chalk.yellowBright(err));
+    const warningLines = [
+      'global Bit install location was not found in your PATH global variable.',
+      missingInPathError(binDir),
+      '',
+    ];
+    return { warning: warningLines.join('\n') };
   } else {
-    return await addDirToEnvPath(binDir, {
-      overwrite: true,
-      position: 'end',
-      configSectionName: 'bit',
-    })
+    try {
+      const pathExtenderReport = await addDirToEnvPath(binDir, {
+        overwrite: true,
+        position: 'end',
+        configSectionName: 'bit',
+      });
+      return { pathExtenderReport };
+    } catch (err) {
+      if (err.code === 'ERR_PNPM_UNKNOWN_SHELL') {
+        return {
+          warning: `Couldn't update the system PATH because failed to detect the active shell.
+You can either set the SHELL env variable to your shell name (e.g., "SHELL=bash bvm install")
+or ${missingInPathError(binDir)}`
+        };
+      }
+      return {
+        warning: `Couldn't update the system path: ${err.message}
+${missingInPathError(binDir)}`
+      }
+    }
   }
 }
 
-function windowsMissingInPathError(binDir: string, docsLink){
-  // Join with \n for better visibility in windows
-  const errLines = [
-    'global Bit install location was not found in your PATH global variable.',
-    'please run the following command and then re-open the terminal:',
-    `setx path "%path%;${binDir}" and re-open your terminal`,
-    `for more information read here - ${docsLink}
-    `
-  ];
-  return errLines.join('\n');
-}
-
-function macLinuxMissingInPathError(binDir: string, docsLink){
-  // Join with \n for better visibility in windows
-  const errLines = [
-    'global Bit install location was not found in your PATH global variable.',
-    'please add the following to your bash/zsh profile then re-open the terminal:',
-    `export PATH=$HOME/bin:$PATH`,
-    `for more information read here - ${docsLink}
-    `
-  ];
-  return errLines.join('\n');
+function missingInPathError(binDir: string) {
+  if (IS_WINDOWS) {
+    return `run the following command and then re-open the terminal:
+setx path "%path%;${binDir}" and re-open your terminal
+for more information read here - ${WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL}`;
+  }
+  return `add the following to your bash/zsh profile then re-open the terminal:
+export PATH=$HOME/bin:$PATH
+for more information read here - ${MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL}`;
 }
 
