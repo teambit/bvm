@@ -39,8 +39,8 @@
         "@pnpm/logger": "4.0.0",
         "@pnpm/node.fetcher": "0.1.1",
         "@pnpm/os.env.path-extender": "0.2.4",
-        "@teambit/toolbox.network.agent": "0.0.245",
-        "@teambit/toolbox.time.time-format": "0.0.443",
+        "@teambit/toolbox.network.agent": "0.0.540",
+        "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",
         "@types/date-fns": "2.5.3",
         "@types/fs-extra": "9.0.7",
@@ -90,7 +90,11 @@
     ],
     "strictPeerDependencies": true,
     "engineStrict": true,
-    "nodeVersion": "12.22.0"
+    "nodeVersion": "12.22.0",
+    "peerDependencyRules": {
+      "allowAny": [],
+      "ignoreMissing": []
+    }
   },
   /**
    * workspace variants allow to set different subsets of configuration for components in your workspace.
