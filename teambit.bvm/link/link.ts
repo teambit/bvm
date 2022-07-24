@@ -155,7 +155,7 @@ function getBitBinPath(){
 
 async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<{ pathExtenderReport?: PathExtenderReport | undefined, warning?: string }> {
   const osPaths = (process.env.PATH || process.env.Path || process.env.path).split(path.delimiter);
-  if (osPaths.indexOf(binDir) !== -1) return;
+  if (osPaths.indexOf(binDir) !== -1) return {};
   if (!opts.addToPathIfMissing) {
     const warningLines = [
       'global Bit install location was not found in your PATH global variable.',
