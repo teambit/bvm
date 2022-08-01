@@ -28,7 +28,7 @@ const defaultShowVersionOptions = {
 }
 
 export class VersionCmd implements CommandModule {
-  aliases = ["version"];
+  aliases = ["version", "versions"];
   describe =
     "show used (current) version, latest installed version and latest remote version (bit and bvm)";
   command = ["version"];
