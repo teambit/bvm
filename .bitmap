@@ -11,87 +11,45 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.1.7",
+        "version": "0.1.8",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/cli/app",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "7e597bf1b8641acdf99b86c984636cfc693da7df"
-            }
-        ]
+        "rootDir": "teambit.bvm/cli/app"
     },
     "commands/config": {
         "scope": "teambit.bvm",
         "version": "0.0.28",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/config",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "bab28a9dbf8548a10d5777becc144b73236e23a4"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/config"
     },
     "commands/install": {
         "scope": "teambit.bvm",
         "version": "0.0.46",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/install",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "12829cc02f52ee0184b8745367a882d4aecd3c63"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "scope": "teambit.bvm",
         "version": "0.0.43",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/link",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "9d779f5c24327968b8444c5a35b7e1f17f220de3"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/link"
     },
     "commands/list": {
         "scope": "teambit.bvm",
         "version": "0.0.36",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/list",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "2fd7d8519df55c080f4b42af733763964f9def61"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/list"
     },
     "commands/remove": {
         "scope": "teambit.bvm",
         "version": "0.0.36",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/remove",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "242bfa766156932fe5c7f1722ffd6141e2418824"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/remove"
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
         "version": "0.0.46",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/upgrade",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "13859b3e01b31750a757375845edaa9bf4feaa05"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/use": {
         "scope": "teambit.bvm",
@@ -101,27 +59,15 @@
     },
     "commands/version": {
         "scope": "teambit.bvm",
-        "version": "0.0.38",
+        "version": "0.0.39",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/commands/version",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "782b9e78f56d36284ada78a3db94201a41944294"
-            }
-        ]
+        "rootDir": "teambit.bvm/commands/version"
     },
     "config": {
         "scope": "teambit.bvm",
         "version": "0.1.1",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/config",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "5ed6beeb03a4d3ac2996a5b10e2e9d04e9762e8a"
-            }
-        ]
+        "rootDir": "teambit.bvm/config"
     },
     "error": {
         "scope": "teambit.bvm",
@@ -133,13 +79,7 @@
         "scope": "teambit.bvm",
         "version": "0.0.39",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/fetch",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "dbc78c67371304a51d551ab4e6a837aad56b54bc"
-            }
-        ]
+        "rootDir": "teambit.bvm/fetch"
     },
     "fs-tar-version": {
         "scope": "teambit.bvm",
@@ -163,37 +103,19 @@
         "scope": "teambit.bvm",
         "version": "0.1.6",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/install",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "0acfe957e0dff71770a3e5be8a014d7c053906df"
-            }
-        ]
+        "rootDir": "teambit.bvm/install"
     },
     "link": {
         "scope": "teambit.bvm",
         "version": "0.1.5",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/link",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "b4ebc282e9982c12b4eb66fd3d07e8ed8bf06780"
-            }
-        ]
+        "rootDir": "teambit.bvm/link"
     },
     "list": {
         "scope": "teambit.bvm",
         "version": "0.0.36",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/list",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "5cf01e08fcd461e258e32cf3d9f408d8fdd3bb6b"
-            }
-        ]
+        "rootDir": "teambit.bvm/list"
     },
     "network/file-downloader": {
         "scope": "teambit.toolbox",
@@ -211,13 +133,7 @@
         "scope": "teambit.bvm",
         "version": "0.0.36",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/remove",
-        "lanes": [
-            {
-                "remoteLane": "teambit.bvm/fix-completion",
-                "version": "443ea888f645a3b717d6da3f159b72386c16e114"
-            }
-        ]
+        "rootDir": "teambit.bvm/remove"
     },
     "reporter": {
         "scope": "teambit.bvm",
@@ -231,5 +147,5 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
-    "$schema-version": "14.9.0"
+    "$schema-version": "15.0.0"
 }
