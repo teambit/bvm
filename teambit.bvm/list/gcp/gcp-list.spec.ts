@@ -12,7 +12,7 @@ describe('GcpList', () => {
         nightly: true,
       },
     ]);
-    const gcpList = GcpList.create(ReleaseType.nightly, 'Windows_NT', 'x64');
+    const gcpList = GcpList.create(ReleaseType.NIGHTLY, 'Windows_NT', 'x64');
     const list = await gcpList.list();
     expect(list.entries[0].url).toBe('https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-win-x64.tar.gz');
   });
@@ -24,7 +24,7 @@ describe('GcpList', () => {
         nightly: true,
       },
     ]);
-    const gcpList = GcpList.create(ReleaseType.nightly, 'Linux', 'x64');
+    const gcpList = GcpList.create(ReleaseType.NIGHTLY, 'Linux', 'x64');
     const list = await gcpList.list();
     expect(list.entries[0].url).toBe('https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-linux-x64.tar.gz');
   });
@@ -36,7 +36,7 @@ describe('GcpList', () => {
         nightly: true,
       },
     ]);
-    const gcpList = GcpList.create(ReleaseType.nightly, 'Darwin', 'x64');
+    const gcpList = GcpList.create(ReleaseType.NIGHTLY, 'Darwin', 'x64');
     const list = await gcpList.list();
     expect(list.entries[0].url).toBe('https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-darwin-x64.tar.gz');
   });
@@ -48,7 +48,7 @@ describe('GcpList', () => {
         nightly: true,
       },
     ]);
-    const gcpList = GcpList.create(ReleaseType.nightly, 'Darwin', 'arm64');
+    const gcpList = GcpList.create(ReleaseType.NIGHTLY, 'Darwin', 'arm64');
     const list = await gcpList.list();
     expect(list.entries[0].url).toBe('https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-darwin-arm64.tar.gz');
   });
