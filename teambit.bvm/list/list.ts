@@ -16,7 +16,7 @@ export type ListOptions = {
 const config = Config.load();
 
 export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
-  const releaseType = options?.releaseType ?? config.get('release-type');
+  const releaseType = options?.releaseType ?? config.getReleaseType();
   const gcpList = GcpList.create(releaseType, os.type(), process.arch, {
     ...config.networkConfig(),
     ...config.proxyConfig(),
