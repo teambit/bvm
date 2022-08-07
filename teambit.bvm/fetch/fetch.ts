@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { listRemote } from '@teambit/bvm.list';
+import { listRemote, ReleaseType } from '@teambit/bvm.list';
 import { Config } from '@teambit/bvm.config';
 import { download as fileDownload } from '@teambit/toolbox.network.progress-bar-file-downloader';
 import ora from 'ora';
@@ -36,6 +36,11 @@ export async function fetch(version: string, opts: FetchOpts): Promise<FsTarVers
     resolvedVersion = remoteVersionList.latest();
   } else {
     resolvedVersion = remoteVersionList.find(version);
+    if (!resolvedVersion) {
+      // If the given version is not found, try to fetch it from the old location
+      const oldVersions = await listRemote({ releaseType: ReleaseType.NIGHTLY_FROM_OLD_LOCATION });
+      resolvedVersion = oldVersions.find(version);
+    }
   }
 
   if (!resolvedVersion) {

@@ -22,6 +22,7 @@ const CONFIG_KEY_NAME = 'global';
 
 
 export const CFG_BVM_DIR = 'BVM_DIR';
+export const CFG_RELEASE_TYPE = 'RELEASE_TYPE';
 export const CFG_PROXY = 'proxy';
 export const CFG_HTTPS_PROXY = 'https_proxy';
 export const CFG_PROXY_CA = 'proxy.ca';
@@ -266,6 +267,10 @@ export class Config {
       return acc;
     }, {});
     return res;
+  }
+
+  getReleaseType() {
+    return this.get(CFG_RELEASE_TYPE);
   }
 
   setLink(linkName: string, value: string): string {
