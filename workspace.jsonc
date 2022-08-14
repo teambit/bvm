@@ -83,7 +83,6 @@
       },
       "peerDependencies": {}
     },
-    "nodeLinker": "hoisted",
     "packageManagerArgs": [],
     "devFilePatterns": [
       "**/*.spec.ts"
