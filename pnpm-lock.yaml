@@ -8,7 +8,7 @@ importers:
       '@pnpm/fetch': '4'
       '@pnpm/logger': ^4.0.0
       '@pnpm/node.fetcher': 0.1.1
-      '@pnpm/os.env.path-extender': 0.2.4
+      '@pnpm/os.env.path-extender': 0.2.6
       '@teambit/toolbox.network.agent': 0.0.540
       '@teambit/toolbox.time.time-format': 0.0.483
       '@types/chalk': 0.4.31
@@ -56,7 +56,7 @@ importers:
       '@pnpm/fetch': registry.npmjs.org/@pnpm/fetch/4.2.7_@pnpm+logger@4.0.0
       '@pnpm/logger': registry.npmjs.org/@pnpm/logger/4.0.0
       '@pnpm/node.fetcher': registry.npmjs.org/@pnpm/node.fetcher/0.1.1_@pnpm+logger@4.0.0
-      '@pnpm/os.env.path-extender': registry.npmjs.org/@pnpm/os.env.path-extender/0.2.4
+      '@pnpm/os.env.path-extender': registry.npmjs.org/@pnpm/os.env.path-extender/0.2.6
       '@teambit/toolbox.network.agent': registry.npmjs.org/@teambit/toolbox.network.agent/0.0.540
       '@teambit/toolbox.time.time-format': registry.npmjs.org/@teambit/toolbox.time.time-format/0.0.483
       '@types/lodash.pick': registry.npmjs.org/@types/lodash.pick/4.4.6
@@ -418,19 +418,19 @@ packages:
       - domexception
     dev: false
 
-  registry.npmjs.org/@pnpm/os.env.path-extender-posix/0.2.3:
-    resolution: {integrity: sha512-gL/G8vGS3i8hnQcG24U2HVHgQMps/I2EEtDWcM03oodvMjPicMOKip4LP5UjwbNQUESyuwxOrPS60/XlYV9DZw==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender-posix/-/os.env.path-extender-posix-0.2.3.tgz}
+  registry.npmjs.org/@pnpm/os.env.path-extender-posix/0.2.4:
+    resolution: {integrity: sha512-gph+76yy+oHoiyJXubrhOWaK08wkubMd/DOrjt6ZlZ8LJQBjbl1okrjEQiTi5MkhGRqLSAOR+wPJMdFk+pvN3Q==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender-posix/-/os.env.path-extender-posix-0.2.4.tgz}
     name: '@pnpm/os.env.path-extender-posix'
-    version: 0.2.3
+    version: 0.2.4
     engines: {node: '>=12.22.0'}
     dependencies:
       '@pnpm/error': registry.npmjs.org/@pnpm/error/2.1.0
     dev: false
 
-  registry.npmjs.org/@pnpm/os.env.path-extender-windows/0.2.1:
-    resolution: {integrity: sha512-KUNyrpl9pcE8keNsjaByd9cCberpIGU+qZAEyk2dP3QNjG+1A6CO9tuRCR4RySjYjWy5+KqOILRLDjhGbd9zbA==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender-windows/-/os.env.path-extender-windows-0.2.1.tgz}
+  registry.npmjs.org/@pnpm/os.env.path-extender-windows/0.2.2:
+    resolution: {integrity: sha512-Wx3z2a/4uBvNCqONfq4d8+18OxlCI7kwqKE9hFR2PK8bk483Ds4scO3QyuPMp4erk+sO8iKea4DG5sVEml60ag==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender-windows/-/os.env.path-extender-windows-0.2.2.tgz}
     name: '@pnpm/os.env.path-extender-windows'
-    version: 0.2.1
+    version: 0.2.2
     engines: {node: '>=12.22.0'}
     dependencies:
       '@pnpm/error': registry.npmjs.org/@pnpm/error/2.1.0
@@ -438,14 +438,14 @@ packages:
       string.prototype.matchall: registry.npmjs.org/string.prototype.matchall/4.0.7
     dev: false
 
-  registry.npmjs.org/@pnpm/os.env.path-extender/0.2.4:
-    resolution: {integrity: sha512-LcJgQq2rzhQe3+WoFVu2uC2A6M1/o5DFqIrHfr3ylqxDYvlE31LyjLjcIPi3LXIkvfQFl0OKQXx0qIIv0ai0fw==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender/-/os.env.path-extender-0.2.4.tgz}
+  registry.npmjs.org/@pnpm/os.env.path-extender/0.2.6:
+    resolution: {integrity: sha512-4Iw6cMRetpf7p4Nrq/BD+xvZrz7nclMlyMXueTWfmIysDraR2BQjXZwOE6IYxvaPcyRwcE3f+S5ofnQfbKwZ7g==, registry: https://node.bit.cloud/, tarball: https://registry.npmjs.org/@pnpm/os.env.path-extender/-/os.env.path-extender-0.2.6.tgz}
     name: '@pnpm/os.env.path-extender'
-    version: 0.2.4
+    version: 0.2.6
     engines: {node: '>=12.22.0'}
     dependencies:
-      '@pnpm/os.env.path-extender-posix': registry.npmjs.org/@pnpm/os.env.path-extender-posix/0.2.3
-      '@pnpm/os.env.path-extender-windows': registry.npmjs.org/@pnpm/os.env.path-extender-windows/0.2.1
+      '@pnpm/os.env.path-extender-posix': registry.npmjs.org/@pnpm/os.env.path-extender-posix/0.2.4
+      '@pnpm/os.env.path-extender-windows': registry.npmjs.org/@pnpm/os.env.path-extender-windows/0.2.2
     dev: false
 
   registry.npmjs.org/@pnpm/package-is-installable/5.0.13_@pnpm+logger@4.0.0:

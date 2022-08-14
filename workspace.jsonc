@@ -32,13 +32,12 @@
      * choose the package manager for Bit to use. you can choose between 'yarn', 'pnpm'
      */
     "packageManager": "teambit.dependencies/pnpm",
-    "nodeLinker": "hoisted",
     "policy": {
       "dependencies": {
         "@pnpm/fetch": "4",
         "@pnpm/logger": "4.0.0",
         "@pnpm/node.fetcher": "0.1.1",
-        "@pnpm/os.env.path-extender": "0.2.4",
+        "@pnpm/os.env.path-extender": "0.2.6",
         "@teambit/toolbox.network.agent": "0.0.540",
         "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",
