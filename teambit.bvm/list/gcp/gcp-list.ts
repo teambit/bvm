@@ -27,7 +27,7 @@ export class GcpList {
     private proxyConfig = {},
     private osType = 'Darwin',
     private arch = 'x64',
-    private releaseType: ReleaseType = ReleaseType.NIGHTLY_FROM_OLD_LOCATION,
+    private releaseType: ReleaseType = ReleaseType.NIGHTLY,
   ) { }
 
   async list(): Promise<RemoteVersionList> {
@@ -68,7 +68,7 @@ export class GcpList {
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
 
-  static create(releaseType: ReleaseType = ReleaseType.NIGHTLY_FROM_OLD_LOCATION, osType = 'Darwin', arch = 'x64', proxyConfig?: {}) {
+  static create(releaseType: ReleaseType = ReleaseType.NIGHTLY, osType = 'Darwin', arch = 'x64', proxyConfig?: {}) {
     const gcpStorage = GcpStorage.create(bucketName, proxyConfig);
     return new GcpList(gcpStorage, proxyConfig, osType, arch, releaseType);
   }
