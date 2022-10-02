@@ -1,14 +1,9 @@
-import { CommandModule, Argv, boolean } from "yargs";
+import { CommandModule, Argv } from "yargs";
 import chalk from "chalk";
-import util from "util";
 import { Config } from "@teambit/bvm.config";
+import { getBvmRemoteVersion, getNewerBvmAvailableOutput, getBvmLocalVersion} from "@teambit/bvm.version";
 import { listLocal, listRemote } from "@teambit/bvm.list";
-import { exec } from "child_process";
-import path from 'path';
 import semver from "semver";
-const execP = util.promisify(exec);
-
-const BVM_PACKAGE_NAME = "@teambit/bvm";
 
 export type VersionsResult = {
   currentBvmVersion?: string;
@@ -130,29 +125,11 @@ function formatOutput(versions: VersionsResult): string {
   return outputs.join("\n");
 }
 
-function getNewerBvmAvailableOutput(
-  currentBvmVersion?: string,
-  latestBvmRemoteVersion?: string
-): string | undefined {
-  if (!currentBvmVersion || !latestBvmRemoteVersion) {
-    return undefined;
-  }
-  if (semver.gt(latestBvmRemoteVersion, currentBvmVersion)) {
-    const npmCommand = chalk.cyan(`npm install -g ${BVM_PACKAGE_NAME}`);
-    const yarnCommand = chalk.cyan(`yarn global add ${BVM_PACKAGE_NAME}`);
-    return `new version of ${chalk.cyan(
-      "bvm"
-    )} is available, upgrade your ${chalk.cyan(
-      "bvm"
-    )} by running "${npmCommand}" or "${yarnCommand}"`;
-  }
-}
-
 function getNewerBitAvailableOutput(
   currentVersion?: string,
   latestInstalledVersion?: string,
   latestRemoteVersion?: string
-): string {
+): string | undefined {
   if (!currentVersion) {
     return undefined;
   }
@@ -169,16 +146,4 @@ function getNewerBitAvailableOutput(
       "bvm upgrade"
     )}"`;
   }
-}
-
-async function getBvmLocalVersion(): Promise<string | undefined> {
-  const {stdout } = await execP("bvm local-version");
-  const stdoutString = stdout.toString().trim();
-  const result = semver.valid(stdoutString) ? stdoutString : undefined;
-  return result;
-}
-
-async function getBvmRemoteVersion(): Promise<string | undefined> {
-  const { stdout } = await execP("npm view @teambit/bvm version");
-  return stdout.toString();
 }
