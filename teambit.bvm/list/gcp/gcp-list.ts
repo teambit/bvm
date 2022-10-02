@@ -5,8 +5,8 @@ import { GcpVersion } from './gcp-version';
 import { RemoteVersionList } from '../version-list';
 import { RemoteVersion } from '../version';
 
-// const BIT_INDEX_JSON = 'https://bvm.bit.dev/bit/index.json';
-const BIT_INDEX_JSON_OBJECT = 'bit/index-test.json';
+const BIT_INDEX_JSON_OBJECT = 'bit/index.json';
+// const BIT_INDEX_JSON_OBJECT = 'bit/index-test.json';
 const BIT_INDEX_JSON = `https://bvm.bit.dev/${BIT_INDEX_JSON_OBJECT}`;
 const bucketName = 'bvm.bit.dev';
 const prefix = 'versions';
