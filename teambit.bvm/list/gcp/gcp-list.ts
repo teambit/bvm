@@ -1,16 +1,26 @@
 import { GcpStorage } from '@teambit/gcp.storage';
 import { getAgent } from '@teambit/toolbox.network.agent';
+import {compare} from 'semver';
 import fetch from 'node-fetch';
 import { GcpVersion } from './gcp-version';
 import { RemoteVersionList } from '../version-list';
 import { RemoteVersion } from '../version';
 
-const BIT_INDEX_JSON = 'https://bvm.bit.dev/bit/index.json';
+const BIT_INDEX_JSON_OBJECT = 'bit/index.json';
+// const BIT_INDEX_JSON_OBJECT = 'bit/index-test.json';
+const BIT_INDEX_JSON = `https://bvm.bit.dev/${BIT_INDEX_JSON_OBJECT}`;
 const bucketName = 'bvm.bit.dev';
 const prefix = 'versions';
 
-export enum ReleaseType {
+export enum ReleaseTypeFilter {
   NIGHTLY_FROM_OLD_LOCATION = 'nightly-from-old-location',
+  // TODO: merge this with the ReleaseType properly
+  DEV = 'dev',
+  NIGHTLY = 'nightly',
+  STABLE = 'stable',
+}
+
+export enum ReleaseType {
   DEV = 'dev',
   NIGHTLY = 'nightly',
   STABLE = 'stable',
@@ -27,14 +37,14 @@ export class GcpList {
     private proxyConfig = {},
     private osType = 'Darwin',
     private arch = 'x64',
-    private releaseType: ReleaseType = ReleaseType.NIGHTLY,
+    private releaseTypeFilter: ReleaseTypeFilter = ReleaseTypeFilter.STABLE,
   ) { }
 
   async list(): Promise<RemoteVersionList> {
-    if (this.releaseType !== ReleaseType.NIGHTLY_FROM_OLD_LOCATION) {
-      const releases = await this._fetchReleasesList();
+    if (this.releaseTypeFilter !== ReleaseTypeFilter.NIGHTLY_FROM_OLD_LOCATION) {
+      const releases = await this.fetchIndex();
       const remoteVersions = releases
-        .filter((release) => release[this.releaseType] === true)
+        .filter((release) => release[this.releaseTypeFilter] === true)
         .map((release) => this._createRemoteVersion(release));
       return new RemoteVersionList(remoteVersions);
     }
@@ -46,11 +56,35 @@ export class GcpList {
     return new RemoteVersionList(remoteVersions);
   }
 
-  async _fetchReleasesList(): Promise<Release[]> {
+  async fetchIndex(): Promise<Release[]> {
     const response = await fetch(BIT_INDEX_JSON, {
       agent: getAgent(BIT_INDEX_JSON, this.proxyConfig),
     });
     return await response.json() as Release[];
+  }
+
+  async updateReleaseEntry(version: string, releaseTypeUpdates: Partial<Record<ReleaseType, boolean>>): Promise<Release> {
+    const index = await this.fetchIndex();
+    const release = index.find((release) => release.version === version);
+    if (!release){
+      throw new Error(`version ${version} not found in index.json`);
+    }
+    Object.entries(releaseTypeUpdates).forEach(([releaseType, value]) => {
+      if (value){
+        release[releaseType] = value;
+      } else {
+        delete release[releaseType];
+      }
+    });
+    const newIndex = index.filter((release) => release.version !== version)
+    newIndex.push(release);
+    const sortedIndex = newIndex.sort(compareReleases);
+    const metadata = {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    }
+    await this.gcpStorage.putFile(BIT_INDEX_JSON_OBJECT, JSON.stringify(sortedIndex, null, 2), metadata);
+    return release;
   }
 
   _createRemoteVersion(release: Release): RemoteVersion {
@@ -68,9 +102,9 @@ export class GcpList {
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
 
-  static create(releaseType: ReleaseType = ReleaseType.NIGHTLY, osType = 'Darwin', arch = 'x64', proxyConfig?: {}) {
-    const gcpStorage = GcpStorage.create(bucketName, proxyConfig);
-    return new GcpList(gcpStorage, proxyConfig, osType, arch, releaseType);
+  static create(releaseTypeFilter: ReleaseTypeFilter = ReleaseTypeFilter.STABLE, osType = 'Darwin', arch = 'x64', proxyConfig?: {}, accessKey?: string, secretKey?: string) {
+    const gcpStorage = GcpStorage.create(bucketName, proxyConfig, accessKey, secretKey);
+    return new GcpList(gcpStorage, proxyConfig, osType, arch, releaseTypeFilter);
   }
 }
 
@@ -80,4 +114,13 @@ function getVersionFromFileName(fileName: string) {
     .replace(/\.[^/.]+$/, '')
     .replace(/\.[^/.]+$/, '')
     .split('-')[1];
+}
+
+function compareReleases(v1: Release, v2: Release) {
+  try {
+    return compare(v1.version, v2.version);
+  } catch (err) {
+    // in case one of them is a snap
+    return 0;
+  }
 }

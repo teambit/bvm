@@ -10,6 +10,7 @@ import {configCmd} from '@teambit/bvm.commands.config';
 import {linkCmd} from '@teambit/bvm.commands.link';
 import {useCmd} from '@teambit/bvm.commands.use';
 import {versionCmd, showAllVersions} from '@teambit/bvm.commands.version';
+import {releaseCmd} from '@teambit/bvm.commands.release';
 import {localVersionCmd} from './local-version';
 
 let argv;
@@ -40,6 +41,7 @@ async function main() {
     .command(useCmd)
     .command(removeCmd)
     .command(configCmd)
+    .command(releaseCmd)
     .example(
       "$0 version",
       "show used (current) version, latest installed version and latest remote version (bit and bvm)"

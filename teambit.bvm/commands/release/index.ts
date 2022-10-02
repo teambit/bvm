@@ -1,0 +1,1 @@
+export {ReleaseCmd, command as releaseCmd} from './release';
