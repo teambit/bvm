@@ -78,7 +78,7 @@ export class GcpList {
     });
     const newIndex = index.filter((release) => release.version !== version)
     newIndex.push(release);
-    const sortedIndex = newIndex.sort(reverseCompareVersions);
+    const sortedIndex = newIndex.sort(compareReleases);
     const metadata = {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',
@@ -116,7 +116,7 @@ function getVersionFromFileName(fileName: string) {
     .split('-')[1];
 }
 
-function reverseCompareVersions(v1: Release, v2: Release) {
+function compareReleases(v1: Release, v2: Release) {
   try {
     return compare(v1.version, v2.version);
   } catch (err) {
