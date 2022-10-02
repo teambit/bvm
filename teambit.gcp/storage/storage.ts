@@ -37,7 +37,7 @@ export class GcpStorage {
   async getFiles(opts: { prefix: string }) {
     const agent = getAgent(this.getStorageAPIUrl(), this.proxyConfig);
     const res = await fetch(
-      `${this.storageAPI}/storage/v1/b/${this.bucketName}/o?prefix=${opts.prefix}`,
+      `${this.getStorageAPIUrl()}/storage/v1/b/${this.bucketName}/o?prefix=${opts.prefix}`,
       {
         agent,
       }
