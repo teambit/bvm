@@ -1,2 +1,2 @@
-export {GcpList, ReleaseType} from './gcp-list';
+export {GcpList, ReleaseType, ReleaseTypeFilter} from './gcp-list';
 export {GcpVersion} from './gcp-version';
