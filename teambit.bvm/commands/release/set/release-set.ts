@@ -2,7 +2,7 @@ import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallResults} from '@teambit/bvm.install';
 import chalk from 'chalk';
 import { updateReleaseEntry } from '@teambit/bvm.release';
-import { Release } from '@teambit/bvm.list/gcp/gcp-list';
+import { Release } from '@teambit/bvm.list';
 
 export class ReleaseSetCmd implements CommandModule {
   aliases = ['set'];

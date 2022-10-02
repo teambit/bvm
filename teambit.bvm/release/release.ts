@@ -1,5 +1,5 @@
 import { getGcpList, ReleaseType } from '@teambit/bvm.list';
-import { Release } from '@teambit/bvm.list/gcp/gcp-list';
+import { Release } from '@teambit/bvm.list';
 
 
 export async function updateReleaseEntry(version: string, releaseTypeUpdates: Partial<Record<ReleaseType, boolean>>): Promise<Release> {

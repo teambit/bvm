@@ -6,8 +6,6 @@ import fs from 'fs-extra';
 import { LocalVersionList, RemoteVersionList } from './version-list';
 import { LocalVersion } from './version';
 
-export { ReleaseType, ReleaseTypeFilter };
-
 export type GcpListOptions = {
   releaseType?: ReleaseTypeFilter;
 }
