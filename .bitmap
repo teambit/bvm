@@ -159,5 +159,11 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
+    "version": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/version"
+    },
     "$schema-version": "15.0.0"
 }

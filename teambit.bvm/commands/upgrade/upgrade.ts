@@ -1,6 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallResults} from '@teambit/bvm.install';
 import chalk from 'chalk';
+import { getBvmLocalVersion, getBvmRemoteVersion, getNewerBvmAvailableOutput } from '@teambit/bvm.version';
 
 export class UpgradeCmd implements CommandModule {
   aliases = ['u', 'upgrade'];
@@ -24,10 +25,25 @@ export class UpgradeCmd implements CommandModule {
         type: 'boolean'
       }
     })
+    .option({
+      'skip-update-check': {
+        describe: "skip checking for a newer version of BVM",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .example('$0 upgrade', 'install latest bit version from the server, update the current version, and delete the previous installed version')
     return yargs;
   }
   async handler(args) {
+    if (!args.skipUpdateCheck) {
+      const currentBvmVersion = await getBvmLocalVersion();
+      const latestBvmRemoteVersion = await getBvmRemoteVersion();
+      const upgradeBvmMsg = getNewerBvmAvailableOutput(currentBvmVersion, latestBvmRemoteVersion);
+      if (upgradeBvmMsg){
+        console.log(chalk.yellow(upgradeBvmMsg));
+      }
+    }
     const upgradeResults = await installVersion('latest', {override: false, replace: true, useSystemNode: args.useSystemNode, addToPathIfMissing: !args.skipUpdatePath});
     return printOutput(upgradeResults);
   };

@@ -2,6 +2,8 @@ import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallOpts} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { renderPathExtenderReport } from '@teambit/bvm.reporter';
+import { getBvmLocalVersion, getBvmRemoteVersion, getNewerBvmAvailableOutput } from '@teambit/bvm.version';
+
 import chalk from 'chalk';
 export class InstallCmd implements CommandModule {
   aliases = ['i', 'install'];
@@ -50,11 +52,26 @@ export class InstallCmd implements CommandModule {
         type: 'boolean'
       }
     })
+    .option({
+      'skip-update-check': {
+        describe: "skip checking for a newer version of BVM",
+        default: false,
+        type: 'boolean'
+      }
+    })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
     return yargs;
   }
   async handler(args) {
+    if (!args.skipUpdateCheck) {
+      const currentBvmVersion = await getBvmLocalVersion();
+      const latestBvmRemoteVersion = await getBvmRemoteVersion();
+      const upgradeBvmMsg = getNewerBvmAvailableOutput(currentBvmVersion, latestBvmRemoteVersion);
+      if (upgradeBvmMsg){
+        console.log(chalk.yellow(upgradeBvmMsg));
+      }
+    }
     const opts: InstallOpts = {
       addToPathIfMissing: !args.skipUpdatePath,
       override: args.override,
