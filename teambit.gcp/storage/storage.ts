@@ -28,7 +28,7 @@ export class GcpStorage {
   }
 
   private getStorageAPIUrl() {
-    if (!this.storageAPI.startsWith('https')){
+    if (!this.storageAPI.startsWith('https:')){
       return `https://${this.storageAPI}`;
     }
     return this.storageAPI;
