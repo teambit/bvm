@@ -1,15 +1,15 @@
 import os from 'os';
-import { GcpList, ReleaseType } from './gcp';
+import { GcpList, ReleaseType, ReleaseTypeFilter } from './gcp';
 import { Config } from '@teambit/bvm.config';
 import semver from 'semver';
 import fs from 'fs-extra';
 import { LocalVersionList, RemoteVersionList } from './version-list';
 import { LocalVersion } from './version';
 
-export { ReleaseType };
+export { ReleaseType, ReleaseTypeFilter };
 
 export type GcpListOptions = {
-  releaseType?: ReleaseType;
+  releaseType?: ReleaseTypeFilter;
 }
 export type ListOptions = GcpListOptions & {
   limit?: number;
