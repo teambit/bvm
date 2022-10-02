@@ -39,6 +39,12 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list"
     },
+    "commands/release": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/commands/release"
+    },
     "commands/remove": {
         "scope": "teambit.bvm",
         "version": "0.0.38",
@@ -128,6 +134,12 @@
         "version": "0.0.25",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
+    },
+    "release": {
+        "scope": "",
+        "version": "",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/release"
     },
     "remove": {
         "scope": "teambit.bvm",

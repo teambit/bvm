@@ -1,0 +1,1 @@
+export {ReleaseSetCmd, releaseSetCommand} from './release-set';

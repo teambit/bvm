@@ -8,19 +8,27 @@ import { LocalVersion } from './version';
 
 export { ReleaseType };
 
-export type ListOptions = {
-  limit?: number;
+export type GcpListOptions = {
   releaseType?: ReleaseType;
+}
+export type ListOptions = GcpListOptions & {
+  limit?: number;
 };
 
 const config = Config.load();
 
-export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
+export function getGcpList(options?: GcpListOptions): GcpList {
   const releaseType = options?.releaseType ?? config.getReleaseType();
+  const {accessKey, secretKey} = config.gcpConfig();
   const gcpList = GcpList.create(releaseType, os.type(), process.arch, {
     ...config.networkConfig(),
     ...config.proxyConfig(),
-  });
+  }, accessKey, secretKey);
+  return gcpList;
+}
+
+export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
+  const gcpList = getGcpList(options);
   const list = await gcpList.list();
   if (!options?.limit) return list;
   return list.slice(options?.limit);

@@ -35,6 +35,10 @@ export const CFG_NETWORK_STRICT_SSL = 'network.strict-ssl';
 export const CFG_NETWORK_CERT = 'network.cert';
 export const CFG_NETWORK_KEY = 'network.key';
 
+// GCP config for set releases metadata
+export const CFG_GCP_ACCESS_KEY = 'gcp_access_key';
+export const CFG_GCP_SECRET_KEY = 'gcp_secret_key';
+
 // For backward compatibility
 export const CFG_PROXY_STRICT_SSL = 'proxy.strict_ssl';
 export const CFG_PROXY_CERT = 'proxy.cert';
@@ -43,6 +47,8 @@ export const CFG_PROXY_KEY = 'proxy.key';
 export const KNOWN_KEYS = [
   CFG_BVM_DIR,
   "DEFAULT_LINK",
+  CFG_GCP_ACCESS_KEY,
+  CFG_GCP_SECRET_KEY,
   CFG_PROXY,
   CFG_HTTPS_PROXY,
   CFG_PROXY_CA,
@@ -51,7 +57,6 @@ export const KNOWN_KEYS = [
   CFG_PROXY_KEY,
   CFG_PROXY_NO_PROXY,
 ];
-
 
 const DEFAULT_LINK = 'bit';
 const DEFAULT_ALTERNATIVE_LINK = 'bbit';
@@ -300,6 +305,13 @@ export class Config {
       localAddress: this.get(CFG_NETWORK_LOCAL_ADDRESS),
       maxSockets: this.get(CFG_NETWORK_MAX_SOCKETS),
       strictSSL,
+    }
+  }
+
+  gcpConfig() {
+    return {
+      accessKey: this.get(CFG_GCP_ACCESS_KEY),
+      secretKey: this.get(CFG_GCP_SECRET_KEY),
     }
   }
 
