@@ -1,5 +1,6 @@
 import { GcpStorage } from '@teambit/gcp.storage';
 import { getAgent } from '@teambit/toolbox.network.agent';
+import {compare} from 'semver';
 import fetch from 'node-fetch';
 import { GcpVersion } from './gcp-version';
 import { RemoteVersionList } from '../version-list';
@@ -77,11 +78,12 @@ export class GcpList {
     });
     const newIndex = index.filter((release) => release.version !== version)
     newIndex.push(release);
+    const sortedIndex = newIndex.sort(reverseCompareVersions);
     const metadata = {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',
     }
-    await this.gcpStorage.putFile(BIT_INDEX_JSON_OBJECT, JSON.stringify(newIndex, null, 2), metadata);
+    await this.gcpStorage.putFile(BIT_INDEX_JSON_OBJECT, JSON.stringify(sortedIndex, null, 2), metadata);
     return release;
   }
 
@@ -112,4 +114,13 @@ function getVersionFromFileName(fileName: string) {
     .replace(/\.[^/.]+$/, '')
     .replace(/\.[^/.]+$/, '')
     .split('-')[1];
+}
+
+function reverseCompareVersions(v1: Release, v2: Release) {
+  try {
+    return compare(v1.version, v2.version);
+  } catch (err) {
+    // in case one of them is a snap
+    return 0;
+  }
 }
