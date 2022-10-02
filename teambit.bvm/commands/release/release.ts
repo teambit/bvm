@@ -5,7 +5,7 @@ import chalk from 'chalk';
 
 export class ReleaseCmd implements CommandModule {
   aliases = ['release'];
-  describe = 'update the remote releases registry';
+  describe = false as const;
   command = [
     'release'
   ];
