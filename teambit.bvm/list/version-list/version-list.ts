@@ -18,6 +18,10 @@ export class VersionList {
     return this.entries.map(entry => entry.version);
   }
 
+  toMap(){
+    return new Map(this.entries.map(e => [e.version, e.releasetype]));
+  }
+
   sortBySemver(order: 'asc' | 'desc' = 'desc'): VersionList {
     let sorted = VersionList.sortList(this.entries, order);   
     return new VersionList(sorted)

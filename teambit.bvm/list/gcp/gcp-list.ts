@@ -18,6 +18,7 @@ export enum ReleaseTypeFilter {
   DEV = 'dev',
   NIGHTLY = 'nightly',
   STABLE = 'stable',
+  ALL = 'all'
 }
 
 export enum ReleaseType {
@@ -43,14 +44,16 @@ export class GcpList {
   async list(): Promise<RemoteVersionList> {
     if (this.releaseTypeFilter !== ReleaseTypeFilter.NIGHTLY_FROM_OLD_LOCATION) {
       const releases = await this.fetchIndex();
-      const remoteVersions = releases
-        .filter((release) => release[this.releaseTypeFilter] === true)
-        .map((release) => this._createRemoteVersion(release));
+      const filteredReleases = this.releaseTypeFilter === ReleaseTypeFilter.ALL 
+        ? releases 
+        : releases.filter((release) => release[this.releaseTypeFilter] === true)
+
+      const remoteVersions = filteredReleases.map((release) => this._createRemoteVersion(release));
       return new RemoteVersionList(remoteVersions);
     }
     const files = (await this.rawFiles()).filter(file => file.contentType === 'application/x-tar');
     const remoteVersions = files.map((file) => {
-      const gcpVersion = new GcpVersion(getVersionFromFileName(file.name), file.name, file.bucket, file.md5Hash, file.timeCreated, file.metadata);
+      const gcpVersion = new GcpVersion(getVersionFromFileName(file.name), file.name, file.bucket, file.md5Hash, file.timeCreated, file.metadata, undefined);
       return gcpVersion.toRemoteVersion();
     });
     return new RemoteVersionList(remoteVersions);
@@ -90,7 +93,8 @@ export class GcpList {
   _createRemoteVersion(release: Release): RemoteVersion {
     const osCode = this.osType === 'Windows_NT' ? 'win' : this.osType.toLowerCase();
     const fileName = `bit/versions/${release.version}/bit-${release.version}-${osCode}-${this.arch}.tar.gz`;
-    const gcpVersion = new GcpVersion(release.version, fileName, bucketName, '', release.date, {});
+    const releaseType = release[ReleaseType.STABLE] ? ReleaseType.STABLE : ReleaseType.NIGHTLY;
+    const gcpVersion = new GcpVersion(release.version, fileName, bucketName, '', release.date, {}, undefined, releaseType);
     return gcpVersion.toRemoteVersion();
   }
 
