@@ -2,15 +2,16 @@ import { CommandModule, Argv } from "yargs";
 import chalk from "chalk";
 import { Config } from "@teambit/bvm.config";
 import { getBvmRemoteVersion, getNewerBvmAvailableOutput, getBvmLocalVersion} from "@teambit/bvm.version";
-import { listLocal, listRemote } from "@teambit/bvm.list";
+import { listLocal, listRemote, ReleaseType, ReleaseTypeFilter, Version } from "@teambit/bvm.list";
 import semver from "semver";
 
 export type VersionsResult = {
   currentBvmVersion?: string;
   latestBvmRemoteVersion?: string;
-  currentVersion?: string;
-  latestRemoteVersion?: string;
-  latestInstalledVersion?: string;
+  currentVersion?: Version;
+  latestRemoteStableVersion?: string;
+  latestRemoteNightlyVersion?: string;
+  latestInstalledVersion?: Version;
 };
 
 export type ShowVersionsOptions = {
@@ -61,11 +62,18 @@ export async function showAllVersions(options: ShowVersionsOptions = defaultShow
   const latestBvmRemoteVersion = actualOpts.includeRemote
     ? await getBvmRemoteVersion()
     : undefined;
-
-  const currentVersion = config.getDefaultLinkVersion();
-  const latestInstalledVersion = (await listLocal()).latest().version;
-  const latestRemoteVersion = actualOpts.includeRemote
-    ? (await listRemote()).latest().version
+    
+  const remoteVersionsList = await listRemote({releaseType: ReleaseTypeFilter.ALL});
+  const remoteVersionsListMap = remoteVersionsList.toMap();
+  const currentVersionString = config.getDefaultLinkVersion();
+  const currentVersion = currentVersionString ? new Version( currentVersionString, remoteVersionsListMap.get(currentVersionString)) : undefined;
+  const releaseType = config.getReleaseType();
+  const latestInstalledVersion = (await listLocal()).latest();
+  const latestRemoteStableVersion = actualOpts.includeRemote
+    ? remoteVersionsList.versionsByReleaseType([ReleaseType.STABLE]).latest().version
+    : undefined;
+  const latestRemoteNightlyVersion = releaseType === ReleaseTypeFilter.NIGHTLY 
+    ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest().version 
     : undefined;
 
   const output = formatOutput({
@@ -73,7 +81,8 @@ export async function showAllVersions(options: ShowVersionsOptions = defaultShow
     latestBvmRemoteVersion,
     currentVersion,
     latestInstalledVersion,
-    latestRemoteVersion,
+    latestRemoteStableVersion,
+    latestRemoteNightlyVersion
   });
   return output;
 }
@@ -89,16 +98,23 @@ function formatOutput(versions: VersionsResult): string {
     : undefined;
 
   const currentVersionOutput = versions.currentVersion
-    ? `current (used) bit version: ${chalk.green(versions.currentVersion)}`
+    ? `current (used) bit version: ${chalk.green(
+      `${versions.currentVersion.version} (${versions.currentVersion.releasetype?.toString() ?? 'stable'})`
+      )}`
     : undefined;
   const latestInstalled = versions.latestInstalledVersion
     ? `latest installed bit version: ${chalk.green(
-        versions.latestInstalledVersion
+        `${versions.latestInstalledVersion.version} (${versions.latestInstalledVersion.releasetype?.toString() ?? 'stable'})`
       )}`
     : undefined;
-  const latestRemote = versions.latestRemoteVersion
-    ? `latest available bit version: ${chalk.green(
-        versions.latestRemoteVersion
+  const latestRemoteStable = versions.latestRemoteStableVersion
+    ? `latest available stable bit version: ${chalk.green(
+        versions.latestRemoteStableVersion
+      )}`
+    : undefined;
+  const latestRemoteNightly = versions.latestRemoteNightlyVersion
+    ? `latest available nightly bit version: ${chalk.green(
+        versions.latestRemoteNightlyVersion
       )}`
     : undefined;
 
@@ -107,9 +123,9 @@ function formatOutput(versions: VersionsResult): string {
     versions.latestBvmRemoteVersion
   );
   const newerBitOutput = getNewerBitAvailableOutput(
-    versions.currentVersion,
-    versions.latestInstalledVersion,
-    versions.latestRemoteVersion
+    versions.currentVersion?.version,
+    versions.latestInstalledVersion?.version,
+    versions.latestRemoteStableVersion
   );
 
   const outputs = [
@@ -117,7 +133,8 @@ function formatOutput(versions: VersionsResult): string {
     latestRemoteBvmOutput,
     currentVersionOutput,
     latestInstalled,
-    latestRemote,
+    latestRemoteStable,
+    latestRemoteNightly,
     "\n",
     newerBvmOutput,
     newerBitOutput,
