@@ -9,8 +9,8 @@ export type VersionsResult = {
   currentBvmVersion?: string;
   latestBvmRemoteVersion?: string;
   currentVersion?: Version;
-  latestRemoteStableVersion?: string;
-  latestRemoteNightlyVersion?: string;
+  latestRemoteStableVersion?: Version;
+  latestRemoteNightlyVersion?: Version;
   latestInstalledVersion?: Version;
 };
 
@@ -70,10 +70,10 @@ export async function showAllVersions(options: ShowVersionsOptions = defaultShow
   const releaseType = config.getReleaseType();
   const latestInstalledVersion = (await listLocal()).latest();
   const latestRemoteStableVersion = actualOpts.includeRemote
-    ? remoteVersionsList.versionsByReleaseType([ReleaseType.STABLE]).latest().version
+    ? remoteVersionsList.versionsByReleaseType([ReleaseType.STABLE]).latest()
     : undefined;
   const latestRemoteNightlyVersion = releaseType === ReleaseTypeFilter.NIGHTLY 
-    ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest().version 
+    ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest() 
     : undefined;
 
   const output = formatOutput({
@@ -99,22 +99,22 @@ function formatOutput(versions: VersionsResult): string {
 
   const currentVersionOutput = versions.currentVersion
     ? `current (used) bit version: ${chalk.green(
-      `${versions.currentVersion.version} (${versions.currentVersion.releasetype?.toString() ?? 'stable'})`
+      `${versions.currentVersion.version} (${versions.currentVersion.releaseType?.toString() ?? 'stable'})`
       )}`
     : undefined;
   const latestInstalled = versions.latestInstalledVersion
     ? `latest installed bit version: ${chalk.green(
-        `${versions.latestInstalledVersion.version} (${versions.latestInstalledVersion.releasetype?.toString() ?? 'stable'})`
+        `${versions.latestInstalledVersion.version} (${versions.latestInstalledVersion.releaseType?.toString() ?? 'stable'})`
       )}`
     : undefined;
   const latestRemoteStable = versions.latestRemoteStableVersion
     ? `latest available stable bit version: ${chalk.green(
-        versions.latestRemoteStableVersion
+        versions.latestRemoteStableVersion.version
       )}`
     : undefined;
   const latestRemoteNightly = versions.latestRemoteNightlyVersion
     ? `latest available nightly bit version: ${chalk.green(
-        versions.latestRemoteNightlyVersion
+        versions.latestRemoteNightlyVersion.version
       )}`
     : undefined;
 
@@ -125,7 +125,8 @@ function formatOutput(versions: VersionsResult): string {
   const newerBitOutput = getNewerBitAvailableOutput(
     versions.currentVersion?.version,
     versions.latestInstalledVersion?.version,
-    versions.latestRemoteStableVersion
+    versions.latestRemoteStableVersion,
+    versions.latestRemoteNightlyVersion
   );
 
   const outputs = [
@@ -145,22 +146,33 @@ function formatOutput(versions: VersionsResult): string {
 function getNewerBitAvailableOutput(
   currentVersion?: string,
   latestInstalledVersion?: string,
-  latestRemoteVersion?: string
+  latestRemoteStableVersion?: Version,
+  latestRemoteNightlyVersion?: Version
 ): string | undefined {
   if (!currentVersion) {
     return undefined;
   }
-  if (!latestInstalledVersion && !latestRemoteVersion) {
+  if (!latestInstalledVersion && !latestRemoteStableVersion && !latestRemoteNightlyVersion) {
     return undefined;
   }
-  if (
-    semver.gt(latestInstalledVersion, currentVersion) ||
-    (latestRemoteVersion && semver.gt(latestRemoteVersion, currentVersion))
-  ) {
-    return `new version of ${chalk.cyan(
-      "bit"
-    )} is available, upgrade your ${chalk.cyan("bit")} by running "${chalk.cyan(
-      "bvm upgrade"
-    )}"`;
+  function newVersionAvailableText(versionToCheck?: Version){
+    if (!versionToCheck) return undefined;
+
+    const commandToRun = versionToCheck.releaseType === ReleaseType.STABLE ?
+      `bvm install ${versionToCheck.version}`
+      : "bvm upgrade"
+    
+    if (
+      semver.gt(latestInstalledVersion || "0.0.0", currentVersion || "0.0.0") ||
+      (versionToCheck.version && semver.gt(versionToCheck.version, currentVersion || "0.0.0"))
+    )
+    {
+      return `new ${versionToCheck.releaseType?.toString() ?? ""} version (${versionToCheck.version}) of ${chalk.cyan("bit")} `+
+           `is available, upgrade your ${chalk.cyan("bit")} by running "${chalk.cyan(commandToRun)}"\n`;
+    }
   }
+  latestRemoteStableVersion = undefined;
+  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion)].join("");
+    
+  return output;
 }
