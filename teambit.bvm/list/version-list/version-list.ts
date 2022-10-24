@@ -19,7 +19,7 @@ export class VersionList {
   }
 
   toMap(){
-    return new Map(this.entries.map(e => [e.version, e.releasetype]));
+    return new Map(this.entries.map(e => [e.version, e.releaseType]));
   }
 
   sortBySemver(order: 'asc' | 'desc' = 'desc'): VersionList {
