@@ -177,7 +177,7 @@ function getNewerBitAvailableOutput(
   }
 
   const moreRecentLocalVersionOutput = latestInstalledVersion && (semver.gt(latestInstalledVersion.version, currentVersion.version)) 
-    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion.version}) installed - run ${chalk.cyan(`bvm use ${latestInstalledVersion.version}`)} to use your latest installed version`
+    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion.version}) installed - run "${chalk.cyan(`bvm use ${latestInstalledVersion.version}`)}" to use your latest installed version`
     : undefined;
 
   function newVersionAvailableText(versionToCheck?: Version){
@@ -190,7 +190,7 @@ function getNewerBitAvailableOutput(
     
     if ((version && semver.gt(version, currentVersion!.version)))
     {
-      return `${chalk.greenBright("newer")} ${releaseType?.toString() ?? ""} version (${version}) of ${chalk.cyan("bit")} `+
+      return `${chalk.greenBright("new")} ${releaseType?.toString() ?? ""} version (${version}) of ${chalk.cyan("bit")} `+
            `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
     }      
   }
