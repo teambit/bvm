@@ -144,10 +144,8 @@ function formatOutput(versions: VersionsResult): string {
     versions.latestBvmRemoteVersion
   );
   const newerBitOutput = getNewerBitAvailableOutput(
-    currentVersion?.version,
-    latestInstalledVersion?.version,
-    latestRemoteStableVersion,
-    latestRemoteNightlyVersion
+    versions.localBitVersions,
+    versions.remoteBitVersions
   );
 
   const outputs = [
@@ -165,11 +163,12 @@ function formatOutput(versions: VersionsResult): string {
 }
 
 function getNewerBitAvailableOutput(
-  currentVersion?: string,
-  latestInstalledVersion?: string,
-  latestRemoteStableVersion?: Version,
-  latestRemoteNightlyVersion?: Version
+  localVersions: LocalBitVersions,
+  remoteVersions: RemoteBitVersions
 ): string | undefined {
+  const { currentVersion, latestInstalledVersion } = localVersions;
+  const { latestRemoteNightlyVersion, latestRemoteStableVersion } = remoteVersions;
+
   if (!currentVersion) {
     return undefined;
   }
@@ -177,8 +176,8 @@ function getNewerBitAvailableOutput(
     return undefined;
   }
 
-  const moreRecentLocalVersionOutput = latestInstalledVersion && (semver.gt(latestInstalledVersion, currentVersion)) 
-    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion}) installed on your machine - run ${chalk.cyan(`bvm use ${latestInstalledVersion}`)} to use your latest installed version`
+  const moreRecentLocalVersionOutput = latestInstalledVersion && (semver.gt(latestInstalledVersion.version, currentVersion.version)) 
+    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion.version}) installed - run ${chalk.cyan(`bvm use ${latestInstalledVersion.version}`)} to use your latest installed version`
     : undefined;
 
   function newVersionAvailableText(versionToCheck?: Version){
@@ -189,7 +188,7 @@ function getNewerBitAvailableOutput(
       `bvm install ${version}`
       : "bvm upgrade"
     
-    if ((version && semver.gt(version, currentVersion || "0.0.0")))
+    if ((version && semver.gt(version, currentVersion!.version)))
     {
       return `${chalk.greenBright("newer")} ${releaseType?.toString() ?? ""} version (${version}) of ${chalk.cyan("bit")} `+
            `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
