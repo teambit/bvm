@@ -176,24 +176,27 @@ function getNewerBitAvailableOutput(
   if (!latestInstalledVersion && !latestRemoteStableVersion && !latestRemoteNightlyVersion) {
     return undefined;
   }
+
+  const moreRecentLocalVersionOutput = latestInstalledVersion && (semver.gt(latestInstalledVersion, currentVersion)) 
+    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion}) installed on your machine - run ${chalk.cyan(`bvm use ${latestInstalledVersion}`)} to use your latest installed version`
+    : undefined;
+
   function newVersionAvailableText(versionToCheck?: Version){
     if (!versionToCheck) return undefined;
+    const { version, releaseType } = versionToCheck;
 
     const commandToRun = versionToCheck.releaseType === ReleaseType.STABLE ?
-      `bvm install ${versionToCheck.version}`
+      `bvm install ${version}`
       : "bvm upgrade"
     
-    if (
-      semver.gt(latestInstalledVersion || "0.0.0", currentVersion || "0.0.0") ||
-      (versionToCheck.version && semver.gt(versionToCheck.version, currentVersion || "0.0.0"))
-    )
+    if ((version && semver.gt(version, currentVersion || "0.0.0")))
     {
-      return `new ${versionToCheck.releaseType?.toString() ?? ""} version (${versionToCheck.version}) of ${chalk.cyan("bit")} `+
-           `is available, upgrade your ${chalk.cyan("bit")} by running "${chalk.cyan(commandToRun)}"\n`;
-    }
+      return `${chalk.greenBright("newer")} ${releaseType?.toString() ?? ""} version (${version}) of ${chalk.cyan("bit")} `+
+           `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
+    }      
   }
-  latestRemoteStableVersion = undefined;
-  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion)].join("");
+
+  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput].join("");
     
   return output;
 }
