@@ -39,7 +39,7 @@ export async function listLocal(): Promise<LocalVersionList> {
   if (!exists) return new LocalVersionList([]);
   const dirEntries = await fs.readdir(versionsDir, { withFileTypes: true });
   const gcpList = getGcpList();
-  const versionsMap = await (await gcpList.list()).toMap();
+  const versionsMap = (await gcpList.list()).toMap();
   const versions = dirEntries
     .filter((dirent) => {
       return (dirent.isDirectory() || dirent.isSymbolicLink()) && semver.valid(dirent.name);
