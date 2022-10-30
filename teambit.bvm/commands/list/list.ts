@@ -30,6 +30,7 @@ export class ListCmd implements CommandModule {
         // },
       },
       { value: 'released', item: 'released' },
+      { value: 'releaseType', item: 'releaseType', alias: 'release-type', formatter: formatStableGreen},
       // {
       //   value: 'md5Hash',
       //   item: 'md5Hash',
@@ -90,4 +91,8 @@ function localListOutput(versions: string[]): string {
     return 'there are no installed version, use bvm install to install new versions';
   }
   return versions.join('\n');
+}
+
+function formatStableGreen(value: string): string {
+  return value === 'stable' ? this.style(value, "green", "bold") : value
 }
