@@ -100,13 +100,13 @@ export class GcpList {
 
   async rawFiles() {
     let filesPrefix = `${prefix}/dev/${this.osType}/`;
-    if (this.osType === 'Darwin' && this.arch === 'arm64'){
+    if (this.osType === 'darwin' && this.arch === 'arm64'){
       filesPrefix = `${prefix}/dev/${this.osType}-${this.arch}/`;
     }
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
 
-  static create(releaseTypeFilter: ReleaseTypeFilter = ReleaseTypeFilter.STABLE, osType = 'Darwin', arch = 'x64', proxyConfig?: {}, accessKey?: string, secretKey?: string) {
+  static create(releaseTypeFilter: ReleaseTypeFilter = ReleaseTypeFilter.STABLE, osType = 'darwin', arch = 'x64', proxyConfig?: {}, accessKey?: string, secretKey?: string) {
     const gcpStorage = GcpStorage.create(bucketName, proxyConfig, accessKey, secretKey);
     return new GcpList(gcpStorage, proxyConfig, osType, arch, releaseTypeFilter);
   }

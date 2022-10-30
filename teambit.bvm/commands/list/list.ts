@@ -67,6 +67,16 @@ export class ListCmd implements CommandModule {
           default: 20,
           type: 'number',
         },
+        os: {
+          describe: 'override the os type',
+          type: 'string',
+          choices: ['linux', 'darwin', 'win'],
+        },
+        arch: {
+          describe: 'override the arch type',
+          type: 'string',
+          choices: ['x64', 'arm64'],
+        },
       })
       .example('$0 list', 'show all installed versions')
       .example('$0 list --remote', 'show all versions available for install');
@@ -74,7 +84,7 @@ export class ListCmd implements CommandModule {
   }
   async handler(args) {
     if (args.remote) {
-      const list = await listRemote({ 'limit': args['limit'] });
+      const list = await listRemote({ 'limit': args['limit'], 'os': args['os'], 'arch': args['arch'] });
       console.log(ListCmd.toTable(list));
       return;
     }

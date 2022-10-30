@@ -8,21 +8,47 @@ import { LocalVersion } from './version';
 
 export type GcpListOptions = {
   releaseType?: ReleaseTypeFilter;
+  os?: 'linux' | 'darwin' | 'win';
+  arch?: 'x64' | 'arm64';
 }
 export type ListOptions = GcpListOptions & {
   limit?: number;
 };
+
+export const supportedPlatforms = {
+  'linux': ['x64'],
+  'win': ['x64'],
+  'darwin': ['x64', 'arm64'],
+}
 
 const config = Config.load();
 
 export function getGcpList(options?: GcpListOptions): GcpList {
   const releaseType = options?.releaseType ?? config.getReleaseType();
   const {accessKey, secretKey} = config.gcpConfig();
-  const gcpList = GcpList.create(releaseType, os.type(), process.arch, {
+  const osType = options?.os ?? os.type().toLowerCase();
+  const arch = options?.arch ?? process.arch;
+  validatePlatform(osType, arch);
+  const gcpList = GcpList.create(releaseType, osType, arch, {
     ...config.networkConfig(),
     ...config.proxyConfig(),
   }, accessKey, secretKey);
   return gcpList;
+}
+
+
+/**
+ * It throws an error if the given platform is not supported
+ * @param {string} osType - The operating system type.
+ * @param {string} arch - The architecture of the target platform.
+ */
+export function validatePlatform(osType: string, arch: string) {
+  if (!supportedPlatforms[osType]) {
+    throw new Error(`unsupported platform ${osType}`);
+  }
+  if (!supportedPlatforms[osType].includes(arch)) {
+    throw new Error(`unsupported platform ${osType} ${arch}`);
+  }
 }
 
 export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
