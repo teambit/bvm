@@ -10,10 +10,10 @@ import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
 import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
-import { listRemote } from '@teambit/bvm.list';
+import { GcpListOptions, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
-export type InstallOpts = {
+export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
   override?: boolean,
   replace?: boolean,
@@ -51,7 +51,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       }
       resolvedVersion = versionFromFileName;
     } else {
-      const remoteVersionList = await listRemote();
+      const remoteVersionList = await listRemote({os: opts.os, arch: opts.arch});
       resolvedVersion = remoteVersionList.latest().version;
     }
   }

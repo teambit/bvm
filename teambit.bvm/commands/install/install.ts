@@ -59,6 +59,18 @@ export class InstallCmd implements CommandModule {
         type: 'boolean'
       }
     })
+    .option({
+      os: {
+        describe: 'override the os type',
+        type: 'string',
+        choices: ['linux', 'darwin', 'win'],
+      },
+      arch: {
+        describe: 'override the arch type',
+        type: 'string',
+        choices: ['x64', 'arm64'],
+      },
+    })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
     return yargs;
@@ -78,6 +90,8 @@ export class InstallCmd implements CommandModule {
       replace: args.replace,
       file: args.file,
       useSystemNode: args.useSystemNode,
+      os: args.os,
+      arch: args.arch,
     }
     const installStartTime = Date.now();
     const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
