@@ -47,6 +47,7 @@ export const CFG_PROXY_KEY = 'proxy.key';
 export const KNOWN_KEYS = [
   CFG_BVM_DIR,
   "DEFAULT_LINK",
+  CFG_RELEASE_TYPE,
   CFG_GCP_ACCESS_KEY,
   CFG_GCP_SECRET_KEY,
   CFG_PROXY,
