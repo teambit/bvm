@@ -99,9 +99,11 @@ export class GcpList {
   }
 
   async rawFiles() {
+    // The old location names were capitalized, so we need to get them as well
+    const osType = this.osType.charAt(0).toUpperCase() + this.osType.slice(1);
     let filesPrefix = `${prefix}/dev/${this.osType}/`;
-    if (this.osType === 'darwin' && this.arch === 'arm64'){
-      filesPrefix = `${prefix}/dev/${this.osType}-${this.arch}/`;
+    if (osType === 'Darwin' && this.arch === 'arm64'){
+      filesPrefix = `${prefix}/dev/${osType}-${this.arch}/`;
     }
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
   }
