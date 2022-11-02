@@ -21,12 +21,19 @@ export const supportedPlatforms = {
   'darwin': ['x64', 'arm64'],
 }
 
+export const OS_TYPES = {
+  'linux': 'linux',
+  'windows_nt': 'win',
+  'win': 'win',
+  'darwin': 'darwin'
+}
+
 const config = Config.load();
 
 export function getGcpList(options?: GcpListOptions): GcpList {
   const releaseType = options?.releaseType ?? config.getReleaseType();
   const {accessKey, secretKey} = config.gcpConfig();
-  const osType = options?.os ?? os.type().toLowerCase();
+  const osType = options?.os ?? OS_TYPES[os.type().toLowerCase()];
   const arch = options?.arch ?? process.arch;
   validatePlatform(osType, arch);
   const gcpList = GcpList.create(releaseType, osType, arch, {

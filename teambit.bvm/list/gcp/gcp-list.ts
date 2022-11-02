@@ -91,8 +91,7 @@ export class GcpList {
   }
 
   _createRemoteVersion(release: Release): RemoteVersion {
-    const osCode = this.osType === 'Windows_NT' ? 'win' : this.osType.toLowerCase();
-    const fileName = `bit/versions/${release.version}/bit-${release.version}-${osCode}-${this.arch}.tar.gz`;
+    const fileName = `bit/versions/${release.version}/bit-${release.version}-${this.osType}-${this.arch}.tar.gz`;
     const releaseType = release[ReleaseType.STABLE] ? ReleaseType.STABLE : ReleaseType.NIGHTLY;
     const gcpVersion = new GcpVersion(release.version, fileName, bucketName, '', release.date, {}, undefined, releaseType);
     return gcpVersion.toRemoteVersion();
@@ -100,7 +99,8 @@ export class GcpList {
 
   async rawFiles() {
     // The old location names were capitalized, so we need to get them as well
-    const osType = this.osType.charAt(0).toUpperCase() + this.osType.slice(1);
+    // The old name of win was Windows_NT
+    const osType = this.osType === 'win' ? 'Windows_NT' : this.osType.charAt(0).toUpperCase() + this.osType.slice(1);
     let filesPrefix = `${prefix}/dev/${this.osType}/`;
     if (osType === 'Darwin' && this.arch === 'arm64'){
       filesPrefix = `${prefix}/dev/${osType}-${this.arch}/`;

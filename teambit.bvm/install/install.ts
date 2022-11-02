@@ -82,7 +82,9 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   } else {
     const fetchOpts: FetchOpts = {
       overrideDir: true,
-      destinationDir: tempDir
+      destinationDir: tempDir,
+      os: opts.os, 
+      arch: opts.arch
     }
     fsTarVersion = await fetch(resolvedVersion, fetchOpts);
     // TODO: check if version already exists, return it's location
