@@ -8,7 +8,7 @@ import { LocalVersion } from './version';
 
 export type GcpListOptions = {
   releaseType?: ReleaseTypeFilter;
-  os?: 'linux' | 'darwin' | 'win';
+  os?: 'linux' | 'darwin' | 'win' | 'Windows_NT' | 'Linux' | 'Darwin';
   arch?: 'x64' | 'arm64';
 }
 export type ListOptions = GcpListOptions & {
@@ -33,7 +33,7 @@ const config = Config.load();
 export function getGcpList(options?: GcpListOptions): GcpList {
   const releaseType = options?.releaseType ?? config.getReleaseType();
   const {accessKey, secretKey} = config.gcpConfig();
-  const osType = options?.os ?? OS_TYPES[os.type().toLowerCase()];
+  const osType = options?.os ? OS_TYPES[options?.os.toLowerCase()] : OS_TYPES[os.type().toLowerCase()];
   const arch = options?.arch ?? process.arch;
   validatePlatform(osType, arch);
   const gcpList = GcpList.create(releaseType, osType, arch, {
