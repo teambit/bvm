@@ -28,6 +28,8 @@ export const OS_TYPES = {
   'darwin': 'darwin'
 }
 
+const FALLBACK_ARCH = 'x64';
+
 const config = Config.load();
 
 export function getGcpList(options?: GcpListOptions): GcpList {
@@ -35,8 +37,8 @@ export function getGcpList(options?: GcpListOptions): GcpList {
   const {accessKey, secretKey} = config.gcpConfig();
   const osType = options?.os ? OS_TYPES[options?.os.toLowerCase()] : OS_TYPES[os.type().toLowerCase()];
   const arch = options?.arch ?? process.arch;
-  validatePlatform(osType, arch);
-  const gcpList = GcpList.create(releaseType, osType, arch, {
+  const archWithFallback = validatePlatform(osType, arch);
+  const gcpList = GcpList.create(releaseType, osType, archWithFallback, {
     ...config.networkConfig(),
     ...config.proxyConfig(),
   }, accessKey, secretKey);
@@ -49,13 +51,15 @@ export function getGcpList(options?: GcpListOptions): GcpList {
  * @param {string} osType - The operating system type.
  * @param {string} arch - The architecture of the target platform.
  */
-export function validatePlatform(osType: string, arch: string) {
+export function validatePlatform(osType: string, arch: string): string {
   if (!supportedPlatforms[osType]) {
     throw new Error(`unsupported platform ${osType}`);
   }
   if (!supportedPlatforms[osType].includes(arch)) {
-    throw new Error(`unsupported platform ${osType} ${arch}`);
+    console.log(`unsupported arch: ${arch} for os: ${osType}. fallback to ${FALLBACK_ARCH}`);
+    return FALLBACK_ARCH;
   }
+  return arch;
 }
 
 export async function listRemote(options?: ListOptions): Promise<RemoteVersionList> {
