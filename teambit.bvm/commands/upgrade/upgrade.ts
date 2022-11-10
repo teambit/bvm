@@ -36,6 +36,13 @@ export class UpgradeCmd implements CommandModule {
         },
       })
       .option({
+        'extract-method': {
+          describe: 'EXPERIMENTAL. change the extraction method',
+          type: 'string',
+          choices: ['default', 'child-process'],
+        }
+      })
+      .option({
         os: {
           describe: "override the os type",
           type: "string",
@@ -69,6 +76,7 @@ export class UpgradeCmd implements CommandModule {
       override: false,
       replace: true,
       useSystemNode: args.useSystemNode,
+      extractMethod: args.extractMethod,
       addToPathIfMissing: !args.skipUpdatePath,
       os: args.os,
       arch: args.arch,

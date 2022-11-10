@@ -1,3 +1,4 @@
+import execa from 'execa';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
@@ -17,7 +18,8 @@ export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
   override?: boolean,
   replace?: boolean,
-  file?: string
+  file?: string,
+  extractMethod?: string,
   useSystemNode?: boolean
 }
 
@@ -92,7 +94,23 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
 
   if (fsTarVersion.path) {
     const tarFile = fsTarVersion.path;
-    await extractWithLoader(fsTarVersion.path, fsTarVersion.version);
+    if (!opts.extractMethod || opts.extractMethod === 'default') {
+      await extractWithLoader(fsTarVersion.path, fsTarVersion.version);
+    } else {
+      const extractMsg = `extracting version ${fsTarVersion.version} using ${opts.extractMethod} method`;
+      loader.start(extractMsg);
+      const extractStartTime = Date.now();
+      try {
+        /* Extracting the tar file. */
+        await execa('tar', ['-xf', fsTarVersion.path], {cwd: tempDir});
+        const extractEndTime = Date.now();
+        const extractTimeDiff = timeFormat(extractEndTime - extractStartTime);
+        loader.succeed(`extracting version ${fsTarVersion.version} in ${extractTimeDiff}`);
+      } catch (e){
+        console.log('failed to extract, error: ', e.message);
+      }
+    }
+
     await removeWithLoader(tarFile);
   }
 
