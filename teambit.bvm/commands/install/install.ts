@@ -46,6 +46,13 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
+      'extract-method': {
+        describe: 'EXPERIMENTAL. change the extraction method',
+        type: 'string',
+        choices: ['default', 'child-process'],
+      }
+    })
+    .option({
       'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
@@ -88,6 +95,7 @@ export class InstallCmd implements CommandModule {
       addToPathIfMissing: !args.skipUpdatePath,
       override: args.override,
       replace: args.replace,
+      extractMethod: args.extractMethod,
       file: args.file,
       useSystemNode: args.useSystemNode,
       os: args.os,
