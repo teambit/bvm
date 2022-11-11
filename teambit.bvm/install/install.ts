@@ -102,14 +102,17 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       const extractStartTime = Date.now();
       try {
         /* Extracting the tar file. */
-        await execa('tar', ['-xf', fsTarVersion.path], {cwd: tempDir});
+        await execa('tar', ['-xf', path.basename(fsTarVersion.path)], {cwd: tempDir});
         const extractEndTime = Date.now();
         const extractTimeDiff = timeFormat(extractEndTime - extractStartTime);
         loader.succeed(`extracting version ${fsTarVersion.version} in ${extractTimeDiff}`);
       } catch (e){
-        console.log('failed to extract, error: ', e.message);
+        console.log('failed to extract, error: ', e.message || '');
+        throw (e);
       }
     }
+
+    throw new Error('gilad')
 
     await removeWithLoader(tarFile);
   }
