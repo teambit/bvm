@@ -112,8 +112,6 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       }
     }
 
-    throw new Error('gilad')
-
     await removeWithLoader(tarFile);
   }
 
