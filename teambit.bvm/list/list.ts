@@ -48,7 +48,7 @@ export function getGcpList(options?: GcpListOptions): GcpList {
 }
 
 export function getOsType(osName?: string): OS_TYPE {
-  const osType = osName ? OS_TYPES[osName.toLowerCase()] : OS_TYPES[os.type().toLowerCase()];
+  const osType = OS_TYPES[(osName || os.type()).toLowerCase()];
   return osType
 }
 
