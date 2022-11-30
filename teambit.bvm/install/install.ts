@@ -67,6 +67,8 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     }
   }
   const { versionDir, exists } = config.getSpecificVersionDir(resolvedVersion);
+  const skipTempDir = config.getSkipTempDir();
+  const extractDir = skipTempDir ? versionDir : undefined;
   if (exists) {
     if (!concreteOpts.override){
       const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
@@ -105,14 +107,19 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     const tarFile = fsTarVersion.path;
     const extractMethod = getExtractMethod(opts.extractMethod, opts.os);
     if (!extractMethod || extractMethod === 'default') {
-      await extractWithLoader(fsTarVersion.path, fsTarVersion.version);
+      await extractWithLoader(fsTarVersion.path, fsTarVersion.version, extractDir);
     } else {
+      const extractFlags = ['-xf', path.basename(fsTarVersion.path)];
+      if (extractDir){
+        fs.ensureDir(extractDir)
+        extractFlags.push('-C', extractDir);
+      }
       const extractMsg = `extracting version ${fsTarVersion.version} using ${extractMethod} method`;
       loader.start(extractMsg);
       const extractStartTime = Date.now();
       try {
         /* Extracting the tar file. */
-        await execa('tar', ['-xf', path.basename(fsTarVersion.path)], {cwd: tempDir});
+        await execa('tar', extractFlags, {cwd: tempDir});
         const extractEndTime = Date.now();
         const extractTimeDiff = timeFormat(extractEndTime - extractStartTime);
         loader.succeed(`extracting version ${fsTarVersion.version} in ${extractTimeDiff}`);
@@ -125,7 +132,10 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     await removeWithLoader(tarFile);
   }
 
-  await moveWithLoader(tempDir, versionDir, {overwrite: true});
+  if (!extractDir){
+    await moveWithLoader(tempDir, versionDir, {overwrite: true});
+  }
+
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {
     const wantedNodeVersion = config.getWantedNodeVersion(path.join(versionDir, `bit-${resolvedVersion}`));
@@ -200,13 +210,13 @@ async function installNode(config: Config, version: string): Promise<string> {
   return versionDir;
 }
 
-async function extractWithLoader(filePath: string, version) {
+async function extractWithLoader(filePath: string, version: string, targetDir?: string): Promise<void> {
   const extractLoaderText = `extracting version ${version}`;
   const extractStartTime = Date.now();
   const progressBarOpts = {
     format: `extracting version ${version} [{bar}] {percentage}% | ETA: {etah} | Speed: {speed}`,
   }
-  await extract(filePath, undefined, {}, progressBarOpts);
+  await extract(filePath, targetDir, {ensureDir: true}, progressBarOpts);
   const extractEndTime = Date.now();
   const extractTimeDiff = timeFormat(extractEndTime - extractStartTime);
   loader.succeed(`${extractLoaderText} in ${extractTimeDiff}`);
