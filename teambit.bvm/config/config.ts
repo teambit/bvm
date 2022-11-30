@@ -24,6 +24,7 @@ const CONFIG_KEY_NAME = 'global';
 export const CFG_BVM_DIR = 'BVM_DIR';
 export const CFG_RELEASE_TYPE = 'RELEASE_TYPE';
 export const CFG_EXTRACT_METHOD = 'EXTRACT_METHOD';
+export const CFG_SKIP_TEMP_DIR = 'SKIP_TEMP_DIR';
 export const CFG_PROXY = 'proxy';
 export const CFG_HTTPS_PROXY = 'https_proxy';
 export const CFG_PROXY_CA = 'proxy.ca';
@@ -50,6 +51,7 @@ export const KNOWN_KEYS = [
   "DEFAULT_LINK",
   CFG_RELEASE_TYPE,
   CFG_EXTRACT_METHOD,
+  CFG_SKIP_TEMP_DIR,
   CFG_GCP_ACCESS_KEY,
   CFG_GCP_SECRET_KEY,
   CFG_PROXY,
@@ -204,6 +206,11 @@ export class Config {
 
   getExtractMethod(): string {
     return this.store.get(CFG_EXTRACT_METHOD);
+  }
+
+  getSkipTempDir(): boolean {
+    const skipTempDir = this.store.get(CFG_SKIP_TEMP_DIR);
+    return (skipTempDir === 'true' || skipTempDir === true);
   }
 
   getBitVersionsDir(): string {

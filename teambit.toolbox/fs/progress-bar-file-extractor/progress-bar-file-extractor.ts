@@ -37,7 +37,7 @@ export async function extract(filePath: string, folder?: string, opts: ExtractOp
   const exists = await fs.pathExists(filePath);
   if (!exists) throw new Error(`file ${filePath} does not exist`);
   if (folder) {
-    const folderExists = await fs.pathExists(filePath);
+    const folderExists = await fs.pathExists(folder);
     if (!folderExists && !concreteOpts.ensureDir){
       throw new Error(`folder ${folder} does not exist`);
     }
