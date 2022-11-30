@@ -1,4 +1,5 @@
 import execa from 'execa';
+import os from 'os';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
@@ -11,7 +12,7 @@ import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { Config } from '@teambit/bvm.config';
 import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
-import { GcpListOptions, listRemote } from '@teambit/bvm.list';
+import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 
 export type InstallOpts = GcpListOptions & {
@@ -19,9 +20,11 @@ export type InstallOpts = GcpListOptions & {
   override?: boolean,
   replace?: boolean,
   file?: string,
-  extractMethod?: string,
+  extractMethod?: ExtractMethod,
   useSystemNode?: boolean
 }
+
+export type ExtractMethod = 'default' | 'child-process';
 
 export type InstallResults = {
   installedVersion: string,
@@ -36,6 +39,12 @@ export type InstallResults = {
 const defaultOpts = {
   override: false,
   replace: false
+}
+
+const OS_DEFAULT_EXTRACT_METHOD = {
+  'linux': 'default',
+  'win': 'child-process',
+  'darwin': 'default'
 }
 
 const loader = ora();
@@ -94,10 +103,11 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
 
   if (fsTarVersion.path) {
     const tarFile = fsTarVersion.path;
-    if (!opts.extractMethod || opts.extractMethod === 'default') {
+    const extractMethod = getExtractMethod(opts.extractMethod, opts.os);
+    if (!extractMethod || extractMethod === 'default') {
       await extractWithLoader(fsTarVersion.path, fsTarVersion.version);
     } else {
-      const extractMsg = `extracting version ${fsTarVersion.version} using ${opts.extractMethod} method`;
+      const extractMsg = `extracting version ${fsTarVersion.version} using ${extractMethod} method`;
       loader.start(extractMsg);
       const extractStartTime = Date.now();
       try {
@@ -138,6 +148,17 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
+}
+
+function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
+  const validExtractMethods: ExtractMethod[] = ['default', 'child-process'];
+  const extractMethodOrFromConfig = extractMethod || getConfig().getExtractMethod() as ExtractMethod;
+
+  if (extractMethodOrFromConfig && validExtractMethods.includes(extractMethodOrFromConfig)) {
+    return extractMethodOrFromConfig;
+  }
+  const osType = getOsType(osName);
+  return (OS_DEFAULT_EXTRACT_METHOD[osType] || 'default') as ExtractMethod;
 }
 
 /*

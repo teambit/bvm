@@ -15,6 +15,8 @@ export type ListOptions = GcpListOptions & {
   limit?: number;
 };
 
+type OS_TYPE = 'win' | 'linux' | 'darwin';
+
 export const supportedPlatforms = {
   'linux': ['x64'],
   'win': ['x64'],
@@ -35,7 +37,7 @@ const config = Config.load();
 export function getGcpList(options?: GcpListOptions): GcpList {
   const releaseType = options?.releaseType ?? config.getReleaseType();
   const {accessKey, secretKey} = config.gcpConfig();
-  const osType = options?.os ? OS_TYPES[options?.os.toLowerCase()] : OS_TYPES[os.type().toLowerCase()];
+  const osType = getOsType(options?.os);
   const arch = options?.arch ?? process.arch;
   const archWithFallback = validatePlatform(osType, arch);
   const gcpList = GcpList.create(releaseType, osType, archWithFallback, {
@@ -45,6 +47,10 @@ export function getGcpList(options?: GcpListOptions): GcpList {
   return gcpList;
 }
 
+export function getOsType(osName?: string): OS_TYPE {
+  const osType = OS_TYPES[(osName || os.type()).toLowerCase()];
+  return osType
+}
 
 /**
  * It throws an error if the given platform is not supported
