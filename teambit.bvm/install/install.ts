@@ -150,7 +150,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 }
 
-function getExtractMethod(extractMethod?: ExtractMethod, osName? :string): ExtractMethod {
+function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
   const validExtractMethods: ExtractMethod[] = ['default', 'child-process'];
   const extractMethodOrFromConfig = extractMethod || getConfig().getExtractMethod() as ExtractMethod;
 
