@@ -10,8 +10,9 @@ import semver from 'semver';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://bit.dev/docs';
-const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/reference/using-bvm#troubleshooting`;
-const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_BASE_URL}/reference/using-bvm#troubleshooting`;
+const DOCS_REFERENCE_BASE_URL = 'https://bit.dev/reference';
+const WINDOWS_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_REFERENCE_BASE_URL}/reference/using-bvm#troubleshooting`;
+const MAC_LINUX_INSTALL_TROUBLESHOOTING_DOCS_URL = `${DOCS_REFERENCE_BASE_URL}/reference/using-bvm#troubleshooting`;
 
 const config = Config.load();
 
