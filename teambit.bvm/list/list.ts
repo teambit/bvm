@@ -18,7 +18,7 @@ export type ListOptions = GcpListOptions & {
 type OS_TYPE = 'win' | 'linux' | 'darwin';
 
 export const supportedPlatforms = {
-  'linux': ['x64'],
+  'linux': ['x64', 'arm64'],
   'win': ['x64'],
   'darwin': ['x64', 'arm64'],
 }
