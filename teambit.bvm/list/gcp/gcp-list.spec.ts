@@ -41,6 +41,24 @@ describe("GcpList", () => {
       "https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-linux-x64.tar.gz"
     );
   });
+  it("should return the correct URL on Linux with arm64 CPU", async () => {
+    mockFetch([
+      {
+        version: "1.0.0",
+        date: "2020-01-01",
+        nightly: true,
+      },
+    ]);
+    const gcpList = getGcpList({
+      releaseType: ReleaseTypeFilter.NIGHTLY,
+      os: "Linux",
+      arch: "arm64",
+    });
+    const list = await gcpList.list();
+    expect(list.entries[0].url).toBe(
+      "https://bvm.bit.dev/bit/versions/1.0.0/bit-1.0.0-linux-arm64.tar.gz"
+    );
+  });
   it("should return the correct URL on macOS", async () => {
     mockFetch([
       {

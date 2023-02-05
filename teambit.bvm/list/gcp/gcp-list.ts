@@ -102,7 +102,7 @@ export class GcpList {
     // The old name of win was Windows_NT
     const osType = this.osType === 'win' ? 'Windows_NT' : this.osType.charAt(0).toUpperCase() + this.osType.slice(1);
     let filesPrefix = `${prefix}/dev/${this.osType}/`;
-    if (osType === 'Darwin' && this.arch === 'arm64'){
+    if ((osType === 'Darwin' || osType === 'Linux') && this.arch === 'arm64'){
       filesPrefix = `${prefix}/dev/${osType}-${this.arch}/`;
     }
     return this.gcpStorage.getFiles({ prefix: filesPrefix });
