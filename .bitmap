@@ -11,7 +11,7 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.2.10",
+        "version": "0.3.0",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
@@ -23,13 +23,13 @@
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.1.10",
+        "version": "0.1.11",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.0.53",
+        "version": "0.1.0",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
@@ -41,7 +41,7 @@
     },
     "commands/release": {
         "scope": "teambit.bvm",
-        "version": "0.1.10",
+        "version": "0.1.11",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/release"
     },
@@ -53,13 +53,13 @@
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.1.10",
+        "version": "0.1.11",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/use": {
         "scope": "teambit.bvm",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
@@ -107,13 +107,13 @@
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.1.19",
+        "version": "0.1.20",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.2.7",
+        "version": "0.2.8",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
