@@ -34,11 +34,11 @@
     "packageManager": "teambit.dependencies/pnpm",
     "policy": {
       "dependencies": {
-        "@pnpm/fetch": "4",
-        "@pnpm/logger": "4.0.0",
-        "@pnpm/node.fetcher": "0.1.1",
-        "@pnpm/os.env.path-extender": "0.2.6",
-        "@teambit/toolbox.network.agent": "0.0.540",
+        "@pnpm/fetch": "6.0.6",
+        "@pnpm/logger": "5.0.0",
+        "@pnpm/node.fetcher": "2.0.13",
+        "@pnpm/os.env.path-extender": "0.2.9",
+        "@teambit/toolbox.network.agent": "0.0.551",
         "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",
         "@types/date-fns": "2.5.3",
@@ -184,7 +184,7 @@
       "teambit.dependencies/dependency-resolver": {
         "policy": {
           "dependencies": {
-            "@pnpm/logger": "^4.0.0"
+            "@pnpm/logger": "^5.0.0"
           }
         }
       },
