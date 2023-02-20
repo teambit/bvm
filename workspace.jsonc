@@ -93,7 +93,7 @@
     ],
     "strictPeerDependencies": true,
     "engineStrict": true,
-    "nodeVersion": "12.22.0",
+    "nodeVersion": "14.6.0",
     "peerDependencyRules": {
       "allowAny": [],
       "ignoreMissing": []
@@ -122,7 +122,7 @@
           "private": false,
           "license": "Apache-2.0",
           "engines": {
-            "node": ">=12.15.0"
+            "node": ">=14.6"
           },
           "repository": {
             "type": "git",
@@ -145,7 +145,7 @@
           "private": false,
           "license": "Apache-2.0",
           "engines": {
-            "node": ">=12.15.0"
+            "node": ">=14.6"
           },
           "repository": {
             "type": "git",
@@ -168,7 +168,7 @@
           "private": false,
           "license": "Apache-2.0",
           "engines": {
-            "node": ">=12.15.0"
+            "node": ">=14.6"
           },
           "repository": {
             "type": "git",
@@ -197,7 +197,7 @@
           "private": false,
           "license": "Apache-2.0",
           "engines": {
-            "node": ">=12.15.0"
+            "node": ">=14.6"
           },
           "bin": {
             "bvm": "./dist/app.js"
