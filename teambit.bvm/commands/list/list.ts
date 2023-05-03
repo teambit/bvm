@@ -1,4 +1,4 @@
-import Table from 'tty-table';
+import { Table } from 'voici.js';
 import type { CommandModule, Argv } from 'yargs';
 import { listRemote, listLocal, RemoteVersionList } from '@teambit/bvm.list';
 
@@ -6,50 +6,42 @@ export class ListCmd implements CommandModule {
   aliases = ['l', 'list'];
   describe = 'list installed bit versions';
   command = ['list'];
-  static toTable(list: RemoteVersionList) {
-    const options = {
-      borderStyle: 'solid',
-      paddingBottom: 0,
-      headerAlign: 'center',
-      align: 'left',
-      headerColor: 'cyan',
-    };
-    const headers = [
-      {
-        value: 'version',
-        item: 'version',
-        width: 10,
-      },
-      {
-        value: 'url',
-        item: 'url',
-        width: 70,
-        // formatter: function (value) {
-        //   if (value == true) return this.style(value, 'green');
-        //   return 'false';
-        // },
-      },
-      { value: 'released', item: 'released' },
-      { value: 'releaseType', item: 'releaseType', alias: 'release-type', formatter: formatStableGreen},
-      // {
-      //   value: 'md5Hash',
-      //   item: 'md5Hash',
-      //   width: 20,
-      // },
-      // {
-      //   value: 'stable',
-      //   item: 'stable',
-      //   width: 8,
-      //   formatter: function (value) {
-      //     if (value == true) return this.style(value, 'green');
-      //     return 'false';
-      //   },
-      // },
-    ];
+  static toTable(list: RemoteVersionList): string {
+    const entries: Array<{
+      version: string;
+      url: string;
+      released: string;
+      releaseType: string;
+    }> = list.entries.map((entry) => {
+      return {
+        version: entry.version,
+        url: entry.url,
+        released: entry.released,
+        releaseType: entry.releaseType,
+      }
+    });
 
-    // @ts-ignore
-    const table = new Table(headers, list.entries, options);
-    return table.render();
+    // TODO: bold for highlight, column widths
+    const table = new Table(entries, {
+      header: {
+        width: 'auto',
+        order: ['version', 'url', 'released', 'releaseType'],
+        displayNames: {
+          releaseType: 'release-type',
+        }
+      },
+      body: {
+        highlightCell: {
+          textColor: 'green',
+          func: (cell, _, col) => {
+            // console.log(cell, _, col)
+            return cell === "stable" && col === "releaseType"
+          }
+        }
+      }
+    });
+
+    return table.toString();
   }
 
   builder(yargs: Argv) {
@@ -101,8 +93,4 @@ function localListOutput(versions: string[]): string {
     return 'there are no installed version, use bvm install to install new versions';
   }
   return versions.join('\n');
-}
-
-function formatStableGreen(value: string): string {
-  return value === 'stable' ? this.style(value, "green", "bold") : value
 }
