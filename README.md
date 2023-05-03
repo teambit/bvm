@@ -16,6 +16,11 @@ Using BVM makes it easier to install and manage multiple versions of Bit in a si
 npm i -g @teambit/bvm
 ```
 
+#### Install with pnpm
+```shell
+pnpm add -g @teambit/bvm
+```
+
 #### Install with Yarn
 ```shell
 yarn global add @teambit/bvm
