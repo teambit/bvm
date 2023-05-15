@@ -51,7 +51,7 @@ export async function removeAll(versionsToKeep: string[] = [], numberOfLatestToK
     versionsToRemove = semverSortDesc(versionsToRemove);
     versionsToRemove.splice(0, numberOfLatestToKeep);
   }
-  return this.removeVersions(versionsToRemove);
+  return removeVersions(versionsToRemove);
 }
 
 
