@@ -51,7 +51,7 @@ async function main() {
     .example("$0 list", "show all installed versions")
     .example("$0 use 0.0.522", "switch to version 0.0522 of bit")
     .example(
-      "$0 remove all --keep-latest-versions 3",
+      "$0 remove --all --keep-latest-versions 3",
       "remove all installed versions except the last 3 installed versions"
     )
     .completion()
