@@ -11,157 +11,157 @@
 {
     "cli/app": {
         "scope": "teambit.bvm",
-        "version": "0.3.1",
+        "version": "0.4.0",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
     "commands/config": {
         "scope": "teambit.bvm",
-        "version": "0.0.33",
+        "version": "0.0.34",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/config"
     },
     "commands/install": {
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "scope": "teambit.bvm",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
     "commands/list": {
         "scope": "teambit.bvm",
-        "version": "0.0.47",
+        "version": "0.0.48",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list"
     },
     "commands/release": {
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/release"
     },
     "commands/remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.47",
+        "version": "0.0.48",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/remove"
     },
     "commands/upgrade": {
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/use": {
         "scope": "teambit.bvm",
-        "version": "0.0.29",
+        "version": "0.0.30",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
     "commands/version": {
         "scope": "teambit.bvm",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/version"
     },
     "config": {
         "scope": "teambit.bvm",
-        "version": "0.2.2",
+        "version": "0.2.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config"
     },
     "error": {
         "scope": "teambit.bvm",
-        "version": "0.0.5",
+        "version": "0.0.6",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/error"
     },
     "fetch": {
         "scope": "teambit.bvm",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch"
     },
     "fs-tar-version": {
         "scope": "teambit.bvm",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fs-tar-version"
     },
     "fs/progress-bar-file-extractor": {
         "scope": "teambit.toolbox",
-        "version": "0.0.8",
+        "version": "0.0.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/progress-bar-file-extractor"
     },
     "fs/untar": {
         "scope": "teambit.toolbox",
-        "version": "0.0.12",
+        "version": "0.0.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/untar"
     },
     "install": {
         "scope": "teambit.bvm",
-        "version": "0.1.21",
+        "version": "0.1.22",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
         "scope": "teambit.bvm",
-        "version": "0.2.9",
+        "version": "0.2.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
     "list": {
         "scope": "teambit.bvm",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/list"
     },
     "network/file-downloader": {
         "scope": "teambit.toolbox",
-        "version": "0.0.9",
+        "version": "0.0.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/file-downloader"
     },
     "network/progress-bar-file-downloader": {
         "scope": "teambit.toolbox",
-        "version": "0.0.27",
+        "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },
     "release": {
         "scope": "teambit.bvm",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/release"
     },
     "remove": {
         "scope": "teambit.bvm",
-        "version": "0.0.47",
+        "version": "0.0.48",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/remove"
     },
     "reporter": {
         "scope": "teambit.bvm",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/reporter"
     },
     "storage": {
         "scope": "teambit.gcp",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
     "version": {
         "scope": "teambit.bvm",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/version"
     },
