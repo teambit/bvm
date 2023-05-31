@@ -1,50 +1,51 @@
-import { Provider } from 'nconf';
-import os from 'os';
-import path from 'path';
-import userHome from 'user-home';
-import pickBy from 'lodash.pickby';
-import fs from 'fs-extra';
-import {execSync} from 'child_process';
-import semver from 'semver';
-import chalk from 'chalk';
+import { Provider } from "nconf";
+import os from "os";
+import path from "path";
+import userHome from "user-home";
+import pickBy from "lodash.pickby";
+import fs from "fs-extra";
+import { execSync } from "child_process";
+import semver from "semver";
+import chalk from "chalk";
 
-export const BVM_ENV_VARS_PREFIX = 'BVM_';
+export const BVM_ENV_VARS_PREFIX = "BVM_";
 
-export const BVM_GLOBALS_DIR_ENV_VARIABLE = 'BVM_GLOBALS_DIR';
-export const IS_WINDOWS = os.platform() === 'win32';
-export const CONFIG_DIR = 'config';
+export const BVM_GLOBALS_DIR_ENV_VARIABLE = "BVM_GLOBALS_DIR";
+export const IS_WINDOWS = os.platform() === "win32";
+export const CONFIG_DIR = "config";
 export const CONFIG_FILENAME = "config.json";
-export const ALIASES_KEY = 'aliases';
-export const LINKS_KEY = 'links';
-export const BIT_VERSIONS_FOLDER_NAME = 'versions';
-export const NODE_VERSIONS_FOLDER_NAME = 'nodejs';
-const CONFIG_KEY_NAME = 'global';
+export const ALIASES_KEY = "aliases";
+export const LINKS_KEY = "links";
+export const BIT_VERSIONS_FOLDER_NAME = "versions";
+export const NODE_VERSIONS_FOLDER_NAME = "nodejs";
+const CONFIG_KEY_NAME = "global";
 
+export const CFG_BVM_DIR = "BVM_DIR";
+export const CFG_RELEASE_TYPE = "RELEASE_TYPE";
+export const CFG_EXTRACT_METHOD = "EXTRACT_METHOD";
+export const CFG_SKIP_TEMP_DIR = "SKIP_TEMP_DIR";
+export const CFG_PROXY = "proxy";
+export const CFG_HTTPS_PROXY = "https_proxy";
+export const CFG_PROXY_CA = "proxy.ca";
+export const CFG_PROXY_CA_FILE = "proxy.cafile";
+export const CFG_PROXY_NO_PROXY = "proxy.no_proxy";
 
-export const CFG_BVM_DIR = 'BVM_DIR';
-export const CFG_RELEASE_TYPE = 'RELEASE_TYPE';
-export const CFG_EXTRACT_METHOD = 'EXTRACT_METHOD';
-export const CFG_SKIP_TEMP_DIR = 'SKIP_TEMP_DIR';
-export const CFG_PROXY = 'proxy';
-export const CFG_HTTPS_PROXY = 'https_proxy';
-export const CFG_PROXY_CA = 'proxy.ca';
-export const CFG_PROXY_NO_PROXY = 'proxy.no_proxy';
-
-export const CFG_NETWORK_LOCAL_ADDRESS = 'network.local_address';
-export const CFG_NETWORK_MAX_SOCKETS = 'network.max_sockets';
-export const CFG_NETWORK_CA = 'network.ca';
-export const CFG_NETWORK_STRICT_SSL = 'network.strict-ssl';
-export const CFG_NETWORK_CERT = 'network.cert';
-export const CFG_NETWORK_KEY = 'network.key';
+export const CFG_NETWORK_LOCAL_ADDRESS = "network.local_address";
+export const CFG_NETWORK_MAX_SOCKETS = "network.max_sockets";
+export const CFG_NETWORK_CA = "network.ca";
+export const CFG_NETWORK_CA_FILE = "network.cafile";
+export const CFG_NETWORK_STRICT_SSL = "network.strict-ssl";
+export const CFG_NETWORK_CERT = "network.cert";
+export const CFG_NETWORK_KEY = "network.key";
 
 // GCP config for set releases metadata
-export const CFG_GCP_ACCESS_KEY = 'gcp_access_key';
-export const CFG_GCP_SECRET_KEY = 'gcp_secret_key';
+export const CFG_GCP_ACCESS_KEY = "gcp_access_key";
+export const CFG_GCP_SECRET_KEY = "gcp_secret_key";
 
 // For backward compatibility
-export const CFG_PROXY_STRICT_SSL = 'proxy.strict_ssl';
-export const CFG_PROXY_CERT = 'proxy.cert';
-export const CFG_PROXY_KEY = 'proxy.key';
+export const CFG_PROXY_STRICT_SSL = "proxy.strict_ssl";
+export const CFG_PROXY_CERT = "proxy.cert";
+export const CFG_PROXY_KEY = "proxy.key";
 
 export const KNOWN_KEYS = [
   CFG_BVM_DIR,
@@ -57,23 +58,31 @@ export const KNOWN_KEYS = [
   CFG_PROXY,
   CFG_HTTPS_PROXY,
   CFG_PROXY_CA,
+  CFG_PROXY_CA_FILE,
   CFG_PROXY_STRICT_SSL,
   CFG_PROXY_CERT,
   CFG_PROXY_KEY,
   CFG_PROXY_NO_PROXY,
+  CFG_NETWORK_LOCAL_ADDRESS,
+  CFG_NETWORK_MAX_SOCKETS,
+  CFG_NETWORK_CA,
+  CFG_NETWORK_CA_FILE,
+  CFG_NETWORK_STRICT_SSL,
+  CFG_NETWORK_CERT,
+  CFG_NETWORK_KEY,
 ];
 
-const DEFAULT_LINK = 'bit';
-const DEFAULT_ALTERNATIVE_LINK = 'bbit';
+const DEFAULT_LINK = "bit";
+const DEFAULT_ALTERNATIVE_LINK = "bbit";
 
 const ALTERNATIVE_LINK_WARNING = `A legacy version of Bit is installed on your machine.
 Use the 'bbit' command for Bit's latest version and the 'bit' command for Bit's legacy version.
-For more information, see the following link: https://harmony-docs.bit.dev/introduction/installation`
+For more information, see the following link: https://harmony-docs.bit.dev/introduction/installation`;
 
 const globalDefaults = {
   BVM_DIR: getBvmDirectory(),
-  DEFAULT_LINK: DEFAULT_LINK
-}
+  DEFAULT_LINK: DEFAULT_LINK,
+};
 
 function getBvmDirectory(): string {
   const fromEnvVar = process.env[BVM_GLOBALS_DIR_ENV_VARIABLE];
@@ -81,10 +90,10 @@ function getBvmDirectory(): string {
     return fromEnvVar;
   }
   if (IS_WINDOWS && process.env.LOCALAPPDATA) {
-    return path.join(process.env.LOCALAPPDATA, '.bvm');
+    return path.join(process.env.LOCALAPPDATA, ".bvm");
   }
 
-  return path.join(userHome, '.bvm');
+  return path.join(userHome, ".bvm");
 }
 
 function getConfigDirectory(): string {
@@ -97,14 +106,19 @@ function getConfigPath(): string {
 
 let configSingleton;
 
-export type ConfigSource = 'env' | 'argv' | 'file';
+export type ConfigSource = "env" | "argv" | "file";
 export type ConfigSources = ConfigSource[];
 
 export class Config {
   private store: Provider;
   private fsStore: Provider;
 
-  constructor(private name: string, private filePath: string, defaults: any ={}, _sources: ConfigSources = ['env', 'file']){
+  constructor(
+    private name: string,
+    private filePath: string,
+    defaults: any = {},
+    _sources: ConfigSources = ["env", "file"]
+  ) {
     let store = new Provider();
     // TODO: implement
     // sources.forEach((source) => {
@@ -124,38 +138,48 @@ export class Config {
     //   }
     // });
     // store.defaults(defaults);
-    
+
     // store.env().argv().file(name, filePath).defaults(defaults);
-    store.env({transform: transformEnvVariable}).file(name, filePath).defaults(defaults);
+    store
+      .env({ transform: transformEnvVariable })
+      .file(name, filePath)
+      .defaults(defaults);
     const fsStore = new Provider().file(name, filePath);
     this.store = store;
     this.fsStore = fsStore;
   }
 
-  static load(newInstance = false, sources: ConfigSources = ['env', 'file']): Config {
-    if (process.argv.includes('--get-yargs-completions') || process.argv.includes('--help')) {
+  static load(
+    newInstance = false,
+    sources: ConfigSources = ["env", "file"]
+  ): Config {
+    if (
+      process.argv.includes("--get-yargs-completions") ||
+      process.argv.includes("--help")
+    ) {
       // this is a workaround to get the completion and `bvm --help` working.
       // otherwise, the `new Config()` later on, calls `store.env().argv()`, and for some reason,
       // nconf doesn't play nice with yargs
+      // @ts-ignore
       return;
     }
-    if (!newInstance && configSingleton){
+    if (!newInstance && configSingleton) {
       return configSingleton;
     }
     const name = CONFIG_KEY_NAME;
     const configPath = getConfigPath();
-    if (!fs.existsSync(configPath)){
+    if (!fs.existsSync(configPath)) {
       fs.ensureDirSync(path.dirname(configPath));
       const legacyBitExist = checkIfBitLegacyExist();
       let defaultLink = DEFAULT_LINK;
-      if (legacyBitExist){
+      if (legacyBitExist) {
         console.log(chalk.yellowBright(ALTERNATIVE_LINK_WARNING));
         defaultLink = DEFAULT_ALTERNATIVE_LINK;
       }
-      fs.writeJSONSync(configPath, {DEFAULT_LINK: defaultLink});
+      fs.writeJSONSync(configPath, { DEFAULT_LINK: defaultLink });
     }
     const config = new Config(name, configPath, globalDefaults, sources);
-    if (!newInstance){
+    if (!newInstance) {
       configSingleton = config;
     }
     return config;
@@ -165,7 +189,7 @@ export class Config {
     return this.store.get(key);
   }
 
-  set(key: string, value: any): void{
+  set(key: string, value: any): void {
     this.fsStore.set(key, value);
     this.store.set(key, value);
     this.persist();
@@ -175,16 +199,20 @@ export class Config {
     this.fsStore.save(this.name);
   }
 
-  del(key: string): void{
+  del(key: string): void {
     this.fsStore.clear(key);
     this.store.clear(key);
     this.persist();
   }
 
   list(persistedOnly = false): any {
-    const allConfigs =  persistedOnly ? this.fsStore.load() : this.store.load();
+    const allConfigs = persistedOnly ? this.fsStore.load() : this.store.load();
     return pickBy(allConfigs, (val, key) => {
-      return (KNOWN_KEYS.includes(key) || (key.startsWith(ALIASES_KEY) || (key.startsWith(LINKS_KEY))))
+      return (
+        KNOWN_KEYS.includes(key) ||
+        key.startsWith(ALIASES_KEY) ||
+        key.startsWith(LINKS_KEY)
+      );
     });
   }
 
@@ -193,15 +221,15 @@ export class Config {
   }
 
   getBvmDirectory(): string {
-    return this.store.get('BVM_DIR');
+    return this.store.get("BVM_DIR");
   }
 
   getTempDir(): string {
-    return path.join(this.getBvmDirectory(), 'temp');
+    return path.join(this.getBvmDirectory(), "temp");
   }
 
   getDefaultLinkName(): string {
-    return this.store.get('DEFAULT_LINK');
+    return this.store.get("DEFAULT_LINK");
   }
 
   getExtractMethod(): string {
@@ -210,37 +238,43 @@ export class Config {
 
   getSkipTempDir(): boolean {
     const skipTempDir = this.store.get(CFG_SKIP_TEMP_DIR);
-    return (skipTempDir === 'true' || skipTempDir === true);
+    return skipTempDir === "true" || skipTempDir === true;
   }
 
   getBitVersionsDir(): string {
     return path.join(this.getBvmDirectory(), BIT_VERSIONS_FOLDER_NAME);
   }
 
-  getSpecificVersionDir(version: string, innerDir = false):{versionDir: string, exists: boolean} {
+  getSpecificVersionDir(
+    version: string,
+    innerDir = false
+  ): { versionDir: string; exists: boolean } {
     const versionsDir = this.getBitVersionsDir();
     let versionDir = path.join(versionsDir, version);
-    if (innerDir){
+    if (innerDir) {
       versionDir = path.join(versionDir, `bit-${version}`);
     }
     const exists = fs.pathExistsSync(versionDir);
     return {
       versionDir,
-      exists
-    }
+      exists,
+    };
   }
 
   getNodeVersionsDir(): string {
     return path.join(this.getBvmDirectory(), NODE_VERSIONS_FOLDER_NAME);
   }
 
-  getSpecificNodeVersionDir(version: string): {versionDir: string, exists: boolean} {
+  getSpecificNodeVersionDir(version: string): {
+    versionDir: string;
+    exists: boolean;
+  } {
     const versionsDir = this.getNodeVersionsDir();
     const versionDir = path.join(versionsDir, version);
     const exists = fs.pathExistsSync(versionDir);
     return {
       versionDir,
-      exists
+      exists,
     };
   }
 
@@ -248,7 +282,9 @@ export class Config {
    * Returns the Node.js version which is required by the given Bit CLI.
    */
   getWantedNodeVersion(innerVersionDir: string): string | undefined {
-    const bitManifest = fs.readJsonSync(path.join(innerVersionDir, 'node_modules/@teambit/bit/package.json'));
+    const bitManifest = fs.readJsonSync(
+      path.join(innerVersionDir, "node_modules/@teambit/bit/package.json")
+    );
     return bitManifest.bvm && bitManifest.bvm.node;
   }
 
@@ -259,16 +295,16 @@ export class Config {
    * So we just create a dedicated content-addressable store for Node.js artifacts in the bvm directory.
    */
   getCafsDir() {
-    return path.join(this.getNodeVersionsDir(), '.store');
+    return path.join(this.getNodeVersionsDir(), ".store");
   }
 
   getAliases(): Record<string, string> {
     const all = this.list();
     const flatAliases = pickBy(all, (val, key) => {
-      return ((key.startsWith(ALIASES_KEY)))
+      return key.startsWith(ALIASES_KEY);
     });
     const res = Object.keys(flatAliases).reduce((acc, keyName) => {
-      const keyWithoutPrefix = keyName.replace(`${ALIASES_KEY}.`, '');
+      const keyWithoutPrefix = keyName.replace(`${ALIASES_KEY}.`, "");
       acc[keyWithoutPrefix] = flatAliases[keyName];
       return acc;
     }, {});
@@ -278,10 +314,10 @@ export class Config {
   getLinks(): Record<string, string> {
     const all = this.list();
     const flatLinks = pickBy(all, (val, key) => {
-      return ((key.startsWith(LINKS_KEY)))
+      return key.startsWith(LINKS_KEY);
     });
     const res = Object.keys(flatLinks).reduce((acc, keyName) => {
-      const keyWithoutPrefix = keyName.replace(`${LINKS_KEY}.`, '');
+      const keyWithoutPrefix = keyName.replace(`${LINKS_KEY}.`, "");
       acc[keyWithoutPrefix] = flatLinks[keyName];
       return acc;
     }, {});
@@ -306,7 +342,8 @@ export class Config {
   }
 
   networkConfig() {
-    const strictSslConfig = this.get(CFG_NETWORK_STRICT_SSL) ?? this.get(CFG_PROXY_STRICT_SSL);
+    const strictSslConfig =
+      this.get(CFG_NETWORK_STRICT_SSL) ?? this.get(CFG_PROXY_STRICT_SSL);
     const strictSSL =
       strictSslConfig && typeof strictSslConfig === "string"
         ? strictSslConfig === "true"
@@ -314,19 +351,20 @@ export class Config {
 
     return {
       ca: this.get(CFG_NETWORK_CA) ?? this.get(CFG_PROXY_CA),
+      cafile: this.get(CFG_NETWORK_CA_FILE) ?? this.get(CFG_PROXY_CA_FILE),
       cert: this.get(CFG_NETWORK_CERT) ?? this.get(CFG_PROXY_CERT),
       key: this.get(CFG_NETWORK_KEY) ?? this.get(CFG_PROXY_KEY),
       localAddress: this.get(CFG_NETWORK_LOCAL_ADDRESS),
       maxSockets: this.get(CFG_NETWORK_MAX_SOCKETS),
       strictSSL,
-    }
+    };
   }
 
   gcpConfig() {
     return {
       accessKey: this.get(CFG_GCP_ACCESS_KEY),
       secretKey: this.get(CFG_GCP_SECRET_KEY),
-    }
+    };
   }
 
   proxyConfig() {
@@ -350,40 +388,47 @@ export class Config {
       noProxy,
     };
   }
-
 }
 
 function checkIfBitLegacyExist(): boolean {
   try {
     // Ignore errors to prevent printing the error to the console. in case of error we just treat it as it doesn't exists
-    const output = execSync('bit -v', {stdio: ['pipe', 'pipe', 'ignore']}).toString();
-    if (output && semver.valid(output.trim()) && output.startsWith('14')){
+    const output = execSync("bit -v", {
+      stdio: ["pipe", "pipe", "ignore"],
+    }).toString();
+    if (output && semver.valid(output.trim()) && output.startsWith("14")) {
       return true;
     }
     return false;
-  } catch (e){
+  } catch (e) {
     return false;
   }
 }
 
 /**
  * This function will transform the env variable to only get env variable starts with the BVM_ENV_VARS_PREFIX
- * it will also remove this prefix from the env var name so we don't need to treat it with this prefix 
+ * it will also remove this prefix from the env var name so we don't need to treat it with this prefix
  * in rest of the code
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
-function transformEnvVariable({key, value}: {key: string, value:string}):{key: string, value:string} | undefined {
-  if(!key.startsWith(BVM_ENV_VARS_PREFIX)){
+function transformEnvVariable({
+  key,
+  value,
+}: {
+  key: string;
+  value: string;
+}): { key: string; value: string } | undefined {
+  if (!key.startsWith(BVM_ENV_VARS_PREFIX)) {
     return undefined;
   }
-  if (key === CFG_BVM_DIR){
+  if (key === CFG_BVM_DIR) {
     // do not remove BVM_ prefix from the BVM dir config, as this is it's name
-    return {key, value};
+    return { key, value };
   }
   return {
-    key: key.replace(BVM_ENV_VARS_PREFIX, ''),
-    value
-  }
+    key: key.replace(BVM_ENV_VARS_PREFIX, ""),
+    value,
+  };
 }
