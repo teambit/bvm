@@ -27,11 +27,12 @@ export function getNewerBvmAvailableOutput(
   }
   if (semver.gt(latestBvmRemoteVersion, currentBvmVersion)) {
     const npmCommand = chalk.cyan(`npm install -g ${BVM_PACKAGE_NAME}`);
+    const pnpmCommand = chalk.cyan(`pnpm add -g ${BVM_PACKAGE_NAME}`);
     const yarnCommand = chalk.cyan(`yarn global add ${BVM_PACKAGE_NAME}`);
     return `new version of ${chalk.cyan(
       "bvm"
     )} is available (${latestBvmRemoteVersion}), upgrade your ${chalk.cyan(
       "bvm"
-    )} by running "${npmCommand}" or "${yarnCommand}"\n`;
+    )} by running "${npmCommand}", "${pnpmCommand}" or "${yarnCommand}"\n`;
   }
 }
