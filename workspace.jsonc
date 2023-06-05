@@ -34,9 +34,9 @@
     "packageManager": "teambit.dependencies/pnpm",
     "policy": {
       "dependencies": {
-        "@pnpm/fetch": "7.0.1",
+        "@pnpm/fetch": "7.0.2",
         "@pnpm/logger": "5.0.0",
-        "@pnpm/node.fetcher": "3.0.1",
+        "@pnpm/node.fetcher": "3.0.3",
         "@pnpm/os.env.path-extender": "0.2.10",
         "@teambit/toolbox.network.agent": "0.0.551",
         "@teambit/toolbox.time.time-format": "0.0.483",
