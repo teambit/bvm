@@ -59,9 +59,15 @@ export class GcpList {
     return new RemoteVersionList(remoteVersions);
   }
 
+  getIndexJsonUrl(): string {
+    const random = Math.floor(Math.random() * 10000000);
+    return `${BIT_INDEX_JSON}?random=${random}`;
+  }
+
   async fetchIndex(): Promise<Release[]> {
-    const response = await fetch(BIT_INDEX_JSON, {
-      agent: getAgent(BIT_INDEX_JSON, this.proxyConfig),
+    const url = this.getIndexJsonUrl();
+    const response = await fetch(url, {
+      agent: getAgent(url, this.proxyConfig),
     });
     return await response.json() as Release[];
   }
