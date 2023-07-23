@@ -3,6 +3,7 @@ import {Config} from '@teambit/bvm.config';
 import {listLocal} from '@teambit/bvm.list';
 import cmdShim from '@zkochan/cmd-shim';
 import path from 'path';
+import symlinkDir from 'symlink-dir';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
@@ -134,6 +135,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     warnings.push(warning);
   }
 
+  await symlinkDir(generatedLink.source, path.join(config.getBvmDirectory(), linkName))
   return {
     linkName, 
     previousLinkVersion,
