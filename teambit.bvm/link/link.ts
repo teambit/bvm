@@ -114,7 +114,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     source: versionDir,
     target: rawGeneratedLinks[0]
   }
-  const currentDir = path.join(config.getBvmDirectory(), linkName)
+  const currentDir = path.join(config.getBvmDirectory(), 'links', linkName)
   await symlinkDir(generatedLink.source, currentDir)
   await cmdShim(path.join(currentDir, source), generatedLink.target, {
     // Unsigned PowerShell scripts are not allowed on Windows with default settings,
