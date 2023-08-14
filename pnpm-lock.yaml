@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: true
+
 importers:
 
   .:
@@ -158,6 +162,8 @@ importers:
       '@types/yargs':
         specifier: 17.0.0
         version: 17.0.0
+
+  bvm/path: {}
 
   teambit.bvm/cli/app: {}
 
