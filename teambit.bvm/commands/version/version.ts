@@ -85,7 +85,7 @@ export async function showAllVersions(options: ShowVersionsOptions = defaultShow
     : undefined;
 
   // latest nightly should be latest stable if stable is more recent
-   if (semver.compare(latestRemoteNightlyVersion.version, latestRemoteStableVersion.version) < 1){
+   if (semver.lt(latestRemoteNightlyVersion.version, latestRemoteStableVersion.version)){
     latestRemoteNightlyVersion = latestRemoteStableVersion
    }
 
