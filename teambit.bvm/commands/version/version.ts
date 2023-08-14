@@ -200,8 +200,9 @@ function getNewerBitAvailableOutput(
            `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
     }      
   }
+  const bitVersionsGhLink = '\nhttps://github.com/teambit/bit/releases';
 
-  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput].join("");
+  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput, bitVersionsGhLink].join("");
     
   return output;
 }
