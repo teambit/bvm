@@ -108,6 +108,8 @@ export async function showAllVersions(
 
   // latest nightly should be latest stable if stable is more recent
   if (
+    latestRemoteNightlyVersion &&
+    latestRemoteStableVersion &&
     semver.lt(
       latestRemoteNightlyVersion.version,
       latestRemoteStableVersion.version
