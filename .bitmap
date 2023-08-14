@@ -135,6 +135,12 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },
+    "path": {
+        "scope": "teambit.bvm",
+        "version": "0.0.2",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/path"
+    },
     "release": {
         "scope": "teambit.bvm",
         "version": "0.1.10",
@@ -165,5 +171,5 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/version"
     },
-    "$schema-version": "15.0.0"
+    "$schema-version": "16.0.0"
 }
