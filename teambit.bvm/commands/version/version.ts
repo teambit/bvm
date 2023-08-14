@@ -132,7 +132,7 @@ function formatOutput(versions: VersionsResult): string {
       )}`
     : undefined;
 
-  let { latestRemoteNightlyVersion, latestRemoteStableVersion } = versions.remoteBitVersions;
+  const { latestRemoteNightlyVersion, latestRemoteStableVersion } = versions.remoteBitVersions;
   
     const latestRemoteStable = latestRemoteStableVersion
     ? `latest available stable bit version: ${chalk.green(
