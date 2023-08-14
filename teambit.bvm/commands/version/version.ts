@@ -80,9 +80,14 @@ export async function showAllVersions(options: ShowVersionsOptions = defaultShow
   const latestRemoteStableVersion = actualOpts.includeRemote
     ? remoteVersionsList.versionsByReleaseType([ReleaseType.STABLE]).latest()
     : undefined;
-  const latestRemoteNightlyVersion = (actualOpts.includeRemote && releaseType === ReleaseTypeFilter.NIGHTLY)
+  let latestRemoteNightlyVersion = (actualOpts.includeRemote && releaseType === ReleaseTypeFilter.NIGHTLY)
     ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest() 
     : undefined;
+
+  // latest nightly should be latest stable if stable is more recent
+   if (semver.lt(latestRemoteNightlyVersion.version, latestRemoteStableVersion.version)){
+    latestRemoteNightlyVersion = latestRemoteStableVersion
+   }
 
   const localBitVersions: LocalBitVersions = {
     currentVersion,
@@ -128,7 +133,8 @@ function formatOutput(versions: VersionsResult): string {
     : undefined;
 
   const { latestRemoteNightlyVersion, latestRemoteStableVersion } = versions.remoteBitVersions;
-  const latestRemoteStable = latestRemoteStableVersion
+  
+    const latestRemoteStable = latestRemoteStableVersion
     ? `latest available stable bit version: ${chalk.green(
         latestRemoteStableVersion.version
       )}`
@@ -194,8 +200,9 @@ function getNewerBitAvailableOutput(
            `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
     }      
   }
+  const bitVersionsGhLink = '\nhttps://github.com/teambit/bit/releases';
 
-  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput].join("");
+  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput, bitVersionsGhLink].join("");
     
   return output;
 }
