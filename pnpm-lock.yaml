@@ -18,8 +18,8 @@ importers:
         specifier: 3.0.3
         version: 3.0.3(@pnpm/logger@5.0.0)
       '@pnpm/os.env.path-extender':
-        specifier: 0.2.10
-        version: 0.2.10
+        specifier: 0.2.12
+        version: 0.2.12
       '@teambit/toolbox.network.agent':
         specifier: 0.0.551
         version: 0.0.551
@@ -566,15 +566,15 @@ packages:
       - supports-color
     dev: false
 
-  /@pnpm/os.env.path-extender-posix@0.2.8:
-    resolution: {integrity: sha1-rIVheBWDfnN+oCPYkVaYSajHWgY=, tarball: https://node-registry.bit.cloud/@pnpm/os.env.path-extender-posix/-/@pnpm-os.env.path-extender-posix-0.2.8.tgz}
+  /@pnpm/os.env.path-extender-posix@0.2.10:
+    resolution: {integrity: sha512-Ok2EB4yp/x9BUOeP6ZMqgO1MuJ8gvwK6GowN0nY4EqQHjOj/nG0Ggg0bHZ6eTuVfr0NxNkcaR4Ux9i0UGVgYWQ==}
     engines: {node: '>=12.22.0'}
     dependencies:
       '@pnpm/error': 4.0.1
     dev: false
 
-  /@pnpm/os.env.path-extender-windows@0.2.4:
-    resolution: {integrity: sha1-7MpeQqKrw4ucwNBWYlGDlEMYl+o=, tarball: https://node-registry.bit.cloud/@pnpm/os.env.path-extender-windows/-/@pnpm-os.env.path-extender-windows-0.2.4.tgz}
+  /@pnpm/os.env.path-extender-windows@0.2.5:
+    resolution: {integrity: sha512-lOXwdYtBO+3ndLjKTVCQ9odTOq1LRDBqzaZ9cNlgrtfRp8QUxeUywCDJtTpUsMxGTZJRHO77+uLcjXPdzTNQPg==}
     engines: {node: '>=12.22.0'}
     dependencies:
       '@pnpm/error': 4.0.1
@@ -582,12 +582,12 @@ packages:
       string.prototype.matchall: 4.0.7
     dev: false
 
-  /@pnpm/os.env.path-extender@0.2.10:
-    resolution: {integrity: sha1-XQYmhsCzMgW6Yus6qJ38A2PEFrQ=, tarball: https://node-registry.bit.cloud/@pnpm/os.env.path-extender/-/@pnpm-os.env.path-extender-0.2.10.tgz}
+  /@pnpm/os.env.path-extender@0.2.12:
+    resolution: {integrity: sha512-/9ZfazOlLfpmcoa/I24UwAPkA0WPGtnovguXOy+SnkAi67Tvp2FxZNYBcnP9XQuXk44iyDOTq3aMsn3qJTLZSg==}
     engines: {node: '>=12.22.0'}
     dependencies:
-      '@pnpm/os.env.path-extender-posix': 0.2.8
-      '@pnpm/os.env.path-extender-windows': 0.2.4
+      '@pnpm/os.env.path-extender-posix': 0.2.10
+      '@pnpm/os.env.path-extender-windows': 0.2.5
     dev: false
 
   /@pnpm/pick-fetcher@2.0.0:
