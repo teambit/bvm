@@ -3,6 +3,7 @@ import {Config} from '@teambit/bvm.config';
 import {listLocal} from '@teambit/bvm.list';
 import cmdShim from '@zkochan/cmd-shim';
 import path from 'path';
+import symlinkDir from 'symlink-dir';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
@@ -109,17 +110,19 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     force: true,
   }
   const rawGeneratedLinks = binLinks.getPaths(binOpts);
-  await cmdShim(path.join(versionDir, source), rawGeneratedLinks[0], {
+  const generatedLink = {
+    source: versionDir,
+    target: rawGeneratedLinks[0]
+  }
+  const currentDir = path.join(config.getBvmDirectory(), 'links', linkName)
+  await symlinkDir(generatedLink.source, currentDir)
+  await cmdShim(path.join(currentDir, source), generatedLink.target, {
     // Unsigned PowerShell scripts are not allowed on Windows with default settings,
     // so it is better to not use them.
     createPwshFile: false,
     nodeExecPath,
     prependToPath: nodeExecPath ? path.dirname(nodeExecPath) : undefined,
   });
-  const generatedLink = {
-    source: versionDir,
-    target: rawGeneratedLinks[0]
-  }
 
   let previousLinkVersion;
   if (opts.addToConfig){
