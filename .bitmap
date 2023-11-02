@@ -3,173 +3,200 @@
 /**
  * The Bitmap file is an auto generated file used by Bit to track all your Bit components. It maps the component to a folder in your file system.
  * This file should be committed to VCS(version control).
- * Components are listed using their component ID (https://bit.dev/docs/components/component-id).
+ * Components are listed using their component ID (https://bit.dev/reference/components/component-id).
  * If you want to delete components you can use the "bit remove <component-id>" command.
- * See the docs (https://bit.dev/docs/components/removing-components) for more information, or use "bit remove --help".
+ * See the docs (https://bit.dev/reference/components/removing-components) for more information, or use "bit remove --help".
  */
 
 {
     "cli/app": {
+        "name": "cli/app",
         "scope": "teambit.bvm",
         "version": "0.4.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
     "commands/config": {
+        "name": "commands/config",
         "scope": "teambit.bvm",
         "version": "0.0.34",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/config"
     },
     "commands/install": {
+        "name": "commands/install",
         "scope": "teambit.bvm",
         "version": "0.1.15",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
+        "name": "commands/link",
         "scope": "teambit.bvm",
         "version": "0.1.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
     "commands/list": {
+        "name": "commands/list",
         "scope": "teambit.bvm",
         "version": "0.0.49",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list"
     },
     "commands/release": {
+        "name": "commands/release",
         "scope": "teambit.bvm",
         "version": "0.1.15",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/release"
     },
     "commands/remove": {
+        "name": "commands/remove",
         "scope": "teambit.bvm",
         "version": "0.0.49",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/remove"
     },
     "commands/upgrade": {
+        "name": "commands/upgrade",
         "scope": "teambit.bvm",
         "version": "0.1.15",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/use": {
+        "name": "commands/use",
         "scope": "teambit.bvm",
         "version": "0.0.31",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
     "commands/version": {
+        "name": "commands/version",
         "scope": "teambit.bvm",
         "version": "0.1.12",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/version"
     },
     "config": {
+        "name": "config",
         "scope": "teambit.bvm",
         "version": "0.2.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config"
     },
     "error": {
+        "name": "error",
         "scope": "teambit.bvm",
         "version": "0.0.6",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/error"
     },
     "fetch": {
+        "name": "fetch",
         "scope": "teambit.bvm",
         "version": "0.1.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch"
     },
     "fs-tar-version": {
+        "name": "fs-tar-version",
         "scope": "teambit.bvm",
         "version": "0.0.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fs-tar-version"
     },
     "fs/progress-bar-file-extractor": {
+        "name": "fs/progress-bar-file-extractor",
         "scope": "teambit.toolbox",
         "version": "0.0.9",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/progress-bar-file-extractor"
     },
     "fs/untar": {
+        "name": "fs/untar",
         "scope": "teambit.toolbox",
         "version": "0.0.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/fs/untar"
     },
     "install": {
+        "name": "install",
         "scope": "teambit.bvm",
         "version": "0.1.24",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
+        "name": "link",
         "scope": "teambit.bvm",
         "version": "0.2.11",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
     "list": {
+        "name": "list",
         "scope": "teambit.bvm",
         "version": "0.1.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/list"
     },
     "network/file-downloader": {
+        "name": "network/file-downloader",
         "scope": "teambit.toolbox",
         "version": "0.0.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/file-downloader"
     },
     "network/progress-bar-file-downloader": {
+        "name": "network/progress-bar-file-downloader",
         "scope": "teambit.toolbox",
         "version": "0.0.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },
     "path": {
+        "name": "path",
         "scope": "teambit.bvm",
         "version": "0.0.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/path"
     },
     "release": {
+        "name": "release",
         "scope": "teambit.bvm",
         "version": "0.1.10",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/release"
     },
     "remove": {
+        "name": "remove",
         "scope": "teambit.bvm",
         "version": "0.0.49",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/remove"
     },
     "reporter": {
+        "name": "reporter",
         "scope": "teambit.bvm",
         "version": "0.1.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/reporter"
     },
     "storage": {
+        "name": "storage",
         "scope": "teambit.gcp",
         "version": "0.1.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.gcp/storage"
     },
     "version": {
+        "name": "version",
         "scope": "teambit.bvm",
         "version": "0.1.2",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/version"
     },
-    "$schema-version": "16.0.0"
+    "$schema-version": "17.0.0"
 }
