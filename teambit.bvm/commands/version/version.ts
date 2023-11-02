@@ -1,19 +1,29 @@
 import { CommandModule, Argv } from "yargs";
 import chalk from "chalk";
 import { Config } from "@teambit/bvm.config";
-import { getBvmRemoteVersion, getNewerBvmAvailableOutput, getBvmLocalVersion} from "@teambit/bvm.version";
-import { listLocal, listRemote, ReleaseType, ReleaseTypeFilter, Version } from "@teambit/bvm.list";
+import {
+  getBvmRemoteVersion,
+  getNewerBvmAvailableOutput,
+  getBvmLocalVersion,
+} from "@teambit/bvm.version";
+import {
+  listLocal,
+  listRemote,
+  ReleaseType,
+  ReleaseTypeFilter,
+  Version,
+} from "@teambit/bvm.list";
 import semver from "semver";
 
 export type LocalBitVersions = {
   currentVersion?: Version;
   latestInstalledVersion?: Version;
-}
+};
 
 export type RemoteBitVersions = {
   latestRemoteStableVersion?: Version;
   latestRemoteNightlyVersion?: Version;
-}
+};
 
 export type VersionsResult = {
   currentBvmVersion?: string;
@@ -23,13 +33,13 @@ export type VersionsResult = {
 };
 
 export type ShowVersionsOptions = {
-  includeRemote?: boolean,
-  overrideLocalVersion?: string
-}
+  includeRemote?: boolean;
+  overrideLocalVersion?: string;
+};
 
 const defaultShowVersionOptions = {
-  includeRemote: true
-}
+  includeRemote: true,
+};
 
 export class VersionCmd implements CommandModule {
   aliases = ["version", "versions"];
@@ -63,42 +73,66 @@ export class VersionCmd implements CommandModule {
 
 export const command = new VersionCmd();
 
-export async function showAllVersions(options: ShowVersionsOptions = defaultShowVersionOptions): Promise<string> {
+export async function showAllVersions(
+  options: ShowVersionsOptions = defaultShowVersionOptions
+): Promise<string> {
   const actualOpts = Object.assign({}, defaultShowVersionOptions, options);
   const config = Config.load();
-  const currentBvmVersion = actualOpts.overrideLocalVersion ? actualOpts.overrideLocalVersion : await getBvmLocalVersion();
+  const currentBvmVersion = actualOpts.overrideLocalVersion
+    ? actualOpts.overrideLocalVersion
+    : await getBvmLocalVersion();
   const latestBvmRemoteVersion = actualOpts.includeRemote
     ? await getBvmRemoteVersion()
     : undefined;
-    
-  const remoteVersionsList = await listRemote({releaseType: ReleaseTypeFilter.ALL});
+
+  const remoteVersionsList = await listRemote({
+    releaseType: ReleaseTypeFilter.ALL,
+  });
   const remoteVersionsListMap = remoteVersionsList.toMap();
   const currentVersionString = config.getDefaultLinkVersion();
-  const currentVersion = currentVersionString ? new Version(currentVersionString, remoteVersionsListMap.get(currentVersionString)) : undefined;
+  const currentVersion = currentVersionString
+    ? new Version(
+        currentVersionString,
+        remoteVersionsListMap.get(currentVersionString)
+      )
+    : undefined;
   const releaseType = config.getReleaseType();
   const latestInstalledVersion = (await listLocal()).latest();
   const latestRemoteStableVersion = actualOpts.includeRemote
     ? remoteVersionsList.versionsByReleaseType([ReleaseType.STABLE]).latest()
     : undefined;
-  const latestRemoteNightlyVersion = (actualOpts.includeRemote && releaseType === ReleaseTypeFilter.NIGHTLY)
-    ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest() 
-    : undefined;
+  let latestRemoteNightlyVersion =
+    actualOpts.includeRemote && releaseType === ReleaseTypeFilter.NIGHTLY
+      ? remoteVersionsList.versionsByReleaseType([ReleaseType.NIGHTLY]).latest()
+      : undefined;
+
+  // latest nightly should be latest stable if stable is more recent
+  if (
+    latestRemoteNightlyVersion?.version &&
+    latestRemoteStableVersion?.version &&
+    semver.lt(
+      latestRemoteNightlyVersion.version,
+      latestRemoteStableVersion.version
+    )
+  ) {
+    latestRemoteNightlyVersion = latestRemoteStableVersion;
+  }
 
   const localBitVersions: LocalBitVersions = {
     currentVersion,
-    latestInstalledVersion
-  }
+    latestInstalledVersion,
+  };
 
   const remoteBitVersions: RemoteBitVersions = {
     latestRemoteStableVersion,
-    latestRemoteNightlyVersion
-  }
+    latestRemoteNightlyVersion,
+  };
 
   const output = formatOutput({
     currentBvmVersion,
     latestBvmRemoteVersion,
     localBitVersions,
-    remoteBitVersions
+    remoteBitVersions,
   });
   return output;
 }
@@ -107,7 +141,7 @@ function formatOutput(versions: VersionsResult): string {
   // BVM versions
   const currentBvmVersionOutput = versions.currentBvmVersion
     ? `current (used) bvm version: ${chalk.green(versions.currentBvmVersion)}`
-    : `current (used) bvm version: ${chalk.red('unknown')}`;
+    : `current (used) bvm version: ${chalk.red("unknown")}`;
   const latestRemoteBvmOutput = versions.latestBvmRemoteVersion
     ? `latest available bvm version: ${chalk.green(
         versions.latestBvmRemoteVersion
@@ -115,19 +149,25 @@ function formatOutput(versions: VersionsResult): string {
     : undefined;
 
   // Bit versions - local then remote
-  const { currentVersion, latestInstalledVersion} = versions.localBitVersions;
+  const { currentVersion, latestInstalledVersion } = versions.localBitVersions;
   const currentVersionOutput = currentVersion
     ? `current (used) bit version: ${chalk.green(
-      `${currentVersion.version} (${currentVersion.releaseType?.toString() ?? 'stable'})`
+        `${currentVersion.version} (${
+          currentVersion.releaseType?.toString() ?? "stable"
+        })`
       )}`
     : undefined;
   const latestInstalled = latestInstalledVersion
     ? `latest installed bit version: ${chalk.green(
-        `${latestInstalledVersion.version} (${latestInstalledVersion.releaseType?.toString() ?? 'stable'})`
+        `${latestInstalledVersion.version} (${
+          latestInstalledVersion.releaseType?.toString() ?? "stable"
+        })`
       )}`
     : undefined;
 
-  const { latestRemoteNightlyVersion, latestRemoteStableVersion } = versions.remoteBitVersions;
+  const { latestRemoteNightlyVersion, latestRemoteStableVersion } =
+    versions.remoteBitVersions;
+
   const latestRemoteStable = latestRemoteStableVersion
     ? `latest available stable bit version: ${chalk.green(
         latestRemoteStableVersion.version
@@ -167,35 +207,58 @@ function getNewerBitAvailableOutput(
   remoteVersions: RemoteBitVersions
 ): string | undefined {
   const { currentVersion, latestInstalledVersion } = localVersions;
-  const { latestRemoteNightlyVersion, latestRemoteStableVersion } = remoteVersions;
+  const { latestRemoteNightlyVersion, latestRemoteStableVersion } =
+    remoteVersions;
 
   if (!currentVersion) {
     return undefined;
   }
-  if (!latestInstalledVersion && !latestRemoteStableVersion && !latestRemoteNightlyVersion) {
+  if (
+    !latestInstalledVersion &&
+    !latestRemoteStableVersion &&
+    !latestRemoteNightlyVersion
+  ) {
     return undefined;
   }
 
-  const moreRecentLocalVersionOutput = latestInstalledVersion && (semver.gt(latestInstalledVersion.version, currentVersion.version)) 
-    ? `\nNOTE: you have a more recent version of bit (${latestInstalledVersion.version}) installed - run "${chalk.cyan(`bvm use ${latestInstalledVersion.version}`)}" to use your latest installed version`
-    : undefined;
+  const moreRecentLocalVersionOutput =
+    latestInstalledVersion &&
+    semver.gt(latestInstalledVersion.version, currentVersion.version)
+      ? `\nNOTE: you have a more recent version of bit (${
+          latestInstalledVersion.version
+        }) installed - run "${chalk.cyan(
+          `bvm use ${latestInstalledVersion.version}`
+        )}" to use your latest installed version`
+      : undefined;
 
-  function newVersionAvailableText(versionToCheck?: Version){
+  function newVersionAvailableText(versionToCheck?: Version) {
     if (!versionToCheck) return undefined;
     const { version, releaseType } = versionToCheck;
 
-    const commandToRun = versionToCheck.releaseType === ReleaseType.STABLE ?
-      `bvm install ${version}`
-      : "bvm upgrade"
-    
-    if ((version && semver.gt(version, currentVersion!.version)))
-    {
-      return `${chalk.greenBright("new")} ${releaseType?.toString() ?? ""} version (${version}) of ${chalk.cyan("bit")} `+
-           `is available, upgrade ${chalk.cyan("bit")} to the latest version by running "${chalk.cyan(commandToRun)}"\n`;
-    }      
-  }
+    const commandToRun =
+      versionToCheck.releaseType === ReleaseType.STABLE
+        ? `bvm install ${version}`
+        : "bvm upgrade";
 
-  const output = [newVersionAvailableText(latestRemoteStableVersion), newVersionAvailableText(latestRemoteNightlyVersion), moreRecentLocalVersionOutput].join("");
-    
+    if (version && semver.gt(version, currentVersion!.version)) {
+      return (
+        `${chalk.greenBright("new")} ${
+          releaseType?.toString() ?? ""
+        } version (${version}) of ${chalk.cyan("bit")} ` +
+        `is available, upgrade ${chalk.cyan(
+          "bit"
+        )} to the latest version by running "${chalk.cyan(commandToRun)}"\n`
+      );
+    }
+  }
+  const bitVersionsGhLink = "\nhttps://github.com/teambit/bit/releases";
+
+  const output = [
+    newVersionAvailableText(latestRemoteStableVersion),
+    newVersionAvailableText(latestRemoteNightlyVersion),
+    moreRecentLocalVersionOutput,
+    bitVersionsGhLink,
+  ].join("");
+
   return output;
 }

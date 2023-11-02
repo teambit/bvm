@@ -166,6 +166,8 @@ importers:
         specifier: 17.0.0
         version: 17.0.0
 
+  bvm/path: {}
+
   teambit.bvm/cli/app: {}
 
   teambit.bvm/commands/config: {}
