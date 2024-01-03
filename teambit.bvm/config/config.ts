@@ -153,9 +153,11 @@ export class Config {
     newInstance = false,
     sources: ConfigSources = ["env", "file"]
   ): Config {
+    const isBvmCommand = process.argv[1].includes("bvm");
     if (
-      process.argv.includes("--get-yargs-completions") ||
-      process.argv.includes("--help")
+      isBvmCommand &&
+      (process.argv.includes("--get-yargs-completions") ||
+        process.argv.includes("--help"))
     ) {
       // this is a workaround to get the completion and `bvm --help` working.
       // otherwise, the `new Config()` later on, calls `store.env().argv()`, and for some reason,
