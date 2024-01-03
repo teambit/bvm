@@ -1,6 +1,15 @@
 import path from 'path';
 
-export function findCurrentBvmDir(dir: string): string | null {
+let currentBvmDir: string | undefined | null;
+
+export function findCurrentBvmDir() {
+  if (currentBvmDir === undefined) {
+    currentBvmDir = findBvmDir(process.argv[1]);
+  }
+  return currentBvmDir;
+}
+
+export function findBvmDir(dir: string): string | null {
   let current = dir;
   let parentDir = dir;
   let parentParentDir = path.dirname(parentDir)
