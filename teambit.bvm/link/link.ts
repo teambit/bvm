@@ -79,6 +79,13 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     const localLatest = (await listLocal()).latest();
     concreteVersion = localLatest.version;
   }
+  if (concreteVersion === 'stable'){
+    const localStable = (await listLocal()).stable();
+    if (!localStable){
+      throw new BvmError(`no stable version found installed`);
+    }
+    concreteVersion = localStable.version;
+  }
   const {versionDir, exists} = config.getSpecificVersionDir(concreteVersion, true);
   if (!exists){
     throw new BvmError(`version ${concreteVersion} is not installed`);

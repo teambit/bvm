@@ -16,6 +16,8 @@ export class UseCmd implements CommandModule {
     })
     .example('$0 use', 'show currently used version of bit')
     .example('$0 use 1.7.5', 'switch to version 1.7.5 of bit')
+    .example('$0 use stable', 'switch to latest installed stable version')
+    .example('$0 use latest', 'switch to latest installed version')
     return yargs;
   }
   async handler(args) {
