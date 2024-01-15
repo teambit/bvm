@@ -12,7 +12,7 @@
     "cli/app": {
         "name": "cli/app",
         "scope": "teambit.bvm",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
@@ -26,56 +26,56 @@
     "commands/install": {
         "name": "commands/install",
         "scope": "teambit.bvm",
-        "version": "0.1.18",
+        "version": "0.1.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
     "commands/link": {
         "name": "commands/link",
         "scope": "teambit.bvm",
-        "version": "0.1.6",
+        "version": "0.1.7",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/link"
     },
     "commands/list": {
         "name": "commands/list",
         "scope": "teambit.bvm",
-        "version": "0.0.51",
+        "version": "0.0.52",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/list"
     },
     "commands/release": {
         "name": "commands/release",
         "scope": "teambit.bvm",
-        "version": "0.1.18",
+        "version": "0.1.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/release"
     },
     "commands/remove": {
         "name": "commands/remove",
         "scope": "teambit.bvm",
-        "version": "0.0.51",
+        "version": "0.0.52",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/remove"
     },
     "commands/upgrade": {
         "name": "commands/upgrade",
         "scope": "teambit.bvm",
-        "version": "0.1.18",
+        "version": "0.1.19",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/upgrade"
     },
     "commands/use": {
         "name": "commands/use",
         "scope": "teambit.bvm",
-        "version": "0.0.34",
+        "version": "0.0.35",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/use"
     },
     "commands/version": {
         "name": "commands/version",
         "scope": "teambit.bvm",
-        "version": "0.1.14",
+        "version": "0.1.15",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/version"
     },
@@ -96,7 +96,7 @@
     "fetch": {
         "name": "fetch",
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/fetch"
     },
@@ -124,21 +124,21 @@
     "install": {
         "name": "install",
         "scope": "teambit.bvm",
-        "version": "0.1.27",
+        "version": "0.1.28",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/install"
     },
     "link": {
         "name": "link",
         "scope": "teambit.bvm",
-        "version": "0.2.14",
+        "version": "0.2.15",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/link"
     },
     "list": {
         "name": "list",
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/list"
     },
@@ -166,14 +166,14 @@
     "release": {
         "name": "release",
         "scope": "teambit.bvm",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/release"
     },
     "remove": {
         "name": "remove",
         "scope": "teambit.bvm",
-        "version": "0.0.51",
+        "version": "0.0.52",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/remove"
     },
