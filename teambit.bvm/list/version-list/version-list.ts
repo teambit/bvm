@@ -10,6 +10,11 @@ export class VersionList {
     return sorted.entries[0];
   }
 
+  stable(): Version | undefined {
+    const sorted = this.sortBySemver('desc');
+    return sorted.entries.find(version => version.releaseType === 'stable');
+  }
+
   find(version: string): Version | undefined {
     return this.entries.find(entry => entry.version === version);
   }
