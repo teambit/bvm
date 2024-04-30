@@ -1,3 +1,4 @@
+import util from 'util';
 import type {CommandModule, Argv} from 'yargs';
 import {installVersion, InstallOpts} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
@@ -83,36 +84,48 @@ export class InstallCmd implements CommandModule {
     return yargs;
   }
   async handler(args) {
-    if (!args.skipUpdateCheck) {
-      const currentBvmVersion = await getBvmLocalVersion();
-      const latestBvmRemoteVersion = await getBvmRemoteVersion();
-      const upgradeBvmMsg = getNewerBvmAvailableOutput(currentBvmVersion, latestBvmRemoteVersion);
-      if (upgradeBvmMsg){
-        console.log(chalk.yellow(upgradeBvmMsg));
+    try {
+      if (!args.skipUpdateCheck) {
+        const currentBvmVersion = await getBvmLocalVersion();
+        const latestBvmRemoteVersion = await getBvmRemoteVersion();
+        const upgradeBvmMsg = getNewerBvmAvailableOutput(currentBvmVersion, latestBvmRemoteVersion);
+        if (upgradeBvmMsg){
+          console.log(chalk.yellow(upgradeBvmMsg));
+        }
       }
-    }
-    const opts: InstallOpts = {
-      addToPathIfMissing: !args.skipUpdatePath,
-      override: args.override,
-      replace: args.replace,
-      extractMethod: args.extractMethod,
-      file: args.file,
-      useSystemNode: args.useSystemNode,
-      os: args.os,
-      arch: args.arch,
-    }
-    const installStartTime = Date.now();
-    const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
-    const installEndTime = Date.now();
-    const installTimeDiff = timeFormat(installEndTime - installStartTime);
-    console.log(`version ${chalk.green(installedVersion)} installed on ${chalk.green(versionPath)} in ${chalk.cyan(installTimeDiff)}`);
-    if (warnings && warnings.length) {
-      console.log(chalk.yellowBright(warnings.join('\n')));
-    }
-    if (!pathExtenderReport) return; 
-    const output = renderPathExtenderReport(pathExtenderReport);
-    if (output) {
-      console.log(`\n${output}`);
+      const opts: InstallOpts = {
+        addToPathIfMissing: !args.skipUpdatePath,
+        override: args.override,
+        replace: args.replace,
+        extractMethod: args.extractMethod,
+        file: args.file,
+        useSystemNode: args.useSystemNode,
+        os: args.os,
+        arch: args.arch,
+      }
+      const installStartTime = Date.now();
+      const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
+      const installEndTime = Date.now();
+      const installTimeDiff = timeFormat(installEndTime - installStartTime);
+      console.log(`version ${chalk.green(installedVersion)} installed on ${chalk.green(versionPath)} in ${chalk.cyan(installTimeDiff)}`);
+      if (warnings && warnings.length) {
+        console.log(chalk.yellowBright(warnings.join('\n')));
+      }
+      if (!pathExtenderReport) return; 
+      const output = renderPathExtenderReport(pathExtenderReport);
+      if (output) {
+        console.log(`\n${output}`);
+      }
+    } catch (error) {
+      if (util.types.isNativeError(error) && error.message.includes('unable to verify the first certificate')) {
+        console.log(chalk.red(`Error: ${error.message}
+
+You must configure BVM with the right network settings to fix this issue.
+See related docs: https://bit.dev/reference/reference/config/network-config/
+`));
+        process.exit(1);
+      }
+      throw error;
     }
   };
 }
