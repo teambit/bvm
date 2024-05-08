@@ -12,7 +12,7 @@
     "cli/app": {
         "name": "cli/app",
         "scope": "teambit.bvm",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/cli/app"
     },
@@ -26,7 +26,7 @@
     "commands/install": {
         "name": "commands/install",
         "scope": "teambit.bvm",
-        "version": "0.1.19",
+        "version": "0.1.20",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/commands/install"
     },
