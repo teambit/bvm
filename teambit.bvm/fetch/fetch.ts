@@ -7,7 +7,7 @@ import ora from 'ora';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { BvmError } from '@teambit/bvm.error';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
-import pick from 'lodash.pick';
+import { pick } from 'lodash';
 
 const config = Config.load();
 

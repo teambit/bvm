@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import {addSeconds, formatDistanceToNow} from 'date-fns';
 import cliProgress from 'cli-progress';
-import tar from 'tar';
+import * as tar from 'tar';
 import prettyBytes from 'pretty-bytes';
 
 export type ExtractOpts = {
