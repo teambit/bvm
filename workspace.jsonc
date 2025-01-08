@@ -34,10 +34,12 @@
     "packageManager": "teambit.dependencies/pnpm",
     "policy": {
       "dependencies": {
+        "@pnpm/config": "^1002.1.2",
         "@pnpm/fetch": "7.0.2",
         "@pnpm/logger": "5.0.0",
         "@pnpm/node.fetcher": "3.0.3",
         "@pnpm/os.env.path-extender": "0.2.12",
+        "@pnpm/plugin-commands-installation": "^1001.2.1",
         "@teambit/toolbox.network.agent": "0.0.551",
         "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",

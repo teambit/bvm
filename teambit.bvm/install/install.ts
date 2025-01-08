@@ -14,6 +14,7 @@ import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
+import { installWithPnpm } from './installWithPnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -86,6 +87,19 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       }
     }
     await removeWithLoader(versionDir);
+  }
+  if (true) {
+    await installWithPnpm(resolvedVersion, versionDir);
+    loader.stop();
+    return {
+      // downloadRequired: !!fsTarVersion.path,
+      installedVersion: resolvedVersion,
+      // replacedCurrent: replacedCurrentResult.replaced,
+      // previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+      // pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+      // warnings: replacedCurrentResult.warnings,
+      versionPath: versionDir
+    } as any;
   }
   const tempDir = config.getTempDir();
   let fsTarVersion;
