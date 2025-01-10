@@ -10,18 +10,6 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
   await fetchLockfile(fetch, version, dest);
   await createPackageJsonFile(dest);
 
-  const stopReporting = initDefaultReporter({
-    context: {
-      argv: [],
-    },
-    reportingOptions: {
-      appendOnly: false,
-      throttleProgress: 200,
-      hideProgressPrefix: true,
-    },
-    streamParser: streamParser as any, // eslint-disable-line
-  });
-
   const cliOptions = {
     argv: [],
     dir: dest,
@@ -31,12 +19,25 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     cliOptions,
     packageManager: { name: '@teambit/bvm', version: '' },
   });
+  const stopReporting = initDefaultReporter({
+    context: {
+      argv: [],
+      config,
+    },
+    reportingOptions: {
+      appendOnly: false,
+      throttleProgress: 200,
+      hideProgressPrefix: true,
+    },
+    streamParser: streamParser as any, // eslint-disable-line
+  });
   await install.handler({
     ...config,
     argv: { original: [] },
     frozenLockfile: true,
     nodeLinker: 'hoisted',
     cliOptions,
+    ignoreScripts: true,
   });
   // pnpm is doing some actions in workers.
   // We need to finish them, when we're done.
