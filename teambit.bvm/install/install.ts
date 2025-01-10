@@ -90,21 +90,30 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
   try {
     const fetch = createFetch(config);
-    await installWithPnpm(fetch, resolvedVersion, path.join(versionDir, `bit-${resolvedVersion}`));
+    const innerVersionDir = path.join(versionDir, `bit-${resolvedVersion}`);
+    await installWithPnpm(fetch, resolvedVersion, innerVersionDir);
+    let useSystemNode = opts.useSystemNode;
+    if (!useSystemNode) {
+      const wantedNodeVersion = config.getWantedNodeVersion(innerVersionDir);
+      if (wantedNodeVersion) {
+        // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+        useSystemNode = !(await installNode(config, wantedNodeVersion));
+      }
+    }
     const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
       addToPathIfMissing: opts.addToPathIfMissing,
-      // useSystemNode,
+      useSystemNode,
     });
     loader.stop();
     return {
-      // downloadRequired: !!fsTarVersion.path,
+      downloadRequired: false,
       installedVersion: resolvedVersion,
       replacedCurrent: replacedCurrentResult.replaced,
       previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
       pathExtenderReport: replacedCurrentResult.pathExtenderReport,
       warnings: replacedCurrentResult.warnings,
       versionPath: versionDir
-    } as any;
+    };
   } catch (err) {
     // If we failed to install with pnpm, then we proceed to install from tarball
   }

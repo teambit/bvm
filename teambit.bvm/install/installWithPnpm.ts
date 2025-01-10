@@ -42,6 +42,7 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     ...config,
     argv: { original: [] },
     frozenLockfile: true,
+    nodeLinker: 'hoisted',
     cliOptions,
   });
 }
