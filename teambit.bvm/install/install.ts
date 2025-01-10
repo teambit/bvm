@@ -228,15 +228,15 @@ function createFetch(config: Config) {
 /**
  * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
  */
-async function installNode(config: Config, version: string): Promise<string> {
+async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
   const fetch = createFetch(config);
-  const cafsDir = config.getCafsDir();
+  const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(fetch, version, versionDir, { cafsDir });
+    await fetchNode(fetch, version, versionDir, { storeDir });
   } catch (err) {
     loader.fail('Could not install Node.js, using the system Node.js instead');
     return undefined;

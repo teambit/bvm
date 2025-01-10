@@ -296,7 +296,7 @@ export class Config {
    * We could use pnpm's global store location as well but its location may vary on different systems.
    * So we just create a dedicated content-addressable store for Node.js artifacts in the bvm directory.
    */
-  getCafsDir() {
+  getStoreDir() {
     return path.join(this.getNodeVersionsDir(), ".store");
   }
 
