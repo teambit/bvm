@@ -1,12 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import { getConfig } from '@pnpm/config';
+import { streamParser } from '@pnpm/logger';
+import { initDefaultReporter } from '@pnpm/default-reporter';
 import { install } from '@pnpm/plugin-commands-installation';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
 
 export async function installWithPnpm(fetch, version: string, dest: string) {
   await fetchLockfile(fetch, version, dest);
   await createPackageJsonFile(dest);
+
+  const stopReporting = initDefaultReporter({
+    context: {
+      argv: [],
+    },
+    reportingOptions: {
+      appendOnly: false,
+      throttleProgress: 200,
+      hideProgressPrefix: true,
+    },
+    streamParser: streamParser as any, // eslint-disable-line
+  });
 
   const cliOptions = {
     argv: [],
@@ -27,6 +41,7 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
   // pnpm is doing some actions in workers.
   // We need to finish them, when we're done.
   await global['finishWorkers']();
+  stopReporting();
 }
 
 async function fetchLockfile(fetch, version: string, dest: string): Promise<void> {
