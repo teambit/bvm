@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getConfig } from '@pnpm/config';
+import { getConfig, type Config } from '@pnpm/config';
 import { streamParser } from '@pnpm/logger';
 import { initDefaultReporter } from '@pnpm/default-reporter';
 import { install } from '@pnpm/plugin-commands-installation';
@@ -19,18 +19,7 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     cliOptions,
     packageManager: { name: '@teambit/bvm', version: '' },
   });
-  const stopReporting = initDefaultReporter({
-    context: {
-      argv: [],
-      config,
-    },
-    reportingOptions: {
-      appendOnly: false,
-      throttleProgress: 200,
-      hideProgressPrefix: true,
-    },
-    streamParser: streamParser as any, // eslint-disable-line
-  });
+  const stopReporting = initReporter(config);
   await install.handler({
     ...config,
     argv: { original: [] },
@@ -72,4 +61,19 @@ async function createPackageJsonFile(dest: string) {
       overrides: lockfile?.overrides ?? {},
     },
   }, null, 2), 'utf8');
+}
+
+function initReporter(config: Config) {
+  return initDefaultReporter({
+    context: {
+      argv: [],
+      config,
+    },
+    reportingOptions: {
+      appendOnly: false,
+      throttleProgress: 200,
+      hideProgressPrefix: true,
+    },
+    streamParser: streamParser as any, // eslint-disable-line
+  });
 }
