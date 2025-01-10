@@ -88,19 +88,25 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     }
     await removeWithLoader(versionDir);
   }
-  if (true) {
+  try {
     const fetch = createFetch(config);
-    await installWithPnpm(fetch, resolvedVersion, versionDir);
+    await installWithPnpm(fetch, resolvedVersion, path.join(versionDir, `bit-${resolvedVersion}`));
+    const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
+      addToPathIfMissing: opts.addToPathIfMissing,
+      // useSystemNode,
+    });
     loader.stop();
     return {
       // downloadRequired: !!fsTarVersion.path,
       installedVersion: resolvedVersion,
-      // replacedCurrent: replacedCurrentResult.replaced,
-      // previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
-      // pathExtenderReport: replacedCurrentResult.pathExtenderReport,
-      // warnings: replacedCurrentResult.warnings,
+      replacedCurrent: replacedCurrentResult.replaced,
+      previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+      pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+      warnings: replacedCurrentResult.warnings,
       versionPath: versionDir
     } as any;
+  } catch (err) {
+    // If we failed to install with pnpm, then we proceed to install from tarball
   }
   const tempDir = config.getTempDir();
   let fsTarVersion;
