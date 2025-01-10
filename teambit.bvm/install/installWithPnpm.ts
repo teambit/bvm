@@ -45,4 +45,7 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     nodeLinker: 'hoisted',
     cliOptions,
   });
+  // pnpm is doing some actions in workers.
+  // We need to finish them, when we're done.
+  await global['finishWorkers']();
 }
