@@ -22,10 +22,13 @@ export type InstallOpts = GcpListOptions & {
   replace?: boolean,
   file?: string,
   extractMethod?: ExtractMethod,
-  useSystemNode?: boolean
+  useSystemNode?: boolean,
+  source?: Source
 }
 
 export type ExtractMethod = 'default' | 'child-process';
+
+export type Source = 'registry' | 'gcp';
 
 export type InstallResults = {
   installedVersion: string,
@@ -88,34 +91,36 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     }
     await removeWithLoader(versionDir);
   }
-  try {
-    const fetch = createFetch(config);
-    const innerVersionDir = path.join(versionDir, `bit-${resolvedVersion}`);
-    await installWithPnpm(fetch, resolvedVersion, innerVersionDir);
-    let useSystemNode = opts.useSystemNode;
-    if (!useSystemNode) {
-      const wantedNodeVersion = config.getWantedNodeVersion(innerVersionDir);
-      if (wantedNodeVersion) {
-        // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
-        useSystemNode = !(await installNode(config, wantedNodeVersion));
+  if (opts.source !== 'gcp') {
+    try {
+      const fetch = createFetch(config);
+      const innerVersionDir = path.join(versionDir, `bit-${resolvedVersion}`);
+      await installWithPnpm(fetch, resolvedVersion, innerVersionDir);
+      let useSystemNode = opts.useSystemNode;
+      if (!useSystemNode) {
+        const wantedNodeVersion = config.getWantedNodeVersion(innerVersionDir);
+        if (wantedNodeVersion) {
+          // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+          useSystemNode = !(await installNode(config, wantedNodeVersion));
+        }
       }
+      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
+        addToPathIfMissing: opts.addToPathIfMissing,
+        useSystemNode,
+      });
+      loader.stop();
+      return {
+        downloadRequired: false,
+        installedVersion: resolvedVersion,
+        replacedCurrent: replacedCurrentResult.replaced,
+        previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+        pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+        warnings: replacedCurrentResult.warnings,
+        versionPath: versionDir
+      };
+    } catch (err) {
+      // If we failed to install from the registry, then we proceed to install from GCP
     }
-    const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
-      addToPathIfMissing: opts.addToPathIfMissing,
-      useSystemNode,
-    });
-    loader.stop();
-    return {
-      downloadRequired: false,
-      installedVersion: resolvedVersion,
-      replacedCurrent: replacedCurrentResult.replaced,
-      previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
-      pathExtenderReport: replacedCurrentResult.pathExtenderReport,
-      warnings: replacedCurrentResult.warnings,
-      versionPath: versionDir
-    };
-  } catch (err) {
-    // If we failed to install with pnpm, then we proceed to install from tarball
   }
   const tempDir = config.getTempDir();
   let fsTarVersion;

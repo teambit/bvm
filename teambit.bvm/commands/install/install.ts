@@ -54,6 +54,14 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
+      'source': {
+        describe: 'change the installation source',
+        type: 'string',
+        default: 'registry',
+        choices: ['registry', 'gcp'],
+      }
+    })
+    .option({
       'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
@@ -102,6 +110,7 @@ export class InstallCmd implements CommandModule {
         useSystemNode: args.useSystemNode,
         os: args.os,
         arch: args.arch,
+        source: args.source,
       }
       const installStartTime = Date.now();
       const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
