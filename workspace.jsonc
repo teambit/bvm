@@ -36,6 +36,7 @@
       "dependencies": {
         "@pnpm/config": "^1002.1.2",
         "@pnpm/fetch": "7.0.2",
+        "@pnpm/lockfile.fs": "^1001.1.1",
         "@pnpm/logger": "5.0.0",
         "@pnpm/node.fetcher": "3.0.3",
         "@pnpm/os.env.path-extender": "0.2.12",

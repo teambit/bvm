@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { getConfig } from '@pnpm/config';
 import { install } from '@pnpm/plugin-commands-installation';
+import { readWantedLockfile } from '@pnpm/lockfile.fs';
 
 export async function installWithPnpm(fetch, version: string, dest: string) {
   const url = `https://bvm.bit.dev/bit/versions/${version}/pnpm-lock.yaml`;
@@ -19,7 +20,15 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     fileStream.on('error', (err: Error) => reject(err));
   });
 
-  fs.writeFileSync(path.join(dest, 'package.json'), '{}', 'utf8');
+  const lockfile = await readWantedLockfile(dest, { ignoreIncompatible: false });
+  fs.writeFileSync(path.join(dest, 'package.json'), JSON.stringify({
+    dependencies: {
+      '@teambit/bit': lockfile?.importers['.'].specifiers['@teambit/bit'],
+    },
+    pnpm: {
+      overrides: lockfile?.overrides ?? {},
+    },
+  }, null, 2), 'utf8');
   const cliOptions = {
     argv: [],
     dir: dest,
@@ -34,6 +43,5 @@ export async function installWithPnpm(fetch, version: string, dest: string) {
     argv: { original: [] },
     frozenLockfile: true,
     cliOptions,
-    ignorePackageManifest: true,
-  } as any);
+  });
 }

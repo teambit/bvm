@@ -14,6 +14,9 @@ importers:
       '@pnpm/fetch':
         specifier: 7.0.2
         version: 7.0.2(@pnpm/logger@5.0.0)
+      '@pnpm/lockfile.fs':
+        specifier: ^1001.1.1
+        version: 1001.1.1(@pnpm/logger@5.0.0)
       '@pnpm/logger':
         specifier: 5.0.0
         version: 5.0.0
