@@ -89,7 +89,8 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     await removeWithLoader(versionDir);
   }
   if (true) {
-    await installWithPnpm(resolvedVersion, versionDir);
+    const fetch = createFetch(config);
+    await installWithPnpm(fetch, resolvedVersion, versionDir);
     loader.stop();
     return {
       // downloadRequired: !!fsTarVersion.path,
@@ -199,18 +200,23 @@ function getBitVersionFromFilePath(filePath: string): string | null {
   return version;
 }
 
-/**
- * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
- */
-async function installNode(config: Config, version: string): Promise<string> {
-  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
-  if (exists) return versionDir;
+function createFetch(config: Config) {
   const networkConfig = config.networkConfig();
   const fetch = createFetchFromRegistry({
     ...networkConfig,
     ...config.proxyConfig(),
     strictSsl: networkConfig.strictSSL,
   });
+  return fetch;
+}
+
+/**
+ * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
+ */
+async function installNode(config: Config, version: string): Promise<string> {
+  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
+  if (exists) return versionDir;
+  const fetch = createFetch(config);
   const cafsDir = config.getCafsDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
