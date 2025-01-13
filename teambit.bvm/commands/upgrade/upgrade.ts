@@ -43,6 +43,14 @@ export class UpgradeCmd implements CommandModule {
         }
       })
       .option({
+        'source': {
+          describe: 'change the installation source',
+          type: 'string',
+          default: 'registry',
+          choices: ['registry', 'gcp'],
+        }
+      })
+      .option({
         os: {
           describe: "override the os type",
           type: "string",
@@ -80,6 +88,7 @@ export class UpgradeCmd implements CommandModule {
       addToPathIfMissing: !args.skipUpdatePath,
       os: args.os,
       arch: args.arch,
+      source: args.source,
     });
     return printOutput(upgradeResults);
   }
