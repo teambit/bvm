@@ -93,31 +93,12 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
   if (opts.source !== 'gcp') {
     try {
-      const fetch = createFetch(config);
-      const innerVersionDir = path.join(versionDir, `bit-${resolvedVersion}`);
-      await installWithPnpm(fetch, resolvedVersion, innerVersionDir);
-      let useSystemNode = opts.useSystemNode;
-      if (!useSystemNode) {
-        const wantedNodeVersion = config.getWantedNodeVersion(innerVersionDir);
-        if (wantedNodeVersion) {
-          // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
-          useSystemNode = !(await installNode(config, wantedNodeVersion));
-        }
-      }
-      const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
-        addToPathIfMissing: opts.addToPathIfMissing,
-        useSystemNode,
+      return installFromRegistry({
+        ...concreteOpts,
+        resolvedVersion,
+        versionDir,
+        config,
       });
-      loader.stop();
-      return {
-        downloadRequired: false,
-        installedVersion: resolvedVersion,
-        replacedCurrent: replacedCurrentResult.replaced,
-        previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
-        pathExtenderReport: replacedCurrentResult.pathExtenderReport,
-        warnings: replacedCurrentResult.warnings,
-        versionPath: versionDir
-      };
     } catch (err) {
       // If we failed to install from the registry, then we proceed to install from GCP
     }
@@ -193,6 +174,43 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
+}
+
+async function installFromRegistry(
+  opts: {
+    resolvedVersion: string;
+    versionDir: string;
+    replace: boolean;
+    addToPathIfMissing?: boolean;
+    useSystemNode?: boolean;
+    config: Config;
+  },
+) {
+  const fetch = createFetch(opts.config);
+  const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
+  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir);
+  let useSystemNode = opts.useSystemNode;
+  if (!useSystemNode) {
+    const wantedNodeVersion = opts.config.getWantedNodeVersion(innerVersionDir);
+    if (wantedNodeVersion) {
+      // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+      useSystemNode = !(await installNode(opts.config, wantedNodeVersion));
+    }
+  }
+  const replacedCurrentResult = await replaceCurrentIfNeeded(opts.replace, opts.resolvedVersion, {
+    addToPathIfMissing: opts.addToPathIfMissing,
+    useSystemNode,
+  });
+  loader.stop();
+  return {
+    downloadRequired: false,
+    installedVersion: opts.resolvedVersion,
+    replacedCurrent: replacedCurrentResult.replaced,
+    previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+    pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+    warnings: replacedCurrentResult.warnings,
+    versionPath: opts.versionDir
+  };
 }
 
 function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
