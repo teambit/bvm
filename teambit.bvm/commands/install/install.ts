@@ -62,6 +62,12 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
+      'lockfile-path': {
+        describe: 'install from registry using the lockfile at the specified path',
+        type: 'string'
+      }
+    })
+    .option({
       'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
@@ -111,6 +117,7 @@ export class InstallCmd implements CommandModule {
         os: args.os,
         arch: args.arch,
         source: args.source,
+        lockfilePath: args.lockfilePath,
       }
       const installStartTime = Date.now();
       const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);

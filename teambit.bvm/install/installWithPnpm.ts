@@ -6,8 +6,14 @@ import { initDefaultReporter } from '@pnpm/default-reporter';
 import { install } from '@pnpm/plugin-commands-installation';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
 
-export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string }) {
-  await fetchLockfile(fetch, version, dest);
+export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string }) {
+  fs.mkdirSync(dest, { recursive: true })
+  const lockfileDestPath = path.join(dest, 'pnpm-lock.yaml');
+  if (opts.lockfilePath) {
+    fs.copyFileSync(opts.lockfilePath, lockfileDestPath);
+  } else {
+    await fetchLockfile(fetch, version, lockfileDestPath);
+  }
   await createPackageJsonFile(dest);
 
   const cliOptions = {
@@ -34,15 +40,13 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
   stopReporting();
 }
 
-async function fetchLockfile(fetch, version: string, dest: string): Promise<void> {
+async function fetchLockfile(fetch, version: string, lockfilePath: string): Promise<void> {
   const url = `https://bvm.bit.dev/bit/versions/${version}/pnpm-lock.yaml`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
 
-  const lockfilePath = path.join(dest, 'pnpm-lock.yaml');
   const fileStream = fs.createWriteStream(lockfilePath);
 
-  fs.mkdirSync(dest, { recursive: true })
   response.body.pipe(fileStream);
 
   await new Promise<void>((resolve, reject) => {

@@ -24,6 +24,7 @@ export type InstallOpts = GcpListOptions & {
   extractMethod?: ExtractMethod,
   useSystemNode?: boolean,
   source?: Source
+  lockfilePath?: string
 }
 
 export type ExtractMethod = 'default' | 'child-process';
@@ -184,12 +185,14 @@ async function installFromRegistry(
     addToPathIfMissing?: boolean;
     useSystemNode?: boolean;
     config: Config;
+    lockfilePath?: string;
   },
 ) {
   const fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
   await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
+    lockfilePath: opts.lockfilePath,
   });
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {

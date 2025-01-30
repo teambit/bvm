@@ -51,6 +51,12 @@ export class UpgradeCmd implements CommandModule {
         }
       })
       .option({
+        'lockfile-path': {
+          describe: 'install from registry using the lockfile at the specified path',
+          type: 'string'
+        }
+      })
+      .option({
         os: {
           describe: "override the os type",
           type: "string",
@@ -89,6 +95,7 @@ export class UpgradeCmd implements CommandModule {
       os: args.os,
       arch: args.arch,
       source: args.source,
+      lockfilePath: args.lockfilePath,
     });
     return printOutput(upgradeResults);
   }
