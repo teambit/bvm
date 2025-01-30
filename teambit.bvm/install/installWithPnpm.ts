@@ -5,39 +5,51 @@ import { streamParser } from '@pnpm/logger';
 import { initDefaultReporter } from '@pnpm/default-reporter';
 import { install } from '@pnpm/plugin-commands-installation';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
+import pathTemp from 'path-temp';
+import { sync as renameOverwrite } from 'rename-overwrite';
+import rimraf from 'rimraf';
 
 export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string }) {
-  fs.mkdirSync(dest, { recursive: true })
-  const lockfileDestPath = path.join(dest, 'pnpm-lock.yaml');
-  if (opts.lockfilePath) {
-    fs.copyFileSync(opts.lockfilePath, lockfileDestPath);
-  } else {
-    await fetchLockfile(fetch, version, lockfileDestPath);
-  }
-  await createPackageJsonFile(dest);
+  const tempDest = pathTemp(path.dirname(path.dirname(dest)));
+  try {
+    fs.mkdirSync(tempDest, { recursive: true })
+    const lockfileDestPath = path.join(tempDest, 'pnpm-lock.yaml');
+    if (opts.lockfilePath) {
+      fs.copyFileSync(opts.lockfilePath, lockfileDestPath);
+    } else {
+      await fetchLockfile(fetch, version, lockfileDestPath);
+    }
+    await createPackageJsonFile(tempDest);
 
-  const cliOptions = {
-    argv: [],
-    dir: dest,
-    registry: opts.registry,
+    const cliOptions = {
+      argv: [],
+      dir: tempDest,
+      registry: opts.registry,
+    }
+    const { config } = await getConfig({
+      cliOptions,
+      packageManager: { name: '@teambit/bvm', version: '' },
+    });
+    const stopReporting = initReporter(config);
+    await install.handler({
+      ...config,
+      argv: { original: [] },
+      frozenLockfile: true,
+      nodeLinker: 'hoisted',
+      cliOptions,
+      ignoreScripts: true,
+    });
+    // pnpm is doing some actions in workers.
+    // We need to finish them, when we're done.
+    await global['finishWorkers']();
+    stopReporting();
+    renameOverwrite(tempDest, dest);
+  } catch (error) {
+    try {
+      rimraf.sync(tempDest);
+    } catch {}
+    throw error;
   }
-  const { config } = await getConfig({
-    cliOptions,
-    packageManager: { name: '@teambit/bvm', version: '' },
-  });
-  const stopReporting = initReporter(config);
-  await install.handler({
-    ...config,
-    argv: { original: [] },
-    frozenLockfile: true,
-    nodeLinker: 'hoisted',
-    cliOptions,
-    ignoreScripts: true,
-  });
-  // pnpm is doing some actions in workers.
-  // We need to finish them, when we're done.
-  await global['finishWorkers']();
-  stopReporting();
 }
 
 async function fetchLockfile(fetch, version: string, lockfilePath: string): Promise<void> {
