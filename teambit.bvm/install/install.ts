@@ -188,7 +188,9 @@ async function installFromRegistry(
 ) {
   const fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
-  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir);
+  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir, {
+    registry: opts.config.getRegistry(),
+  });
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {
     const wantedNodeVersion = opts.config.getWantedNodeVersion(innerVersionDir);

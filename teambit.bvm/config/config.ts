@@ -21,6 +21,7 @@ export const NODE_VERSIONS_FOLDER_NAME = "nodejs";
 const CONFIG_KEY_NAME = "global";
 
 export const CFG_BVM_DIR = "BVM_DIR";
+export const CFG_REGISTRY = "registry";
 export const CFG_RELEASE_TYPE = "RELEASE_TYPE";
 export const CFG_EXTRACT_METHOD = "EXTRACT_METHOD";
 export const CFG_SKIP_TEMP_DIR = "SKIP_TEMP_DIR";
@@ -50,6 +51,7 @@ export const CFG_PROXY_KEY = "proxy.key";
 export const KNOWN_KEYS = [
   CFG_BVM_DIR,
   "DEFAULT_LINK",
+  CFG_REGISTRY,
   CFG_RELEASE_TYPE,
   CFG_EXTRACT_METHOD,
   CFG_SKIP_TEMP_DIR,
@@ -389,6 +391,10 @@ export class Config {
       httpsProxy,
       noProxy,
     };
+  }
+
+  getRegistry(): string {
+    return this.get(CFG_REGISTRY) ?? 'https://node-registry.bit.cloud/';
   }
 }
 

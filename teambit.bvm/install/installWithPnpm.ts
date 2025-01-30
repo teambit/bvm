@@ -6,14 +6,14 @@ import { initDefaultReporter } from '@pnpm/default-reporter';
 import { install } from '@pnpm/plugin-commands-installation';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
 
-export async function installWithPnpm(fetch, version: string, dest: string) {
+export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string }) {
   await fetchLockfile(fetch, version, dest);
   await createPackageJsonFile(dest);
 
   const cliOptions = {
     argv: [],
     dir: dest,
-    registry: 'https://node-registry.bit.cloud/',
+    registry: opts.registry,
   }
   const { config } = await getConfig({
     cliOptions,
