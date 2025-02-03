@@ -7,7 +7,7 @@ import { install } from '@pnpm/plugin-commands-installation';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
 import pathTemp from 'path-temp';
 import { sync as renameOverwrite } from 'rename-overwrite';
-import rimraf from 'rimraf';
+import { sync as rimraf } from 'rimraf';
 
 export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string }) {
   const tempDest = pathTemp(path.dirname(path.dirname(dest)));
@@ -46,7 +46,7 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
     renameOverwrite(tempDest, dest);
   } catch (error) {
     try {
-      rimraf.sync(tempDest);
+      rimraf(tempDest);
     } catch {}
     throw error;
   }
