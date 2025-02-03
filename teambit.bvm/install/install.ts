@@ -94,7 +94,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
   if (opts.source !== 'gcp') {
     try {
-      return installFromRegistry({
+      return await installFromRegistry({
         ...concreteOpts,
         resolvedVersion,
         versionDir,
