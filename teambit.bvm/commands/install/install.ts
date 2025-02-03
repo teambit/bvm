@@ -1,6 +1,6 @@
 import util from 'util';
 import type {CommandModule, Argv} from 'yargs';
-import {installVersion, InstallOpts} from '@teambit/bvm.install';
+import {installVersion, InstallOpts, InstallationMethods, InstallationMethod} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { renderPathExtenderReport } from '@teambit/bvm.reporter';
 import { getBvmLocalVersion, getBvmRemoteVersion, getNewerBvmAvailableOutput } from '@teambit/bvm.version';
@@ -54,11 +54,11 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
-      'source': {
-        describe: 'change the installation source',
+      'method': {
+        describe: 'change the installation method',
         type: 'string',
-        default: 'registry',
-        choices: ['registry', 'gcp'],
+        default: 'package-manager' satisfies InstallationMethod,
+        choices: InstallationMethods,
       }
     })
     .option({
@@ -116,7 +116,7 @@ export class InstallCmd implements CommandModule {
         useSystemNode: args.useSystemNode,
         os: args.os,
         arch: args.arch,
-        source: args.source,
+        method: args.method,
         lockfilePath: args.lockfilePath,
       }
       const installStartTime = Date.now();

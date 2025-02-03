@@ -1,5 +1,5 @@
 import type { CommandModule, Argv } from "yargs";
-import { installVersion, InstallResults } from "@teambit/bvm.install";
+import { installVersion, InstallResults, InstallationMethods, InstallationMethod } from "@teambit/bvm.install";
 import chalk from "chalk";
 import {
   getBvmLocalVersion,
@@ -43,11 +43,11 @@ export class UpgradeCmd implements CommandModule {
         }
       })
       .option({
-        'source': {
-          describe: 'change the installation source',
+        'method': {
+          describe: 'change the installation method',
           type: 'string',
-          default: 'registry',
-          choices: ['registry', 'gcp'],
+          default: 'package-manager' satisfies InstallationMethod,
+          choices: InstallationMethods,
         }
       })
       .option({
@@ -94,7 +94,7 @@ export class UpgradeCmd implements CommandModule {
       addToPathIfMissing: !args.skipUpdatePath,
       os: args.os,
       arch: args.arch,
-      source: args.source,
+      method: args.method,
       lockfilePath: args.lockfilePath,
     });
     return printOutput(upgradeResults);

@@ -23,13 +23,15 @@ export type InstallOpts = GcpListOptions & {
   file?: string,
   extractMethod?: ExtractMethod,
   useSystemNode?: boolean,
-  source?: Source
+  method?: InstallationMethod
   lockfilePath?: string
 }
 
 export type ExtractMethod = 'default' | 'child-process';
 
-export type Source = 'registry' | 'gcp';
+export const InstallationMethods: InstallationMethod[] = ['package-manager', 'tar'];
+
+export type InstallationMethod = 'package-manager' | 'tar';
 
 export type InstallResults = {
   installedVersion: string,
@@ -92,7 +94,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     }
     await removeWithLoader(versionDir);
   }
-  if (opts.source !== 'gcp') {
+  if (opts.method === 'package-manager') {
     try {
       return await installFromRegistry({
         ...concreteOpts,
