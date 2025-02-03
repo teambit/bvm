@@ -1,5 +1,5 @@
 import type { CommandModule, Argv } from "yargs";
-import { installVersion, InstallResults } from "@teambit/bvm.install";
+import { installVersion, InstallResults, InstallationMethods, InstallationMethod } from "@teambit/bvm.install";
 import chalk from "chalk";
 import {
   getBvmLocalVersion,
@@ -43,6 +43,20 @@ export class UpgradeCmd implements CommandModule {
         }
       })
       .option({
+        'method': {
+          describe: 'change the installation method',
+          type: 'string',
+          default: 'package-manager' satisfies InstallationMethod,
+          choices: InstallationMethods,
+        }
+      })
+      .option({
+        'lockfile-path': {
+          describe: 'install from registry using the lockfile at the specified path',
+          type: 'string'
+        }
+      })
+      .option({
         os: {
           describe: "override the os type",
           type: "string",
@@ -80,6 +94,8 @@ export class UpgradeCmd implements CommandModule {
       addToPathIfMissing: !args.skipUpdatePath,
       os: args.os,
       arch: args.arch,
+      method: args.method,
+      lockfilePath: args.lockfilePath,
     });
     return printOutput(upgradeResults);
   }

@@ -14,6 +14,7 @@ import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
+import { installWithPnpm } from './installWithPnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -21,10 +22,16 @@ export type InstallOpts = GcpListOptions & {
   replace?: boolean,
   file?: string,
   extractMethod?: ExtractMethod,
-  useSystemNode?: boolean
+  useSystemNode?: boolean,
+  method?: InstallationMethod
+  lockfilePath?: string
 }
 
 export type ExtractMethod = 'default' | 'child-process';
+
+export const InstallationMethods: InstallationMethod[] = ['package-manager', 'tar'];
+
+export type InstallationMethod = 'package-manager' | 'tar';
 
 export type InstallResults = {
   installedVersion: string,
@@ -86,6 +93,18 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       }
     }
     await removeWithLoader(versionDir);
+  }
+  if (opts.method === 'package-manager') {
+    try {
+      return await installFromRegistry({
+        ...concreteOpts,
+        resolvedVersion,
+        versionDir,
+        config,
+      });
+    } catch (err) {
+      // If we failed to install from the registry, then we proceed to install from GCP
+    }
   }
   const tempDir = config.getTempDir();
   let fsTarVersion;
@@ -160,6 +179,47 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   }
 }
 
+async function installFromRegistry(
+  opts: {
+    resolvedVersion: string;
+    versionDir: string;
+    replace: boolean;
+    addToPathIfMissing?: boolean;
+    useSystemNode?: boolean;
+    config: Config;
+    lockfilePath?: string;
+  },
+) {
+  const fetch = createFetch(opts.config);
+  const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
+  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir, {
+    registry: opts.config.getRegistry(),
+    lockfilePath: opts.lockfilePath,
+  });
+  let useSystemNode = opts.useSystemNode;
+  if (!useSystemNode) {
+    const wantedNodeVersion = opts.config.getWantedNodeVersion(innerVersionDir);
+    if (wantedNodeVersion) {
+      // If Node.js installation doesn't succeed, we'll use the system default Node.js instead.
+      useSystemNode = !(await installNode(opts.config, wantedNodeVersion));
+    }
+  }
+  const replacedCurrentResult = await replaceCurrentIfNeeded(opts.replace, opts.resolvedVersion, {
+    addToPathIfMissing: opts.addToPathIfMissing,
+    useSystemNode,
+  });
+  loader.stop();
+  return {
+    downloadRequired: false,
+    installedVersion: opts.resolvedVersion,
+    replacedCurrent: replacedCurrentResult.replaced,
+    previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
+    pathExtenderReport: replacedCurrentResult.pathExtenderReport,
+    warnings: replacedCurrentResult.warnings,
+    versionPath: opts.versionDir
+  };
+}
+
 function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
   const validExtractMethods: ExtractMethod[] = ['default', 'child-process'];
   const extractMethodOrFromConfig = extractMethod || getConfig().getExtractMethod() as ExtractMethod;
@@ -185,23 +245,28 @@ function getBitVersionFromFilePath(filePath: string): string | null {
   return version;
 }
 
-/**
- * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
- */
-async function installNode(config: Config, version: string): Promise<string> {
-  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
-  if (exists) return versionDir;
+function createFetch(config: Config) {
   const networkConfig = config.networkConfig();
   const fetch = createFetchFromRegistry({
     ...networkConfig,
     ...config.proxyConfig(),
     strictSsl: networkConfig.strictSSL,
   });
-  const cafsDir = config.getCafsDir();
+  return fetch;
+}
+
+/**
+ * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
+ */
+async function installNode(config: Config, version: string): Promise<string | undefined> {
+  const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
+  if (exists) return versionDir;
+  const fetch = createFetch(config);
+  const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(fetch, version, versionDir, { cafsDir });
+    await fetchNode(fetch, version, versionDir, { storeDir });
   } catch (err) {
     loader.fail('Could not install Node.js, using the system Node.js instead');
     return undefined;

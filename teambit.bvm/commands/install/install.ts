@@ -1,6 +1,6 @@
 import util from 'util';
 import type {CommandModule, Argv} from 'yargs';
-import {installVersion, InstallOpts} from '@teambit/bvm.install';
+import {installVersion, InstallOpts, InstallationMethods, InstallationMethod} from '@teambit/bvm.install';
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { renderPathExtenderReport } from '@teambit/bvm.reporter';
 import { getBvmLocalVersion, getBvmRemoteVersion, getNewerBvmAvailableOutput } from '@teambit/bvm.version';
@@ -54,6 +54,20 @@ export class InstallCmd implements CommandModule {
       }
     })
     .option({
+      'method': {
+        describe: 'change the installation method',
+        type: 'string',
+        default: 'package-manager' satisfies InstallationMethod,
+        choices: InstallationMethods,
+      }
+    })
+    .option({
+      'lockfile-path': {
+        describe: 'install from registry using the lockfile at the specified path',
+        type: 'string'
+      }
+    })
+    .option({
       'use-system-node': {
         describe: "use the Node.js installed on the system to run Bit CLI",
         default: false,
@@ -102,6 +116,8 @@ export class InstallCmd implements CommandModule {
         useSystemNode: args.useSystemNode,
         os: args.os,
         arch: args.arch,
+        method: args.method,
+        lockfilePath: args.lockfilePath,
       }
       const installStartTime = Date.now();
       const {versionPath, installedVersion, pathExtenderReport, warnings} = await installVersion(args.bitVersion, opts);
