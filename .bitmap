@@ -82,7 +82,7 @@
     "config": {
         "name": "config",
         "scope": "teambit.bvm",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/config"
     },
