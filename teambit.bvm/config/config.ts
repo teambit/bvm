@@ -3,10 +3,7 @@ import os from "os";
 import path from "path";
 import userHome from "user-home";
 import pickBy from "lodash.pickby";
-import fs from "fs-extra";
-import { execSync } from "child_process";
-import semver from "semver";
-import chalk from "chalk";
+import fs from "fs";
 
 export const BVM_ENV_VARS_PREFIX = "BVM_";
 
@@ -75,11 +72,6 @@ export const KNOWN_KEYS = [
 ];
 
 const DEFAULT_LINK = "bit";
-const DEFAULT_ALTERNATIVE_LINK = "bbit";
-
-const ALTERNATIVE_LINK_WARNING = `A legacy version of Bit is installed on your machine.
-Use the 'bbit' command for Bit's latest version and the 'bit' command for Bit's legacy version.
-For more information, see the following link: https://harmony-docs.bit.dev/introduction/installation`;
 
 const globalDefaults = {
   BVM_DIR: getBvmDirectory(),
@@ -173,14 +165,10 @@ export class Config {
     const name = CONFIG_KEY_NAME;
     const configPath = getConfigPath();
     if (!fs.existsSync(configPath)) {
-      fs.ensureDirSync(path.dirname(configPath));
-      const legacyBitExist = checkIfBitLegacyExist();
+      const configDir = path.dirname(configPath);
+      if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
       let defaultLink = DEFAULT_LINK;
-      if (legacyBitExist) {
-        console.log(chalk.yellowBright(ALTERNATIVE_LINK_WARNING));
-        defaultLink = DEFAULT_ALTERNATIVE_LINK;
-      }
-      fs.writeJSONSync(configPath, { DEFAULT_LINK: defaultLink });
+      fs.writeFileSync(configPath, JSON.stringify({ DEFAULT_LINK: defaultLink }, undefined, 2));
     }
     const config = new Config(name, configPath, globalDefaults, sources);
     if (!newInstance) {
@@ -258,7 +246,7 @@ export class Config {
     if (innerDir) {
       versionDir = path.join(versionDir, `bit-${version}`);
     }
-    const exists = fs.pathExistsSync(versionDir);
+    const exists = fs.existsSync(versionDir);
     return {
       versionDir,
       exists,
@@ -275,7 +263,7 @@ export class Config {
   } {
     const versionsDir = this.getNodeVersionsDir();
     const versionDir = path.join(versionsDir, version);
-    const exists = fs.pathExistsSync(versionDir);
+    const exists = fs.existsSync(versionDir);
     return {
       versionDir,
       exists,
@@ -286,9 +274,10 @@ export class Config {
    * Returns the Node.js version which is required by the given Bit CLI.
    */
   getWantedNodeVersion(innerVersionDir: string): string | undefined {
-    const bitManifest = fs.readJsonSync(
+    const bitManifestUnparsed = fs.readFileSync(
       path.join(innerVersionDir, "node_modules/@teambit/bit/package.json")
     );
+    const bitManifest = JSON.parse(bitManifestUnparsed.toString());
     return bitManifest.bvm && bitManifest.bvm.node;
   }
 
@@ -395,21 +384,6 @@ export class Config {
 
   getRegistry(): string {
     return this.get(CFG_REGISTRY) ?? 'https://node-registry.bit.cloud/';
-  }
-}
-
-function checkIfBitLegacyExist(): boolean {
-  try {
-    // Ignore errors to prevent printing the error to the console. in case of error we just treat it as it doesn't exists
-    const output = execSync("bit -v", {
-      stdio: ["pipe", "pipe", "ignore"],
-    }).toString();
-    if (output && semver.valid(output.trim()) && output.startsWith("14")) {
-      return true;
-    }
-    return false;
-  } catch (e) {
-    return false;
   }
 }
 
