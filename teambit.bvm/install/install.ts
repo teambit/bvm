@@ -14,6 +14,7 @@ import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
+import { parse as parseCommentJson } from 'comment-json';
 import { installWithPnpm } from './installWithPnpm';
 
 export type InstallOpts = GcpListOptions & {
@@ -62,12 +63,15 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
 
   let resolvedVersion = version;
   if (!version || version === 'latest') {
+    let versionFromWorkspaceManifest: string | undefined;
     if (opts.file) {
       const versionFromFileName = getBitVersionFromFilePath(opts.file);
       if (!versionFromFileName) {
         throw new BvmError(`Could not detect bit version from file name "${opts.file}"`);
       }
       resolvedVersion = versionFromFileName;
+    } else if (!version && (versionFromWorkspaceManifest = getVersionFromWorkspaceJsonc())) {
+      resolvedVersion = versionFromWorkspaceManifest;
     } else {
       const remoteVersionList = await listRemote({os: opts.os, arch: opts.arch});
       resolvedVersion = remoteVersionList.latest().version;
@@ -176,6 +180,15 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
     warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
+  }
+}
+
+function getVersionFromWorkspaceJsonc(): string | undefined {
+  try {
+    const workspaceManifest = parseCommentJson(fs.readFileSync('workspace.jsonc', 'utf8'));
+    return workspaceManifest?.['teambit.harmony/bit']?.engine;
+  } catch {
+    return undefined;
   }
 }
 

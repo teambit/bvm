@@ -15,7 +15,6 @@ export class InstallCmd implements CommandModule {
   builder(yargs: Argv) {
     yargs.positional('bit-version', {
       describe: 'version to install',
-      default: 'latest',
       type: 'string'
     })
     .option({
