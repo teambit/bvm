@@ -106,8 +106,7 @@
       "ignoreMissing": []
     },
     "overrides": {
-      "@pnpm/worker": "^1000.2.0",
-      "esbuild": "0.25.1"
+      "@pnpm/worker": "^1000.2.0"
     }
   },
   /**
