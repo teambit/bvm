@@ -9,12 +9,29 @@
  */
 
 {
+    "bundle-env": {
+        "name": "bundle-env",
+        "scope": "",
+        "version": "",
+        "defaultScope": "teambit.bvm",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/bundle-env",
+        "config": {
+            "bitdev.general/envs/bit-env@3.0.7": {}
+        }
+    },
     "cli/app": {
         "name": "cli/app",
         "scope": "teambit.bvm",
         "version": "2.1.0",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/cli/app"
+        "rootDir": "teambit.bvm/cli/app",
+        "config": {
+            "teambit.bvm/bundle-env": {},
+            "teambit.envs/envs": {
+                "env": "teambit.bvm/bundle-env"
+            }
+        }
     },
     "commands/config": {
         "name": "commands/config",
