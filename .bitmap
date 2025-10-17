@@ -17,7 +17,10 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.bvm/bundle-env",
         "config": {
-            "bitdev.general/envs/bit-env@3.0.7": {}
+            "bitdev.general/envs/bit-env@3.0.7": {},
+            "teambit.envs/envs": {
+                "env": "bitdev.general/envs/bit-env"
+            }
         }
     },
     "cli/app": {
