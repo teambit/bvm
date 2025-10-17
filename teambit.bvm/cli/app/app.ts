@@ -11,7 +11,7 @@ import {linkCmd} from '@teambit/bvm.commands.link';
 import {useCmd} from '@teambit/bvm.commands.use';
 import {versionCmd, showAllVersions} from '@teambit/bvm.commands.version';
 import {releaseCmd} from '@teambit/bvm.commands.release';
-import {localVersionCmd} from './local-version';
+import {localVersionCmd} from './local-version.js';
 
 let argv;
 async function main() {
