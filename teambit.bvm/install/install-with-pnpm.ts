@@ -48,7 +48,9 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
   } catch (error) {
     try {
       rimraf(tempDest);
-    } catch {}
+    } catch {
+      // Ignore
+    }
     throw error;
   }
 }

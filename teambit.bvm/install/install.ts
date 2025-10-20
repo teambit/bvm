@@ -15,7 +15,7 @@ import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 import { parse as parseCommentJson } from 'comment-json';
-import { installWithPnpm } from './installWithPnpm';
+import { installWithPnpm } from './install-with-pnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -260,12 +260,12 @@ function getBitVersionFromFilePath(filePath: string): string | null {
 
 function createFetch(config: Config) {
   const networkConfig = config.networkConfig();
-  const fetch = createFetchFromRegistry({
+  const _fetch = createFetchFromRegistry({
     ...networkConfig,
     ...config.proxyConfig(),
     strictSsl: networkConfig.strictSSL,
   });
-  return fetch;
+  return _fetch;
 }
 
 /**
