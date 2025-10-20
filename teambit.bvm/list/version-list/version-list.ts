@@ -28,7 +28,7 @@ export class VersionList {
   }
 
   sortBySemver(order: 'asc' | 'desc' = 'desc'): VersionList {
-    let sorted = VersionList.sortList(this.entries, order);   
+    const sorted = VersionList.sortList(this.entries, order);   
     return new VersionList(sorted)
   }
 

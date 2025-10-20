@@ -97,7 +97,7 @@ export class UpgradeCmd implements CommandModule {
       method: args.method,
       lockfilePath: args.lockfilePath,
     });
-    return printOutput(upgradeResults);
+    printOutput(upgradeResults);
   }
 }
 

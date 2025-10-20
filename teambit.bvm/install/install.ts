@@ -203,9 +203,9 @@ async function installFromRegistry(
     lockfilePath?: string;
   },
 ) {
-  const fetch = createFetch(opts.config);
+  const _fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
-  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir, {
+  await installWithPnpm(_fetch, opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
     lockfilePath: opts.lockfilePath,
   });
@@ -274,12 +274,12 @@ function createFetch(config: Config) {
 async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
-  const fetch = createFetch(config);
+  const _fetch = createFetch(config);
   const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(fetch, version, versionDir, { storeDir });
+    await fetchNode(_fetch, version, versionDir, { storeDir });
   } catch (err) {
     loader.fail('Could not install Node.js, using the system Node.js instead');
     return undefined;

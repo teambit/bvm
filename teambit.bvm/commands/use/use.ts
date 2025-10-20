@@ -21,13 +21,12 @@ export class UseCmd implements CommandModule {
     return yargs;
   }
   async handler(args) {
-    let results;
     if (!args.bitVersion) {
       const config = Config.load();
       const currentVersion = config.getDefaultLinkVersion();
       return console.log(chalk.cyan(`currently use ${currentVersion} version`));
     }
-    results = [await linkDefault(args.bitVersion, {addToConfig: true})];
+    const results = [await linkDefault(args.bitVersion, {addToConfig: true})];
     printOutput(results, args.verbose);
     return;
   };

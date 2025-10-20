@@ -58,7 +58,7 @@
         "@types/semver": "7.5.8",
         "@types/semver-sort": "0.0.1",
         "@types/tar-fs": "2.0.0",
-        "@types/yargs": "17.0.0",
+        "@types/yargs": "17.0.33",
         "@zkochan/cmd-shim": "6.0.0",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",

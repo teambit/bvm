@@ -47,7 +47,7 @@ export async function extract(filePath: string, folder?: string, opts: ExtractOp
   }
   const finalFolder = folder || path.dirname(filePath);
   const stat = await fs.stat(filePath)
-  let maxBytes = stat.size;
+  const maxBytes = stat.size;
   let processedBytes = 0
   const startedAt = Date.now()
 
