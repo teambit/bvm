@@ -9,7 +9,7 @@ import { NodeEnv } from '@bitdev/node.node-env';
 import { Compiler } from '@teambit/compiler';
 import { Pipeline } from '@teambit/builder';
 import { EnvHandler } from '@teambit/envs';
-import { EsbuildCompiler, EsbuildTask, ESBuiltOriginalOptions } from '@teambit/compilation.esbuild-compiler';
+import { EsbuildCompiler, EsbuildTask, ESBuiltOriginalOptions, ESBuildTarget } from '@teambit/compilation.esbuild-compiler';
 
 const require = createRequire(import.meta.url);
 
@@ -34,67 +34,41 @@ export class BundleEnv extends NodeEnv {
 
   protected dirName = dirname(fileURLToPath(import.meta.url));
 
+  protected esbuildOptions: ESBuiltOriginalOptions = {
+    platform: 'node',
+    bundle: true,
+    minify: false,
+    sourcemap: true,
+    banner: {
+      js: `import { createRequire as _cr } from 'module';const require = _cr(import.meta.url); const __filename = import.meta.filename; const __dirname = import.meta.dirname`,
+    },
+    external: ['@reflink/*'],
+    format: 'esm',
+    define: {
+      'import.meta.url': JSON.stringify(require("url").pathToFileURL(import.meta.filename).href),
+    },
+  };
+
+  protected esbuildTargets: ESBuildTarget[] = [
+    {
+      entryPoint: 'app.ts',
+      outfile: 'bundle.mjs',
+      esbuildOptions: this.esbuildOptions,
+    },
+    {
+      entryPoint: 'worker.ts',
+      outfile: 'worker.js',
+      esbuildOptions: this.esbuildOptions,
+    },
+  ];
+
   compiler(): EnvHandler<Compiler> {
-    const esbuildOptions: ESBuiltOriginalOptions = {
-      platform: 'node',
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      banner: {
-        js: `import { createRequire as _cr } from 'module';const require = _cr(import.meta.url); const __filename = import.meta.filename; const __dirname = import.meta.dirname`,
-      },
-      external: ['@reflink/*'],
-      format: 'esm',
-      define: {
-        'import.meta.url': JSON.stringify(require("url").pathToFileURL(import.meta.filename).href),
-      },
-    };
-    /**
-     * use esbuild for compilation and bundling during development (in the workspace)
-     * executed on 'bit compile', 'bit start', 'bit watch'
-     */
-    return EsbuildCompiler.from([
-      {
-        entryPoint: 'app.ts',
-        outfile: 'bundle.mjs',
-        esbuildOptions,
-      },
-      {
-        entryPoint: 'worker.ts',
-        outfile: 'worker.js',
-        esbuildOptions,
-      },
-    ]);
+    return EsbuildCompiler.from(this.esbuildTargets);
   }
 
   build(): Pipeline {
-    const esbuildOptions: ESBuiltOriginalOptions = {
-      platform: 'node',
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      banner: {
-        js: `import { createRequire as _cr } from 'module';const require = _cr(import.meta.url); const __filename = import.meta.filename; const __dirname = import.meta.dirname`,
-      },
-      external: ['@reflink/*'],
-      format: 'esm',
-      define: {
-        'import.meta.url': JSON.stringify(require("url").pathToFileURL(import.meta.filename).href),
-      },
-    };
     return Pipeline.from([
-      EsbuildTask.from([
-        {
-          entryPoint: 'app.ts',
-          outfile: 'bundle.mjs',
-          esbuildOptions,
-        },
-        {
-          entryPoint: 'worker.ts',
-          outfile: 'worker.js',
-          esbuildOptions,
-        },
-      ], {})
+      EsbuildTask.from(this.esbuildTargets, {})
     ]);
   }
 }
