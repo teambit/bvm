@@ -1,5 +1,4 @@
 import execa from 'execa';
-import os from 'os';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
