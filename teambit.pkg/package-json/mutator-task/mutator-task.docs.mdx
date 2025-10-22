@@ -1,5 +1,42 @@
 ---
 labels: ['MutatorTask', 'build']
-description: 'A task for mutating the package.json file of a component before publish'
+description: "A task for mutating a component's `package.json` before publishing"
 ---
+
+This build task makes dependency-related changes in a component's `package.json`.
+If you bundle your component with its dependencies, you'll need this task
+to remove entries from the `dependencies` and `optionalDependencies` fields of the generated component's `package.json`.
+
+Usage example:
+
+```typescript
+  build(): Pipeline {
+    return Pipeline.from([
+      EsbuildTask.from(this.esbuildTargets, {}),
+      PackageJsonMutatorTask.from({
+        mutator: (pkgJson) => {
+          pkgJson.dependencies = {}
+          return pkgJson;
+        },
+      })
+    ]);
+  }
+```
+
+**Note:** This task is only necessary when modifying the `dependencies` field. To change other fields in `package.json`,
+use the env's `package()` function. For example:
+
+```typescript
+packageJson: PackageJsonProps = {
+  type: 'module',
+  main: 'dist/{main}.js',
+  types: '{main}.ts',
+};
+
+package() {
+  return PackageGenerator.from({
+    packageJson: this.packageJson,
+  });
+}
+```
 
