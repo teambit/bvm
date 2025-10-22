@@ -26,7 +26,8 @@ export type PackageJsonMutatorTaskOptions = {
 type PackageJsonMutator = (pkgJson: any) => any;
 
 export class PackageJsonMutatorTask implements BuildTask {
-  readonly aspectId = 'teambit.pkg/pkg';
+  // Set it as empty so it will take the env id by default
+  readonly aspectId = '';
 
   constructor(
     readonly name = 'MutatePackageJsonFilesOfComponents',
@@ -35,7 +36,7 @@ export class PackageJsonMutatorTask implements BuildTask {
   ) {}
 
   async execute(context: BuildContext): Promise<BuiltTaskResult> {
-    context.capsuleNetwork.seedersCapsules.forEach((capsule) => {
+    context.capsuleNetwork.originalSeedersCapsules.forEach((capsule) => {
       const pkgJsonPath = path.join(capsule.path, 'package.json');
       if (!fs.existsSync(pkgJsonPath)) return;
       const raw = fs.readFileSync(pkgJsonPath, 'utf8');
