@@ -40,7 +40,7 @@
         "@pnpm/os.env.path-extender": "2.0.3",
         "@pnpm/plugin-commands-installation": "1004.6.8",
         "@pnpm/worker": "1000.3.0",
-        "@teambit/compilation.esbuild-compiler": "^1.0.0",
+        "@teambit/compilation.esbuild-compiler": "^1.0.1",
         "@teambit/toolbox.network.agent": "0.0.551",
         "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",
