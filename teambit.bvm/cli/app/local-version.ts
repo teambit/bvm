@@ -6,9 +6,13 @@ import path from 'path';
 // It has it own command since we want to change the builtin -v | --version option to show the version command output
 export class LocalVersionCmd implements CommandModule {
   aliases = ["local-version"];
+
   desc = false;
+
   command = ["local-version"];
+
   async handler() {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
     const pjson = require(path.join(__dirname, "../package.json"));
     return console.log(pjson?.version);
   }

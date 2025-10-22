@@ -3,8 +3,7 @@
  * Learn more on how you can customize your env here - https://bit.cloud/bitdev/node/node-env
  */
 import { createRequire } from "node:module";
-import fs from 'node:fs';
-import path, { dirname } from 'node:path';
+import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { NodeEnv } from '@bitdev/node.node-env';
 import { Compiler } from '@teambit/compiler';
@@ -74,6 +73,7 @@ export class BundleEnv extends NodeEnv {
       EsbuildTask.from(this.esbuildTargets, {}),
       PackageJsonMutatorTask.from({
         mutator: (pkgJson) => {
+          // eslint-disable-next-line no-param-reassign
           pkgJson.dependencies = {
             '@reflink/reflink': '0.1.19',
           }
