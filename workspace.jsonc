@@ -221,6 +221,28 @@
           ]
         }
       }
+    },
+    "teambit.pkg/package-json/mutator-task": {
+      "teambit.pkg/pkg": {
+        "packageManagerPublishArgs": [
+          "--access public"
+        ],
+        "packageJson": {
+          "name": "@teambit/pkg.package-json.mutator-task",
+          "private": false,
+          "license": "Apache-2.0",
+          "engines": {
+            "node": ">=16.14"
+          },
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/teambit/bvm"
+          },
+          "keywords": [
+            "bit"
+          ]
+        }
+      }
     }
   }
 }
