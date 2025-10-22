@@ -80,6 +80,7 @@ export class BundleEnv extends NodeEnv {
    * Adjust this patch to whatever you need during build time.
    */
   protected patchCapsulePackageJson(pkg: any) {
+    // eslint-disable-next-line no-param-reassign
     pkg.dependencies = {
       '@reflink/reflink': '0.1.19',
     }
