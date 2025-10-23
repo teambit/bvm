@@ -176,21 +176,6 @@
         "mainFile": "index.ts",
         "rootDir": "teambit.toolbox/network/progress-bar-file-downloader"
     },
-    "package-json/mutator-task": {
-        "name": "package-json/mutator-task",
-        "scope": "",
-        "version": "",
-        "defaultScope": "teambit.pkg",
-        "mainFile": "index.ts",
-        "rootDir": "teambit.pkg/package-json/mutator-task",
-        "config": {
-            "bitdev.node/node-env@4.0.29": {},
-            "teambit.harmony/node": {},
-            "teambit.envs/envs": {
-                "env": "teambit.harmony/node"
-            }
-        }
-    },
     "path": {
         "name": "path",
         "scope": "teambit.bvm",
