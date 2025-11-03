@@ -94,6 +94,7 @@
       },
       "peerDependencies": {}
     },
+    "rootComponents": true,
     "linkCoreAspects": true,
     "packageManager": "teambit.dependencies/pnpm",
     "packageManagerArgs": [],
