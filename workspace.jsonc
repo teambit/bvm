@@ -212,7 +212,7 @@
             "node": ">=16.14"
           },
           "bin": {
-            "bvm": "./dist/app.js"
+            "bvm": "./out/bundle.mjs"
           },
           "repository": {
             "type": "git",
