@@ -41,7 +41,9 @@ export class BundleEnv extends NodeEnv {
     minify: false,
     sourcemap: true,
     banner: {
-      js: `import { createRequire as _cr } from 'module';const require = _cr(import.meta.url); const __filename = import.meta.filename; const __dirname = import.meta.dirname`,
+      js: `import { createRequire as _cr } from 'module';const require = _cr(import.meta.url); const __filename = import.meta.filename; const __dirname = import.meta.dirname; ` +
+      // This is needed to fix an issue in the smartwrap dependency, which references the "result" variable without declaring it.
+      `let result;`,
     },
     external: ['@reflink/*'],
     format: 'esm',
