@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+import path from 'path';
 import yargs from 'yargs/yargs';
 import chalk from 'chalk';
+import { readJsonSync } from 'fs-extra';
 import { hideBin } from 'yargs/helpers';
 import {installCmd} from '@teambit/bvm.commands.install';
 import {removeCmd} from '@teambit/bvm.commands.remove';
@@ -16,10 +18,11 @@ import {localVersionCmd} from './local-version.js';
 let argv;
 async function main() {
 
+  const pkgJson = readJsonSync(path.join(__dirname, '../package.json'), { throws: false });
   argv = await yargs(hideBin(process.argv))
     .scriptName("bvm")
     .usage("Usage: $0 <cmd> [options]") // usage string of application.
-    .version()
+    .version(pkgJson?.version)
     .option("h", {
       alias: "help",
       description: "display help message",
