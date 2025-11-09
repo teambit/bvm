@@ -48,13 +48,15 @@ export class RemoveCmd implements CommandModule {
       loader.start(loaderText);
       res = await removeVersions(args.versions);
       loader.stop();
-      return printOutput(res);
+      printOutput(res);
+      return;
     } 
     if (args.all){
       loader.start(loaderText);
       res = await removeAll(args.keepVersions, args.keepLatestVersions);
       loader.stop();
-      return printOutput(res);
+      printOutput(res);
+      return;
     }
     throw new BvmError('no versions marked to be removed');
   };

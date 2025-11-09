@@ -74,7 +74,7 @@ export class GcpList {
 
   async updateReleaseEntry(version: string, releaseTypeUpdates: Partial<Record<ReleaseType, boolean>>): Promise<Release> {
     const index = await this.fetchIndex();
-    const release = index.find((release) => release.version === version);
+    const release = index.find((r) => r.version === version);
     if (!release){
       throw new Error(`version ${version} not found in index.json`);
     }
@@ -85,7 +85,7 @@ export class GcpList {
         delete release[releaseType];
       }
     });
-    const newIndex = index.filter((release) => release.version !== version)
+    const newIndex = index.filter((r) => r.version !== version)
     newIndex.push(release);
     const sortedIndex = newIndex.sort(compareReleases);
     const metadata = {

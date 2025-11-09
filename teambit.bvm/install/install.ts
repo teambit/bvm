@@ -1,5 +1,4 @@
 import execa from 'execa';
-import os from 'os';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
@@ -15,7 +14,7 @@ import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 import { parse as parseCommentJson } from 'comment-json';
-import { installWithPnpm } from './installWithPnpm';
+import { installWithPnpm } from './install-with-pnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -203,9 +202,9 @@ async function installFromRegistry(
     lockfilePath?: string;
   },
 ) {
-  const fetch = createFetch(opts.config);
+  const _fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
-  await installWithPnpm(fetch, opts.resolvedVersion, innerVersionDir, {
+  await installWithPnpm(_fetch, opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
     lockfilePath: opts.lockfilePath,
   });
@@ -260,12 +259,12 @@ function getBitVersionFromFilePath(filePath: string): string | null {
 
 function createFetch(config: Config) {
   const networkConfig = config.networkConfig();
-  const fetch = createFetchFromRegistry({
+  const _fetch = createFetchFromRegistry({
     ...networkConfig,
     ...config.proxyConfig(),
     strictSsl: networkConfig.strictSSL,
   });
-  return fetch;
+  return _fetch;
 }
 
 /**
@@ -274,12 +273,12 @@ function createFetch(config: Config) {
 async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
-  const fetch = createFetch(config);
+  const _fetch = createFetch(config);
   const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(fetch, version, versionDir, { storeDir });
+    await fetchNode(_fetch, version, versionDir, { storeDir });
   } catch (err) {
     loader.fail('Could not install Node.js, using the system Node.js instead');
     return undefined;

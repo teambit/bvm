@@ -38,6 +38,7 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
       nodeLinker: 'hoisted',
       cliOptions,
       ignoreScripts: true,
+      pnpmfile: Array.isArray(config.pnpmfile) ? config.pnpmfile : [config.pnpmfile],
     });
     // pnpm is doing some actions in workers.
     // We need to finish them, when we're done.
@@ -47,7 +48,9 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
   } catch (error) {
     try {
       rimraf(tempDest);
-    } catch {}
+    } catch {
+      // Ignore
+    }
     throw error;
   }
 }

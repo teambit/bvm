@@ -30,14 +30,18 @@
   "teambit.dependencies/dependency-resolver": {
     "policy": {
       "dependencies": {
-        "@pnpm/config": "^1003.1.0",
-        "@pnpm/default-reporter": "^1002.0.0",
-        "@pnpm/fetch": "1000.2.2",
-        "@pnpm/lockfile.fs": "^1001.1.12",
-        "@pnpm/logger": "1001.0.0",
-        "@pnpm/node.fetcher": "1000.0.17",
+        "@bitdev/node.node-env": "^4.0.29",
+        "@pnpm/config": "^1004.4.1",
+        "@pnpm/default-reporter": "^1002.0.10",
+        "@pnpm/fetch": "1000.2.5",
+        "@pnpm/lockfile.fs": "^1001.1.20",
+        "@pnpm/logger": "1001.0.1",
+        "@pnpm/node.fetcher": "1001.0.7",
         "@pnpm/os.env.path-extender": "2.0.3",
-        "@pnpm/plugin-commands-installation": "^1004.0.2",
+        "@pnpm/plugin-commands-installation": "1004.6.8",
+        "@pnpm/worker": "1000.3.0",
+        "@teambit/compilation.esbuild-compiler": "^1.0.1",
+        "@teambit/pkg.package-json.mutator-task": "^0.0.1",
         "@teambit/toolbox.network.agent": "0.0.551",
         "@teambit/toolbox.time.time-format": "0.0.483",
         "@types/chalk": "0.4.31",
@@ -55,7 +59,7 @@
         "@types/semver": "7.5.8",
         "@types/semver-sort": "0.0.1",
         "@types/tar-fs": "2.0.0",
-        "@types/yargs": "17.0.0",
+        "@types/yargs": "17.0.33",
         "@zkochan/cmd-shim": "6.0.0",
         "bin-links": "2.2.1",
         "chalk": "4.1.0",
@@ -70,7 +74,7 @@
         "lodash.pickby": "4.6.0",
         "minio": "7.1.3",
         "mkdirp-infer-owner": "2.0.0",
-        "nconf": "0.11.4",
+        "nconf": "0.13.0",
         "node-fetch": "2.6.7",
         "node-fetch-progress": "1.0.2",
         "ora": "5.3.0",
@@ -85,10 +89,12 @@
         "tar-fs": "2.1.1",
         "tty-table": "4.1.3",
         "user-home": "3.0.0",
+        "vitest": "^3.2.4",
         "yargs": "17.0.1"
       },
       "peerDependencies": {}
     },
+    "rootComponents": true,
     "linkCoreAspects": true,
     "packageManager": "teambit.dependencies/pnpm",
     "packageManagerArgs": [],
@@ -100,6 +106,9 @@
     "peerDependencyRules": {
       "allowAny": [],
       "ignoreMissing": []
+    },
+    "overrides": {
+      "@pnpm/worker": "1000.3.0"
     }
   },
   /**
@@ -203,7 +212,29 @@
             "node": ">=16.14"
           },
           "bin": {
-            "bvm": "./dist/app.js"
+            "bvm": "./out/bundle.mjs"
+          },
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/teambit/bvm"
+          },
+          "keywords": [
+            "bit"
+          ]
+        }
+      }
+    },
+    "teambit.pkg/package-json/mutator-task": {
+      "teambit.pkg/pkg": {
+        "packageManagerPublishArgs": [
+          "--access public"
+        ],
+        "packageJson": {
+          "name": "@teambit/pkg.package-json.mutator-task",
+          "private": false,
+          "license": "Apache-2.0",
+          "engines": {
+            "node": ">=16.14"
           },
           "repository": {
             "type": "git",

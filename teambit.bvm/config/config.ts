@@ -113,7 +113,7 @@ export class Config {
     defaults: any = {},
     _sources: ConfigSources = ["env", "file"]
   ) {
-    let store = new Provider();
+    const store = new Provider();
     // TODO: implement
     // sources.forEach((source) => {
     //   // TODO: replace this with store.add / store.use (there is some special case with env/argv when using these methods)
@@ -167,7 +167,7 @@ export class Config {
     if (!fs.existsSync(configPath)) {
       const configDir = path.dirname(configPath);
       if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
-      let defaultLink = DEFAULT_LINK;
+      const defaultLink = DEFAULT_LINK;
       fs.writeFileSync(configPath, JSON.stringify({ DEFAULT_LINK: defaultLink }, undefined, 2));
     }
     const config = new Config(name, configPath, globalDefaults, sources);
