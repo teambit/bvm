@@ -47,10 +47,7 @@ export class BundleEnv extends NodeEnv {
     },
     external: ['@reflink/*'],
     format: 'esm',
-    define: {
-      // Use `as any` to avoid TS complaining about non-standard fields on ImportMeta
-      'import.meta.url': JSON.stringify(require("url").pathToFileURL((import.meta as any).filename).href),
-    },
+    target: 'es2020',
   };
 
   protected esbuildTargets: ESBuildTarget[] = [
