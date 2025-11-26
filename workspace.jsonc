@@ -209,7 +209,7 @@
           "private": false,
           "license": "Apache-2.0",
           "engines": {
-            "node": ">=16.14"
+            "node": ">=20.0.0"
           },
           "bin": {
             "bvm": "./out/bundle.mjs"
