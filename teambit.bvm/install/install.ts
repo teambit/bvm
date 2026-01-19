@@ -281,7 +281,8 @@ async function installNode(config: Config, version: string): Promise<string | un
     await fetchNode(_fetch, version, versionDir, { storeDir });
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
-    loader.fail(`Could not install Node.js, using the system Node.js instead. ${errorMessage}`);
+    loader.fail(`Could not install Node.js, using the system Node.js instead.
+${errorMessage}`);
     return undefined;
   }
   loader.succeed(loaderText);
