@@ -1,5 +1,6 @@
 import type { CommandModule, Argv } from "yargs";
 import { installVersion, InstallResults, InstallationMethods, InstallationMethod } from "@teambit/bvm.install";
+import { removeVersions } from "@teambit/bvm.remove";
 import chalk from "chalk";
 import {
   getBvmLocalVersion,
@@ -97,6 +98,12 @@ export class UpgradeCmd implements CommandModule {
       method: args.method,
       lockfilePath: args.lockfilePath,
     });
+    if (
+      upgradeResults.previousCurrentVersion &&
+      upgradeResults.previousCurrentVersion !== upgradeResults.installedVersion
+    ) {
+      await removeVersions([upgradeResults.previousCurrentVersion]);
+    }
     printOutput(upgradeResults);
   }
 }
