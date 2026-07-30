@@ -61,6 +61,20 @@ const PACKAGE_MANAGER_INSTALL_TIMEOUT = 60_000;
 const loader = ora();
 
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
+  try {
+    return await _installVersion(version, opts);
+  } finally {
+    // Both the package manager installation and fetchNode run some actions in pnpm workers.
+    // The workers have to be terminated, otherwise they keep the process alive forever.
+    try {
+      await global['finishWorkers']?.();
+    } catch {
+      // Ignore
+    }
+  }
+}
+
+async function _installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const config = getConfig();
 
