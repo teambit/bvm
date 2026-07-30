@@ -54,6 +54,10 @@ const OS_DEFAULT_EXTRACT_METHOD = {
   'darwin': 'default'
 }
 
+// If installation with the package manager takes longer than this,
+// it is aborted and installation falls back to the tar method.
+const PACKAGE_MANAGER_INSTALL_TIMEOUT = 60_000;
+
 const loader = ora();
 
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
@@ -98,15 +102,30 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     await removeWithLoader(versionDir);
   }
   if (opts.method === 'package-manager') {
+    const abortController = new AbortController();
+    let timeoutId!: NodeJS.Timeout;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        abortController.abort();
+        reject(new BvmError(`installation with the package manager timed out after ${PACKAGE_MANAGER_INSTALL_TIMEOUT / 1000} seconds`));
+      }, PACKAGE_MANAGER_INSTALL_TIMEOUT);
+    });
     try {
-      return await installFromRegistry({
+      const installFromRegistryPromise = installFromRegistry({
         ...concreteOpts,
         resolvedVersion,
         versionDir,
         config,
+        signal: abortController.signal,
       });
+      // Prevent an unhandled rejection if the aborted installation fails after the timeout won the race
+      installFromRegistryPromise.catch(() => {});
+      return await Promise.race([installFromRegistryPromise, timeout]);
     } catch (err) {
       // If we failed to install from the registry, then we proceed to install from GCP
+      loader.fail(`failed to install with the package manager: ${err.message}. Falling back to installing from a tar file`);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
   const tempDir = config.getTempDir();
@@ -200,6 +219,7 @@ async function installFromRegistry(
     useSystemNode?: boolean;
     config: Config;
     lockfilePath?: string;
+    signal?: AbortSignal;
   },
 ) {
   const _fetch = createFetch(opts.config);
@@ -207,7 +227,9 @@ async function installFromRegistry(
   await installWithPnpm(_fetch, opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
     lockfilePath: opts.lockfilePath,
+    signal: opts.signal,
   });
+  throwIfAborted(opts.signal);
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {
     const wantedNodeVersion = opts.config.getWantedNodeVersion(innerVersionDir);
@@ -216,6 +238,7 @@ async function installFromRegistry(
       useSystemNode = !(await installNode(opts.config, wantedNodeVersion));
     }
   }
+  throwIfAborted(opts.signal);
   const replacedCurrentResult = await replaceCurrentIfNeeded(opts.replace, opts.resolvedVersion, {
     addToPathIfMissing: opts.addToPathIfMissing,
     useSystemNode,
@@ -230,6 +253,12 @@ async function installFromRegistry(
     warnings: replacedCurrentResult.warnings,
     versionPath: opts.versionDir
   };
+}
+
+function throwIfAborted(signal?: AbortSignal): void {
+  if (signal?.aborted) {
+    throw new BvmError('installation with the package manager was aborted');
+  }
 }
 
 function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
