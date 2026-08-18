@@ -2,8 +2,6 @@ import execa from 'execa';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
-import { createFetchFromRegistry } from '@pnpm/fetch';
-import { fetchNode } from '@pnpm/node.fetcher';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
@@ -14,7 +12,7 @@ import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 import { parse as parseCommentJson } from 'comment-json';
-import { installWithPnpm } from './install-with-pnpm';
+import { installNodeWithPnpm, installWithPnpm } from './install-with-pnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -54,27 +52,9 @@ const OS_DEFAULT_EXTRACT_METHOD = {
   'darwin': 'default'
 }
 
-// If installation with the package manager takes longer than this,
-// it is aborted and installation falls back to the tar method.
-const PACKAGE_MANAGER_INSTALL_TIMEOUT = 60_000;
-
 const loader = ora();
 
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
-  try {
-    return await _installVersion(version, opts);
-  } finally {
-    // Both the package manager installation and fetchNode run some actions in pnpm workers.
-    // The workers have to be terminated, otherwise they keep the process alive forever.
-    try {
-      await global['finishWorkers']?.();
-    } catch {
-      // Ignore
-    }
-  }
-}
-
-async function _installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const config = getConfig();
 
@@ -116,30 +96,16 @@ async function _installVersion(version: string, opts: InstallOpts = defaultOpts)
     await removeWithLoader(versionDir);
   }
   if (opts.method === 'package-manager') {
-    const abortController = new AbortController();
-    let timeoutId!: NodeJS.Timeout;
-    const timeout = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(() => {
-        abortController.abort();
-        reject(new BvmError(`installation with the package manager timed out after ${PACKAGE_MANAGER_INSTALL_TIMEOUT / 1000} seconds`));
-      }, PACKAGE_MANAGER_INSTALL_TIMEOUT);
-    });
     try {
-      const installFromRegistryPromise = installFromRegistry({
+      return await installFromRegistry({
         ...concreteOpts,
         resolvedVersion,
         versionDir,
         config,
-        signal: abortController.signal,
       });
-      // Prevent an unhandled rejection if the aborted installation fails after the timeout won the race
-      installFromRegistryPromise.catch(() => {});
-      return await Promise.race([installFromRegistryPromise, timeout]);
     } catch (err) {
       // If we failed to install from the registry, then we proceed to install from GCP
       loader.fail(`failed to install with the package manager: ${err.message}. Falling back to installing from a tar file`);
-    } finally {
-      clearTimeout(timeoutId);
     }
   }
   const tempDir = config.getTempDir();
@@ -233,17 +199,14 @@ async function installFromRegistry(
     useSystemNode?: boolean;
     config: Config;
     lockfilePath?: string;
-    signal?: AbortSignal;
   },
 ) {
-  const _fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
-  await installWithPnpm(_fetch, opts.resolvedVersion, innerVersionDir, {
+  await installWithPnpm(opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
     lockfilePath: opts.lockfilePath,
-    signal: opts.signal,
+    ...networkOpts(opts.config),
   });
-  throwIfAborted(opts.signal);
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {
     const wantedNodeVersion = opts.config.getWantedNodeVersion(innerVersionDir);
@@ -252,7 +215,6 @@ async function installFromRegistry(
       useSystemNode = !(await installNode(opts.config, wantedNodeVersion));
     }
   }
-  throwIfAborted(opts.signal);
   const replacedCurrentResult = await replaceCurrentIfNeeded(opts.replace, opts.resolvedVersion, {
     addToPathIfMissing: opts.addToPathIfMissing,
     useSystemNode,
@@ -267,12 +229,6 @@ async function installFromRegistry(
     warnings: replacedCurrentResult.warnings,
     versionPath: opts.versionDir
   };
-}
-
-function throwIfAborted(signal?: AbortSignal): void {
-  if (signal?.aborted) {
-    throw new BvmError('installation with the package manager was aborted');
-  }
 }
 
 function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): ExtractMethod {
@@ -300,14 +256,11 @@ function getBitVersionFromFilePath(filePath: string): string | null {
   return version;
 }
 
-function createFetch(config: Config) {
-  const networkConfig = config.networkConfig();
-  const _fetch = createFetchFromRegistry({
-    ...networkConfig,
-    ...config.proxyConfig(),
-    strictSsl: networkConfig.strictSSL,
-  });
-  return _fetch;
+function networkOpts(config: Config) {
+  return {
+    networkConfig: config.networkConfig(),
+    proxyConfig: config.proxyConfig(),
+  };
 }
 
 /**
@@ -316,12 +269,13 @@ function createFetch(config: Config) {
 async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
-  const _fetch = createFetch(config);
-  const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(_fetch, version, versionDir, { storeDir });
+    await installNodeWithPnpm(version, versionDir, {
+      storeDir: config.getStoreDir(),
+      ...networkOpts(config),
+    });
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     loader.fail(`Could not install Node.js, using the system Node.js instead.
