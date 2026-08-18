@@ -9,8 +9,13 @@ import pathTemp from 'path-temp';
 import { sync as renameOverwrite } from 'rename-overwrite';
 import { sync as rimraf } from 'rimraf';
 
-export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string }) {
+export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string; signal?: AbortSignal }) {
   const tempDest = pathTemp(path.dirname(path.dirname(dest)));
+  // Terminating pnpm's workers makes any in-progress installation fail fast.
+  const abortListener = () => {
+    global['finishWorkers']?.().catch(() => {});
+  };
+  opts.signal?.addEventListener('abort', abortListener, { once: true });
   try {
     fs.mkdirSync(tempDest, { recursive: true })
     const lockfileDestPath = path.join(tempDest, 'pnpm-lock.yaml');
@@ -31,19 +36,30 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
       packageManager: { name: '@teambit/bvm', version: '' },
     });
     const stopReporting = initReporter(config);
-    await install.handler({
-      ...config,
-      argv: { original: [] },
-      frozenLockfile: true,
-      nodeLinker: 'hoisted',
-      cliOptions,
-      ignoreScripts: true,
-      pnpmfile: Array.isArray(config.pnpmfile) ? config.pnpmfile : [config.pnpmfile],
-    });
-    // pnpm is doing some actions in workers.
-    // We need to finish them, when we're done.
-    await global['finishWorkers']();
-    stopReporting();
+    try {
+      await install.handler({
+        ...config,
+        argv: { original: [] },
+        frozenLockfile: true,
+        nodeLinker: 'hoisted',
+        cliOptions,
+        ignoreScripts: true,
+        pnpmfile: Array.isArray(config.pnpmfile) ? config.pnpmfile : [config.pnpmfile],
+      });
+    } finally {
+      // pnpm is doing some actions in workers.
+      // We need to terminate them even when the installation fails,
+      // otherwise they keep the process alive after the tar fallback finishes.
+      try {
+        await global['finishWorkers']?.();
+      } catch {
+        // Ignore
+      }
+      stopReporting();
+    }
+    if (opts.signal?.aborted) {
+      throw new Error('installation with the package manager was aborted');
+    }
     renameOverwrite(tempDest, dest);
   } catch (error) {
     try {
@@ -52,6 +68,8 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
       // Ignore
     }
     throw error;
+  } finally {
+    opts.signal?.removeEventListener('abort', abortListener);
   }
 }
 
