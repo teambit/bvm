@@ -1,11 +1,18 @@
 import fs from 'fs';
 import path from 'path';
+import nodeFetch from 'node-fetch';
+import { getAgent } from '@teambit/toolbox.network.agent';
 import { streamParser } from '@pnpm/logger';
 import { initDefaultReporter } from '@pnpm/default-reporter';
 import { readWantedLockfile } from '@pnpm/lockfile.fs';
 import pathTemp from 'path-temp';
 import { sync as renameOverwrite } from 'rename-overwrite';
 import { sync as rimraf } from 'rimraf';
+
+// @pnpm/napi is a CommonJS package that builds its exports at load time, so an
+// `import` cannot pick up its named exports. It also loads a native addon, which
+// is why it stays outside the bundle and is required from disk at runtime.
+const nodeApi = require('@pnpm/napi') as typeof import('@pnpm/napi');
 
 // The settings block of pnpm-lock.yaml. It is read with the pnpm v11 lockfile
 // reader, whose type is missing the settings that pnpm v12 added.
@@ -17,12 +24,37 @@ type LockfileSettings = {
   peersSuffixMaxLength?: number;
 };
 
-// @pnpm/napi is a CommonJS package that builds its exports at load time, so an
-// `import` cannot pick up its named exports. It also loads a native addon, which
-// is why it stays outside the bundle and is required from disk at runtime.
-const nodeApi = require('@pnpm/napi') as typeof import('@pnpm/napi');
+export type ProxyConfig = {
+  httpProxy?: string;
+  httpsProxy?: string;
+  noProxy?: string | boolean;
+};
 
-export async function installWithPnpm(fetch, version: string, dest: string, opts: { registry: string; lockfilePath?: string }) {
+export type NetworkConfig = {
+  ca?: string | string[];
+  cafile?: string;
+  cert?: string;
+  key?: string;
+  localAddress?: string;
+  maxSockets?: number;
+  strictSSL?: boolean;
+};
+
+export type NetworkOpts = {
+  proxyConfig?: ProxyConfig;
+  networkConfig?: NetworkConfig;
+};
+
+export type InstallWithPnpmOpts = NetworkOpts & {
+  registry: string;
+  lockfilePath?: string;
+};
+
+/**
+ * Installs the given Bit version from the registry, using the lockfile that was
+ * published with it.
+ */
+export async function installWithPnpm(version: string, dest: string, opts: InstallWithPnpmOpts) {
   const tempDest = pathTemp(path.dirname(path.dirname(dest)));
   try {
     fs.mkdirSync(tempDest, { recursive: true })
@@ -30,40 +62,17 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
     if (opts.lockfilePath) {
       fs.copyFileSync(opts.lockfilePath, lockfileDestPath);
     } else {
-      await fetchLockfile(fetch, version, lockfileDestPath);
+      await fetchLockfile(version, lockfileDestPath, opts);
     }
     const { manifest, overrides, settings } = await createPackageJsonFile(tempDest);
 
-    // The pnpm engine resolves the store, the metadata cache and the registry
-    // credentials from the .npmrc cascade itself. bvm only overrides the registry.
-    const pnpmConfig = nodeApi.readConfig({ dir: tempDest });
     const stopReporting = initReporter();
     try {
       await nodeApi.install({
+        ...engineOptions(tempDest, opts),
         dir: tempDest,
         projects: [{ rootDir: tempDest, manifest }],
-        storeDir: pnpmConfig.storeDir,
-        cacheDir: pnpmConfig.cacheDir,
         registries: { default: opts.registry },
-        authHeaderByUri: pnpmConfig.authHeaderByUri,
-        proxyConfig: {
-          httpProxy: pnpmConfig.httpProxy,
-          httpsProxy: pnpmConfig.httpsProxy,
-          noProxy: pnpmConfig.noProxy,
-        },
-        networkConfig: {
-          ca: pnpmConfig.ca,
-          cert: pnpmConfig.cert,
-          key: pnpmConfig.key,
-          strictSsl: pnpmConfig.strictSsl,
-          maxSockets: pnpmConfig.maxSockets,
-          networkConcurrency: pnpmConfig.networkConcurrency,
-          fetchRetries: pnpmConfig.fetchRetries,
-          fetchRetryFactor: pnpmConfig.fetchRetryFactor,
-          fetchRetryMintimeout: pnpmConfig.fetchRetryMintimeout,
-          fetchRetryMaxtimeout: pnpmConfig.fetchRetryMaxtimeout,
-          fetchTimeout: pnpmConfig.fetchTimeout,
-        },
         overrides,
         // The settings that the lockfile was created with have to be repeated here,
         // otherwise the engine treats the lockfile as outdated and the frozen install fails.
@@ -76,14 +85,6 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
         // The lockfile is published by Bit's release pipeline, so its resolutions
         // don't need to be verified against the registry metadata.
         trustLockfile: true,
-        nodeLinker: 'hoisted',
-        // The hoisted linker copies the packages into node_modules instead of
-        // symlinking them out of a virtual store, so there is no virtual store
-        // for the global one to replace.
-        enableGlobalVirtualStore: false,
-        // The maturity cutoff only slows down resolution and pnpm v12 defaults it to a day.
-        minimumReleaseAge: 0,
-        ignoreScripts: true,
       }, emitLogEvent);
     } finally {
       stopReporting();
@@ -99,9 +100,105 @@ export async function installWithPnpm(fetch, version: string, dest: string, opts
   }
 }
 
-async function fetchLockfile(fetch, version: string, lockfilePath: string): Promise<void> {
+export type InstallNodeOpts = NetworkOpts & {
+  storeDir?: string;
+};
+
+/**
+ * Installs the given Node.js version to the given directory.
+ *
+ * The pnpm engine can install a runtime the same way it installs a package, so
+ * Node.js is requested as a "runtime:" dependency of a throwaway project. The
+ * installed package is the Node.js distribution itself, which is exactly what
+ * bvm keeps in its Node.js directory, so it is moved out of node_modules.
+ */
+export async function installNodeWithPnpm(version: string, dest: string, opts: InstallNodeOpts = {}) {
+  const tempDest = pathTemp(path.dirname(dest));
+  try {
+    fs.mkdirSync(tempDest, { recursive: true });
+    await nodeApi.install({
+      ...engineOptions(tempDest, opts),
+      dir: tempDest,
+      projects: [{
+        rootDir: tempDest,
+        manifest: {
+          name: 'bvm-node',
+          version: '0.0.0',
+          dependencies: { node: `runtime:${version}` },
+        },
+      }],
+      storeDir: opts.storeDir,
+    });
+    renameOverwrite(path.join(tempDest, 'node_modules', 'node'), dest);
+  } finally {
+    try {
+      rimraf(tempDest);
+    } catch {
+      // Ignore
+    }
+  }
+}
+
+/**
+ * The options that every bvm installation shares. The proxy and TLS settings
+ * that bvm was configured with win over the ones the pnpm engine reads from the
+ * .npmrc cascade; the rest of the engine's configuration is used as it is.
+ */
+function engineOptions(dir: string, opts: NetworkOpts) {
+  const pnpmConfig = nodeApi.readConfig({ dir });
+  const proxyConfig = opts.proxyConfig ?? {};
+  const networkConfig = opts.networkConfig ?? {};
+  return {
+    storeDir: pnpmConfig.storeDir,
+    cacheDir: pnpmConfig.cacheDir,
+    authHeaderByUri: pnpmConfig.authHeaderByUri,
+    proxyConfig: {
+      httpProxy: proxyConfig.httpProxy ?? pnpmConfig.httpProxy,
+      httpsProxy: proxyConfig.httpsProxy ?? pnpmConfig.httpsProxy,
+      noProxy: proxyConfig.noProxy ?? pnpmConfig.noProxy,
+    },
+    networkConfig: {
+      ca: readCa(networkConfig) ?? pnpmConfig.ca,
+      cert: networkConfig.cert ?? pnpmConfig.cert,
+      key: networkConfig.key ?? pnpmConfig.key,
+      localAddress: networkConfig.localAddress,
+      strictSsl: networkConfig.strictSSL ?? pnpmConfig.strictSsl,
+      maxSockets: networkConfig.maxSockets ?? pnpmConfig.maxSockets,
+      networkConcurrency: pnpmConfig.networkConcurrency,
+      fetchRetries: pnpmConfig.fetchRetries,
+      fetchRetryFactor: pnpmConfig.fetchRetryFactor,
+      fetchRetryMintimeout: pnpmConfig.fetchRetryMintimeout,
+      fetchRetryMaxtimeout: pnpmConfig.fetchRetryMaxtimeout,
+      fetchTimeout: pnpmConfig.fetchTimeout,
+    },
+    nodeLinker: 'hoisted' as const,
+    // The hoisted linker copies the packages into node_modules instead of
+    // symlinking them out of a virtual store, so there is no virtual store
+    // for the global one to replace.
+    enableGlobalVirtualStore: false,
+    // The maturity cutoff only slows down resolution and pnpm v12 defaults it to a day.
+    minimumReleaseAge: 0,
+    ignoreScripts: true,
+  };
+}
+
+/**
+ * bvm's "cafile" setting points at a file, while the engine wants the certificates themselves.
+ */
+function readCa(networkConfig: NetworkConfig): string | string[] | undefined {
+  if (!networkConfig.cafile) return networkConfig.ca;
+  try {
+    return fs.readFileSync(networkConfig.cafile, 'utf8');
+  } catch {
+    return networkConfig.ca;
+  }
+}
+
+async function fetchLockfile(version: string, lockfilePath: string, opts: NetworkOpts): Promise<void> {
   const url = `https://bvm.bit.dev/bit/versions/${version}/pnpm-lock.yaml`;
-  const response = await fetch(url);
+  const response = await nodeFetch(url, {
+    agent: getAgent(url, { ...opts.networkConfig, ...opts.proxyConfig }),
+  });
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
 
   const fileStream = fs.createWriteStream(lockfilePath);

@@ -2,8 +2,6 @@ import execa from 'execa';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
-import { createFetchFromRegistry } from '@pnpm/fetch';
-import { fetchNode } from '@pnpm/node.fetcher';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
@@ -14,7 +12,7 @@ import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
 import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
 import { parse as parseCommentJson } from 'comment-json';
-import { installWithPnpm } from './install-with-pnpm';
+import { installNodeWithPnpm, installWithPnpm } from './install-with-pnpm';
 
 export type InstallOpts = GcpListOptions & {
   addToPathIfMissing?: boolean,
@@ -57,20 +55,6 @@ const OS_DEFAULT_EXTRACT_METHOD = {
 const loader = ora();
 
 export async function installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
-  try {
-    return await _installVersion(version, opts);
-  } finally {
-    // fetchNode runs some actions in pnpm workers.
-    // The workers have to be terminated, otherwise they keep the process alive forever.
-    try {
-      await global['finishWorkers']?.();
-    } catch {
-      // Ignore
-    }
-  }
-}
-
-async function _installVersion(version: string, opts: InstallOpts = defaultOpts): Promise<InstallResults>{
   const concreteOpts = Object.assign({}, defaultOpts, opts);
   const config = getConfig();
 
@@ -217,11 +201,11 @@ async function installFromRegistry(
     lockfilePath?: string;
   },
 ) {
-  const _fetch = createFetch(opts.config);
   const innerVersionDir = path.join(opts.versionDir, `bit-${opts.resolvedVersion}`);
-  await installWithPnpm(_fetch, opts.resolvedVersion, innerVersionDir, {
+  await installWithPnpm(opts.resolvedVersion, innerVersionDir, {
     registry: opts.config.getRegistry(),
     lockfilePath: opts.lockfilePath,
+    ...networkOpts(opts.config),
   });
   let useSystemNode = opts.useSystemNode;
   if (!useSystemNode) {
@@ -272,14 +256,11 @@ function getBitVersionFromFilePath(filePath: string): string | null {
   return version;
 }
 
-function createFetch(config: Config) {
-  const networkConfig = config.networkConfig();
-  const _fetch = createFetchFromRegistry({
-    ...networkConfig,
-    ...config.proxyConfig(),
-    strictSsl: networkConfig.strictSSL,
-  });
-  return _fetch;
+function networkOpts(config: Config) {
+  return {
+    networkConfig: config.networkConfig(),
+    proxyConfig: config.proxyConfig(),
+  };
 }
 
 /**
@@ -288,12 +269,13 @@ function createFetch(config: Config) {
 async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
-  const _fetch = createFetch(config);
-  const storeDir = config.getStoreDir();
   const loaderText = `downloading Node.js ${version}`
   loader.start(loaderText);
   try {
-    await fetchNode(_fetch, version, versionDir, { storeDir });
+    await installNodeWithPnpm(version, versionDir, {
+      storeDir: config.getStoreDir(),
+      ...networkOpts(config),
+    });
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     loader.fail(`Could not install Node.js, using the system Node.js instead.

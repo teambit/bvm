@@ -48,7 +48,7 @@ export class BundleEnv extends NodeEnv {
     // Native addons cannot be inlined into the bundle. @pnpm/napi loads the pnpm
     // Rust engine, which it resolves at runtime from its platform-specific
     // optional dependencies (@pnpm/napi.linux-x64, ...).
-    external: ['@reflink/*', '@pnpm/napi', '@pnpm/napi.*'],
+    external: ['@pnpm/napi', '@pnpm/napi.*'],
     format: 'esm',
     target: 'es2020',
   };
@@ -57,11 +57,6 @@ export class BundleEnv extends NodeEnv {
     {
       entryPoint: 'app.ts',
       outfile: 'bundle.mjs',
-      esbuildOptions: this.esbuildOptions,
-    },
-    {
-      entryPoint: 'worker.ts',
-      outfile: 'worker.js',
       esbuildOptions: this.esbuildOptions,
     },
   ];
@@ -78,7 +73,6 @@ export class BundleEnv extends NodeEnv {
           // eslint-disable-next-line no-param-reassign
           pkgJson.dependencies = {
             '@pnpm/napi': '12.0.0-rc.7',
-            '@reflink/reflink': '0.1.19',
           }
           return pkgJson;
         },
