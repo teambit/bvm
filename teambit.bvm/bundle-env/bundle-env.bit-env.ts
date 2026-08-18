@@ -45,7 +45,10 @@ export class BundleEnv extends NodeEnv {
       // This is needed to fix an issue in the smartwrap dependency, which references the "result" variable without declaring it.
       `let result;`,
     },
-    external: ['@reflink/*'],
+    // Native addons cannot be inlined into the bundle. @pnpm/napi loads the pnpm
+    // Rust engine, which it resolves at runtime from its platform-specific
+    // optional dependencies (@pnpm/napi.linux-x64, ...).
+    external: ['@reflink/*', '@pnpm/napi', '@pnpm/napi.*'],
     format: 'esm',
     target: 'es2020',
   };
@@ -74,6 +77,7 @@ export class BundleEnv extends NodeEnv {
         mutator: (pkgJson) => {
           // eslint-disable-next-line no-param-reassign
           pkgJson.dependencies = {
+            '@pnpm/napi': '12.0.0-rc.7',
             '@reflink/reflink': '0.1.19',
           }
           return pkgJson;
