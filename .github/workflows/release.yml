@@ -57,6 +57,13 @@ jobs:
       - name: Show status
         run: bit status
 
+      - name: Run tests
+        # Includes the hoisted-layout-integrity spec, which runs the
+        # bundled @pnpm/napi engine for real and asserts the layout it
+        # produces resolves version-conflicted dependencies correctly
+        # (the bug class that shipped broken bit installs before 3.1.2).
+        run: bit test
+
       - name: Tag components (${{ inputs.release-type }})
         run: bit tag --build --${{ inputs.release-type }} --message "bump ${{ inputs.release-type }} version"
 
@@ -83,6 +90,26 @@ jobs:
           git tag "v${{ steps.version.outputs.version }}"
           git push origin HEAD:${{ github.ref_name }}
           git push origin "v${{ steps.version.outputs.version }}"
+
+      - name: Verify the published package ships the tested engine
+        # bvm is published as a bundle whose only runtime dependency is
+        # @pnpm/napi. 3.1.1 shipped depending on an older engine than the
+        # workspace was built and tested with (the bundle env hardcoded
+        # the version), so compare the published stamp against the
+        # version installed in this workspace and fail loudly on drift.
+        run: |
+          EXPECTED=$(node -p "require('@pnpm/napi/package.json').version")
+          for i in $(seq 1 30); do
+            PUBLISHED=$(npm view "@teambit/bvm@${{ steps.version.outputs.version }}" dependencies.@pnpm/napi 2>/dev/null || true)
+            [ -n "$PUBLISHED" ] && break
+            echo "waiting for @teambit/bvm@${{ steps.version.outputs.version }} to appear on the registry ($i)"
+            sleep 10
+          done
+          echo "workspace engine: $EXPECTED, published dependency: $PUBLISHED"
+          if [ "$PUBLISHED" != "$EXPECTED" ]; then
+            echo "Published @teambit/bvm depends on @pnpm/napi@$PUBLISHED but was built and tested with $EXPECTED" >&2
+            exit 1
+          fi
 
       - name: Create GitHub release with generated notes
         env:
