@@ -1,7 +1,15 @@
 import fetch from 'node-fetch';
 import { getAgent } from '@teambit/toolbox.network.agent';
-import { Client as MinioClient, BucketItem } from 'minio';
+import { Client as MinioClient } from 'minio';
 
+export type GcpStorageObject = {
+  name: string;
+  bucket: string;
+  md5Hash: string;
+  timeCreated: string;
+  contentType: string;
+  metadata: Record<string, string>;
+};
 
 export class GcpStorage {
   private minioClient: MinioClient
@@ -42,7 +50,7 @@ export class GcpStorage {
         agent,
       }
     );
-    const json = await res.json() as { items?: BucketItem[] };
+    const json = await res.json() as { items?: GcpStorageObject[] };
     return json.items ?? [];
   }
 
