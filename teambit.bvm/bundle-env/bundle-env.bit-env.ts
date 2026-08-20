@@ -70,9 +70,17 @@ export class BundleEnv extends NodeEnv {
       EsbuildTask.from(this.esbuildTargets, {}),
       PackageJsonMutatorTask.from({
         mutator: (pkgJson) => {
+          // The bundle's sole external dependency. Resolved from the
+          // installed package so it always matches the version the
+          // workspace (workspace.jsonc) was built and tested against —
+          // a hardcoded copy here silently drifted when the policy was
+          // bumped (3.1.1 shipped with the previous engine because of
+          // that).
+          // eslint-disable-next-line global-require
+          const napiVersion = require('@pnpm/napi/package.json').version;
           // eslint-disable-next-line no-param-reassign
           pkgJson.dependencies = {
-            '@pnpm/napi': '12.0.0-rc.7',
+            '@pnpm/napi': napiVersion,
           }
           return pkgJson;
         },
