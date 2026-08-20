@@ -42,7 +42,10 @@ jobs:
 
       - name: Install Bit
         run: |
-          npx @teambit/bvm install
+          # Pinned to 3.0.4: bvm 3.1.0's pnpm-engine install re-resolves Bit's
+          # dependencies instead of using its lockfile, which breaks bit tag
+          # (ERR_IMPORT_ATTRIBUTE_MISSING in the mdx/remark chain).
+          npx @teambit/bvm@3.0.4 install
           echo "$HOME/bin" >> "$GITHUB_PATH"
 
       - name: Set up npm auth (packages are published during tag)
