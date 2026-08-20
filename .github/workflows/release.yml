@@ -1,0 +1,90 @@
+name: Release
+
+# Manual releases only — this workflow never runs on push/merge.
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: 'Version increment'
+        required: true
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+
+# Never allow two releases to run at the same time.
+concurrency:
+  group: release
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # bit.cloud token with export permissions to the teambit.bvm scope
+      BIT_CONFIG_USER_TOKEN: ${{ secrets.BIT_TOKEN }}
+      BIT_CONFIG_ANALYTICS_REPORTING: 'false'
+      BIT_CONFIG_ANONYMOUS_REPORTING: 'false'
+      BIT_CONFIG_INTERACTIVE: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Bit
+        run: |
+          npx @teambit/bvm install
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+
+      - name: Set up npm auth (packages are published during tag)
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Install dependencies
+        run: bit install
+
+      - name: Show status
+        run: bit status
+
+      - name: Tag components (${{ inputs.release-type }})
+        run: bit tag --build --${{ inputs.release-type }} --message "bump ${{ inputs.release-type }} version"
+
+      - name: Export components
+        run: bit export
+
+      - name: Read new bvm version
+        id: version
+        run: |
+          VERSION=$(grep -A3 '"cli/app"' .bitmap | grep '"version"' | head -1 | sed -E 's/.*"version": *"([^"]+)".*/\1/')
+          if [ -z "$VERSION" ]; then
+            echo "Failed to read cli/app version from .bitmap" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "New bvm version: $VERSION"
+
+      - name: Commit version bump and push git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "bump version ${{ steps.version.outputs.version }}"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin "v${{ steps.version.outputs.version }}"
+
+      - name: Create GitHub release with generated notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes
