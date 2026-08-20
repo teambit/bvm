@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { getAgent } from '@teambit/toolbox.network.agent';
-import { Client as MinioClient, BucketItem, BucketStream } from 'minio';
+import { Client as MinioClient, BucketItem } from 'minio';
 
 
 export class GcpStorage {
@@ -42,8 +42,8 @@ export class GcpStorage {
         agent,
       }
     );
-    const json = await res.json();
-    return json.items;
+    const json = await res.json() as { items?: BucketItem[] };
+    return json.items ?? [];
   }
 
   async putFile(objectName: string, content: string | Buffer, metadata: Record<string, any> = {}) {
