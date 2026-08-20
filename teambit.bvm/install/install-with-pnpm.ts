@@ -59,15 +59,12 @@ export async function installWithPnpm(version: string, dest: string, opts: Insta
   try {
     fs.mkdirSync(tempDest, { recursive: true })
     const lockfileDestPath = path.join(tempDest, 'pnpm-lock.yaml');
-    let hasLockfile = true;
     if (opts.lockfilePath) {
       fs.copyFileSync(opts.lockfilePath, lockfileDestPath);
     } else {
-      hasLockfile = await fetchLockfile(version, lockfileDestPath, opts);
+      await fetchLockfile(version, lockfileDestPath, opts);
     }
-    const { manifest, overrides, settings } = hasLockfile
-      ? await createPackageJsonFileFromLockfile(tempDest)
-      : createPackageJsonFileForVersion(tempDest, version);
+    const { manifest, overrides, settings } = await createPackageJsonFile(tempDest);
 
     const stopReporting = initReporter();
     try {
@@ -84,10 +81,10 @@ export async function installWithPnpm(version: string, dest: string, opts: Insta
         excludeLinksFromLockfile: settings?.excludeLinksFromLockfile,
         injectWorkspacePackages: settings?.injectWorkspacePackages,
         peersSuffixMaxLength: settings?.peersSuffixMaxLength,
-        frozenLockfile: hasLockfile,
+        frozenLockfile: true,
         // The lockfile is published by Bit's release pipeline, so its resolutions
         // don't need to be verified against the registry metadata.
-        trustLockfile: hasLockfile,
+        trustLockfile: true,
       }, emitLogEvent);
     } finally {
       stopReporting();
@@ -197,14 +194,11 @@ function readCa(networkConfig: NetworkConfig): string | string[] | undefined {
   }
 }
 
-async function fetchLockfile(version: string, lockfilePath: string, opts: NetworkOpts): Promise<boolean> {
+async function fetchLockfile(version: string, lockfilePath: string, opts: NetworkOpts): Promise<void> {
   const url = `https://bvm.bit.dev/bit/versions/${version}/pnpm-lock.yaml`;
   const response = await nodeFetch(url, {
     agent: getAgent(url, { ...opts.networkConfig, ...opts.proxyConfig }),
   });
-  // Registry installation can still resolve an exact Bit version when its release
-  // pipeline has not published a lockfile yet.
-  if (response.status === 404) return false;
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
 
   const fileStream = fs.createWriteStream(lockfilePath);
@@ -215,10 +209,9 @@ async function fetchLockfile(version: string, lockfilePath: string, opts: Networ
     fileStream.on('finish', () => resolve());
     fileStream.on('error', (err: Error) => reject(err));
   });
-  return true;
 }
 
-async function createPackageJsonFileFromLockfile(dest: string) {
+async function createPackageJsonFile(dest: string) {
   const lockfile = await readWantedLockfile(dest, { ignoreIncompatible: false });
   const overrides = lockfile?.overrides ?? {};
   const manifest = {
@@ -233,16 +226,6 @@ async function createPackageJsonFileFromLockfile(dest: string) {
     },
   }, null, 2), 'utf8');
   return { manifest, overrides, settings: lockfile?.settings as LockfileSettings | undefined };
-}
-
-function createPackageJsonFileForVersion(dest: string, version: string) {
-  const manifest = {
-    dependencies: {
-      '@teambit/bit': version,
-    },
-  };
-  fs.writeFileSync(path.join(dest, 'package.json'), JSON.stringify(manifest, null, 2), 'utf8');
-  return { manifest, overrides: {}, settings: undefined };
 }
 
 /**

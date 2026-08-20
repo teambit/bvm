@@ -57,7 +57,7 @@ describe('installWithPnpm', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  it('resolves the exact Bit version from the registry when its lockfile is missing', async () => {
+  it('fails when the lockfile is missing so the caller can fall back to the tarball', async () => {
     (nodeFetch as unknown as jest.Mock).mockResolvedValue({
       ok: false,
       status: 404,
@@ -65,27 +65,13 @@ describe('installWithPnpm', () => {
     });
     const dest = path.join(tempDir, 'versions', '2.1.0', 'bit-2.1.0');
 
-    await installWithPnpm('2.1.0', dest, { registry: 'https://node-registry.bit.cloud/' });
-
-    expect(mockNodeApiInstall).toHaveBeenCalledWith(
-      expect.objectContaining({
-        projects: [{
-          rootDir: expect.any(String),
-          manifest: {
-            dependencies: {
-              '@teambit/bit': '2.1.0',
-            },
-          },
-        }],
-        frozenLockfile: false,
-        trustLockfile: false,
-      }),
-      expect.any(Function)
+    await expect(installWithPnpm('2.1.0', dest, {
+      registry: 'https://node-registry.bit.cloud/',
+    })).rejects.toThrow(
+      'Failed to fetch https://bvm.bit.dev/bit/versions/2.1.0/pnpm-lock.yaml: Not Found'
     );
-    expect(JSON.parse(fs.readFileSync(path.join(dest, 'package.json'), 'utf8'))).toEqual({
-      dependencies: {
-        '@teambit/bit': '2.1.0',
-      },
-    });
+
+    expect(mockNodeApiInstall).not.toHaveBeenCalled();
+    expect(fs.existsSync(dest)).toBe(false);
   });
 });
