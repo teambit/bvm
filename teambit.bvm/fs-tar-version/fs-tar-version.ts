@@ -1,6 +1,7 @@
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import fs, {CopyOptions} from 'fs-extra';
 import {basename, dirname, join} from 'path';
+import { parseVersionFromTarFileName } from './parse-version-from-file-name';
 
 type LoaderOpts = {
   loader: any
@@ -18,6 +19,9 @@ export class FsTarVersion {
     return dirname(this.path);
   }
   get version() {
+    const parsedVersion = parseVersionFromTarFileName(this.fileName);
+    if (parsedVersion) return parsedVersion;
+    // an unrecognized file name keeps the historical behavior rather than failing here
     return this.fileName
       .replace(/\.[^/.]+$/, '')
       .replace(/\.[^/.]+$/, '')

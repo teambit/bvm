@@ -1,7 +1,6 @@
 import execa from 'execa';
 import fs, { MoveOptions } from 'fs-extra';
 import path from 'path';
-import semver from 'semver';
 import {fetch, FetchOpts} from '@teambit/bvm.fetch';
 import {extract} from '@teambit/toolbox.fs.progress-bar-file-extractor';
 import ora from 'ora';
@@ -10,7 +9,7 @@ import { Config } from '@teambit/bvm.config';
 import { BvmError } from '@teambit/bvm.error';
 import {linkOne, PathExtenderReport} from '@teambit/bvm.link';
 import { GcpListOptions, getOsType, listRemote } from '@teambit/bvm.list';
-import { FsTarVersion } from '@teambit/bvm.fs-tar-version';
+import { FsTarVersion, parseVersionFromTarFileName } from '@teambit/bvm.fs-tar-version';
 import { parse as parseCommentJson } from 'comment-json';
 import { installNodeWithPnpm, installWithPnpm } from './install-with-pnpm';
 
@@ -165,14 +164,16 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
       useSystemNode = !(await installNode(config, wantedNodeVersion));
     }
   }
-  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, fsTarVersion.version, {
+  // the version to link is the one the files were extracted to (`versionDir` above), not the one
+  // read back from the tar file name.
+  const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
     addToPathIfMissing: opts.addToPathIfMissing,
     useSystemNode,
   });
   loader.stop();
   return {
     downloadRequired: !!fsTarVersion.path,
-    installedVersion: fsTarVersion.version,
+    installedVersion: resolvedVersion,
     replacedCurrent: replacedCurrentResult.replaced,
     previousCurrentVersion: replacedCurrentResult.previousCurrentVersion,
     pathExtenderReport: replacedCurrentResult.pathExtenderReport,
@@ -247,13 +248,7 @@ function getExtractMethod(extractMethod?: ExtractMethod, osName?: string): Extra
  * Returns null if a version is not found.
  */
 function getBitVersionFromFilePath(filePath: string): string | null {
-  const fileName = path.basename(filePath);
-  const parts = fileName.split('-');
-  if (parts.length < 4) return null;
-  const versionParts = parts.slice(1, parts.length - 2);
-  const version = versionParts.join('');
-  if (!semver.valid(version)) return null;
-  return version;
+  return parseVersionFromTarFileName(filePath) ?? null;
 }
 
 function networkOpts(config: Config) {
