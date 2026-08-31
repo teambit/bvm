@@ -124,6 +124,22 @@ describe("GcpList", () => {
     expect(list.entries[0].version).toBe("1.0.0");
     expect(list.entries[1].version).toBe("3.0.0");
   });
+  it("should mark dev releases with the dev release type", async () => {
+    mockFetch([
+      {
+        version: "1.0.0",
+        date: "2020-01-01",
+        dev: true,
+      },
+    ]);
+    const gcpList = getGcpList({
+      releaseType: ReleaseTypeFilter.DEV,
+      os: "Darwin",
+      arch: "x64",
+    });
+    const list = await gcpList.list();
+    expect(list.entries[0].releaseType).toBe("dev");
+  });
 });
 
 function mockFetch(releases: Release[]) {
