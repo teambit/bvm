@@ -34,7 +34,7 @@
         "@pnpm/default-reporter": "1002.1.7",
         "@pnpm/lockfile.fs": "1001.1.29",
         "@pnpm/logger": "1001.0.1",
-        "@pnpm/napi": "12.0.0-rc.8",
+        "@pnpm/napi": "12.1.0",
         "@pnpm/os.env.path-extender": "2.0.3",
         "@teambit/compilation.esbuild-compiler": "^1.0.1",
         "@teambit/pkg.package-json.mutator-task": "^0.0.1",
