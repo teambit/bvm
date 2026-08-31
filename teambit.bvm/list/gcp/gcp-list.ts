@@ -98,7 +98,11 @@ export class GcpList {
 
   _createRemoteVersion(release: Release): RemoteVersion {
     const fileName = `bit/versions/${release.version}/bit-${release.version}-${this.osType}-${this.arch}.tar.gz`;
-    const releaseType = release[ReleaseType.STABLE] ? ReleaseType.STABLE : ReleaseType.NIGHTLY;
+    const releaseType = release[ReleaseType.STABLE]
+      ? ReleaseType.STABLE
+      : release[ReleaseType.DEV]
+      ? ReleaseType.DEV
+      : ReleaseType.NIGHTLY;
     const gcpVersion = new GcpVersion(release.version, fileName, bucketName, '', release.date, {}, undefined, releaseType);
     return gcpVersion.toRemoteVersion();
   }
