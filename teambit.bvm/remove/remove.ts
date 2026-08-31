@@ -25,7 +25,7 @@ export async function removeVersions(versions: string[]): Promise<RemoveResults>
   }
   const missingVersions = difference(resolvedVersions, localVersions.toVersionsStringArray());
   const removedVersions = intersect(resolvedVersions, localVersions.toVersionsStringArray());
-  if (!removeVersions.length){
+  if (!removedVersions.length){
     return {
       missingVersions,
       removedVersions
