@@ -99,7 +99,7 @@ jobs:
         # version installed in this workspace and fail loudly on drift.
         run: |
           EXPECTED=$(node -p "require('@pnpm/napi/package.json').version")
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             PUBLISHED=$(npm view "@teambit/bvm@${{ steps.version.outputs.version }}" dependencies.@pnpm/napi 2>/dev/null || true)
             [ -n "$PUBLISHED" ] && break
             echo "waiting for @teambit/bvm@${{ steps.version.outputs.version }} to appear on the registry ($i)"
