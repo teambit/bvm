@@ -57,6 +57,46 @@ describe('installWithPnpm integration', () => {
     expect(installedBit(-1)).toBe(false);
   }, 180_000);
 
+  it('reads a lockfile that starts with an env document', async () => {
+    // Lockfiles of newer Bit versions are written by a pnpm that records its own
+    // version in a separate YAML document at the top of the file.
+    const envDocument = `---
+lockfileVersion: '9.0'
+
+importers:
+
+  .:
+    configDependencies: {}
+    packageManagerDependencies:
+      pnpm:
+        specifier: 12.15.0
+        version: 12.15.0
+
+packages:
+
+  pnpm@12.15.0:
+    resolution: {integrity: sha512-AAAA}
+
+snapshots:
+
+  pnpm@12.15.0: {}
+
+---
+`;
+    const lockfilePath = path.join(tempDir, 'pnpm-lock.yaml');
+    fs.writeFileSync(lockfilePath, envDocument + lockfile);
+    const dest = path.join(tempDir, 'versions', '1.0.0', 'bit-1.0.0');
+
+    await installWithPnpm('1.0.0', dest, {
+      registry: 'https://registry.npmjs.org/',
+      lockfilePath,
+    });
+
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const installedBit = require(path.join(dest, 'node_modules', '@teambit', 'bit'));
+    expect(installedBit(1)).toBe(true);
+  }, 180_000);
+
   it('ignores a pnpm workspace that encloses the bvm directory', async () => {
     // A stray workspace in a parent directory (e.g. a pnpm-workspace.yaml left in
     // the home directory) must not be taken as the root of Bit's installation.

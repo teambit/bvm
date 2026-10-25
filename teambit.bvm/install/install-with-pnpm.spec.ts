@@ -23,10 +23,6 @@ jest.mock('@pnpm/default-reporter', () => ({
   initDefaultReporter: jest.fn(() => jest.fn()),
 }), { virtual: true });
 
-jest.mock('@pnpm/lockfile.fs', () => ({
-  readWantedLockfile: jest.fn(),
-}), { virtual: true });
-
 jest.mock('path-temp', () => jest.fn((parentDir: string) =>
   require('path').join(parentDir, 'bvm-test-temp')
 ), { virtual: true });

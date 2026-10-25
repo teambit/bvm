@@ -4,7 +4,6 @@ import nodeFetch from 'node-fetch';
 import { getAgent } from '@teambit/toolbox.network.agent';
 import { streamParser } from '@pnpm/logger';
 import { initDefaultReporter } from '@pnpm/default-reporter';
-import { readWantedLockfile } from '@pnpm/lockfile.fs';
 import pathTemp from 'path-temp';
 import { sync as renameOverwrite } from 'rename-overwrite';
 import { sync as rimraf } from 'rimraf';
@@ -14,14 +13,21 @@ import { sync as rimraf } from 'rimraf';
 // is why it stays outside the bundle and is required from disk at runtime.
 const nodeApi = require('@pnpm/napi') as typeof import('@pnpm/napi');
 
-// The settings block of pnpm-lock.yaml. It is read with the pnpm v11 lockfile
-// reader, whose type is missing the settings that pnpm v12 added.
+// The parts of pnpm-lock.yaml that bvm reads.
 type LockfileSettings = {
   autoInstallPeers?: boolean;
   dedupePeers?: boolean;
   excludeLinksFromLockfile?: boolean;
   injectWorkspacePackages?: boolean;
   peersSuffixMaxLength?: number;
+};
+
+type Lockfile = {
+  settings?: LockfileSettings;
+  overrides?: Record<string, string>;
+  importers?: Record<string, {
+    dependencies?: Record<string, { specifier: string; version: string }>;
+  }>;
 };
 
 export type ProxyConfig = {
@@ -212,11 +218,17 @@ async function fetchLockfile(version: string, lockfilePath: string, opts: Networ
 }
 
 async function createPackageJsonFile(dest: string) {
-  const lockfile = await readWantedLockfile(dest, { ignoreIncompatible: false });
+  // The engine's reader understands every document pnpm writes to the lockfile,
+  // including the env document that lockfiles of newer Bit versions start with.
+  const lockfile = await nodeApi.readLockfile<Lockfile>({ dir: dest });
+  const bitSpecifier = lockfile?.importers?.['.']?.dependencies?.['@teambit/bit']?.specifier;
+  if (!bitSpecifier) {
+    throw new Error(`The lockfile at "${path.join(dest, 'pnpm-lock.yaml')}" has no @teambit/bit dependency`);
+  }
   const overrides = lockfile?.overrides ?? {};
   const manifest = {
     dependencies: {
-      '@teambit/bit': lockfile?.importers['.'].specifiers['@teambit/bit'],
+      '@teambit/bit': bitSpecifier,
     },
   };
   fs.writeFileSync(path.join(dest, 'package.json'), JSON.stringify({
@@ -225,7 +237,7 @@ async function createPackageJsonFile(dest: string) {
       overrides,
     },
   }, null, 2), 'utf8');
-  return { manifest, overrides, settings: lockfile?.settings as LockfileSettings | undefined };
+  return { manifest, overrides, settings: lockfile?.settings };
 }
 
 /**
