@@ -77,7 +77,7 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
   const skipTempDir = config.getSkipTempDir();
   const extractDir = skipTempDir ? versionDir : undefined;
   if (exists) {
-    if (!concreteOpts.override){
+    if (!concreteOpts.override && isVersionComplete(versionDir, resolvedVersion)){
       const replacedCurrentResult = await replaceCurrentIfNeeded(concreteOpts.replace, resolvedVersion, {
         addToPathIfMissing: opts.addToPathIfMissing,
         useSystemNode: opts.useSystemNode,
@@ -180,6 +180,15 @@ export async function installVersion(version: string, opts: InstallOpts = defaul
     warnings: replacedCurrentResult.warnings,
     versionPath: versionDir
   }
+}
+
+/**
+ * An installation that was interrupted (e.g. in the middle of extracting) leaves
+ * a version directory behind without Bit's manifest. Such a directory can't be
+ * linked, so it is reinstalled instead of being treated as installed.
+ */
+function isVersionComplete(versionDir: string, version: string): boolean {
+  return fs.existsSync(path.join(versionDir, `bit-${version}`, 'node_modules/@teambit/bit/package.json'));
 }
 
 function getVersionFromWorkspaceJsonc(): string | undefined {
