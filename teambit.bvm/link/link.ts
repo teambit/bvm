@@ -8,6 +8,7 @@ import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 import semver from 'semver';
+import { getLinkSource } from './link-source';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://bit.dev/docs';
@@ -73,7 +74,6 @@ export async function linkDefault(
 }
 
 export async function linkOne(linkName: string, version: string | undefined, opts: LinkOptions = {}): Promise<LinkResult> {
-  const source = getLinkSource();
   let concreteVersion = version;
   if (!concreteVersion || concreteVersion === 'latest'){
     const localLatest = (await listLocal()).latest();
@@ -90,6 +90,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (!exists){
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
+  const source = getLinkSource(versionDir);
   let nodeExecPath: string;
   const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
   const warnings: string[] = []
@@ -152,16 +153,6 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     pathExtenderReport,
     warnings,
   }
-}
-
-function getLinkSource(): string {
-  const bitBinPath = getBitBinPath();
-  const source = path.join('.', 'node_modules', bitBinPath);
-  return source;
-}
-
-function getBitBinPath(){
-  return path.join('@teambit', 'bit', 'bin', 'bit');
 }
 
 async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<{ pathExtenderReport?: PathExtenderReport | undefined, warning?: string }> {
