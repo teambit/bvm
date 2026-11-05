@@ -43,11 +43,10 @@ export class GcpStorage {
    * upload a file through the XML API of GCP storage, signed with the HMAC keys (AWS signature v4).
    * the metadata is sent as headers, e.g. Content-Type and Cache-Control.
    */
-  async putFile(objectName: string, content: string | Buffer, metadata: Record<string, string> = {}) {
+  async putFile(objectName: string, content: string | Buffer, metadata: Record<string, string> = {}): Promise<void> {
     if (!this.accessKey || !this.secretKey) {
       throw new Error('accessKey and secretKey are required for GCP storage');
     }
-    const body = typeof content === 'string' ? Buffer.from(content) : content;
     const url = new URL(`${this.getStorageAPIUrl()}/${this.bucketName}/${objectName}`);
     const signed = aws4.sign(
       {
@@ -56,21 +55,20 @@ export class GcpStorage {
         method: 'PUT',
         service: 's3',
         region: 'auto',
-        headers: { ...metadata, 'Content-Length': String(body.length) },
-        body,
+        headers: { ...metadata },
+        body: content,
       },
       { accessKeyId: this.accessKey, secretAccessKey: this.secretKey }
     );
     const res = await fetch(url.toString(), {
       method: 'PUT',
       headers: signed.headers as Record<string, string>,
-      body,
+      body: content,
       agent: getAgent(url.toString(), this.proxyConfig || {}),
     });
     if (!res.ok) {
       throw new Error(`failed uploading ${objectName} to ${this.bucketName}: ${res.status} ${await res.text()}`);
     }
-    return { etag: res.headers.get('etag') };
   }
 
   static create(bucketName: string, proxyConfig?: {}, accessKey?: string, secretKey?: string) {
