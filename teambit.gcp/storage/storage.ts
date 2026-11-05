@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { getAgent } from '@teambit/toolbox.network.agent';
-import { Client as MinioClient } from 'minio';
+import aws4 from 'aws4';
 
 export type GcpStorageObject = {
   name: string;
@@ -12,8 +12,6 @@ export type GcpStorageObject = {
 };
 
 export class GcpStorage {
-  private minioClient: MinioClient
-
   constructor(
     private bucketName: string,
     private proxyConfig?: {},
@@ -21,19 +19,6 @@ export class GcpStorage {
     private accessKey?: string,
     private secretKey?: string
   ) {}
-
-  private getMinioClient() {
-    if (this.minioClient) return this.minioClient;
-    if (!this.accessKey || !this.secretKey) {
-      throw new Error('accessKey and secretKey are required for GCP storage');
-    }
-    this.minioClient = new MinioClient({
-      endPoint: this.storageAPI,
-      accessKey: this.accessKey,
-      secretKey: this.secretKey,
-    });
-    return this.minioClient;
-  }
 
   private getStorageAPIUrl() {
     if (!this.storageAPI.startsWith('https:')){
@@ -54,11 +39,38 @@ export class GcpStorage {
     return json.items ?? [];
   }
 
-  async putFile(objectName: string, content: string | Buffer, metadata: Record<string, any> = {}) {
-    const size = content.length;
-    const minioClient = this.getMinioClient();
-    const res = await minioClient.putObject(this.bucketName, objectName, content, size, metadata);
-    return res;
+  /**
+   * upload a file through the XML API of GCP storage, signed with the HMAC keys (AWS signature v4).
+   * the metadata is sent as headers, e.g. Content-Type and Cache-Control.
+   */
+  async putFile(objectName: string, content: string | Buffer, metadata: Record<string, string> = {}) {
+    if (!this.accessKey || !this.secretKey) {
+      throw new Error('accessKey and secretKey are required for GCP storage');
+    }
+    const body = typeof content === 'string' ? Buffer.from(content) : content;
+    const url = new URL(`${this.getStorageAPIUrl()}/${this.bucketName}/${objectName}`);
+    const signed = aws4.sign(
+      {
+        host: url.host,
+        path: url.pathname,
+        method: 'PUT',
+        service: 's3',
+        region: 'auto',
+        headers: { ...metadata, 'Content-Length': String(body.length) },
+        body,
+      },
+      { accessKeyId: this.accessKey, secretAccessKey: this.secretKey }
+    );
+    const res = await fetch(url.toString(), {
+      method: 'PUT',
+      headers: signed.headers as Record<string, string>,
+      body,
+      agent: getAgent(url.toString(), this.proxyConfig || {}),
+    });
+    if (!res.ok) {
+      throw new Error(`failed uploading ${objectName} to ${this.bucketName}: ${res.status} ${await res.text()}`);
+    }
+    return { etag: res.headers.get('etag') };
   }
 
   static create(bucketName: string, proxyConfig?: {}, accessKey?: string, secretKey?: string) {

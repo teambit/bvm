@@ -14,7 +14,10 @@
         "scope": "teambit.bvm",
         "version": "0.1.3",
         "mainFile": "index.ts",
-        "rootDir": "teambit.bvm/bundle-env"
+        "rootDir": "teambit.bvm/bundle-env",
+        "config": {
+            "bitdev.general/envs/bit-env@6.0.9": {}
+        }
     },
     "cli/app": {
         "name": "cli/app",
