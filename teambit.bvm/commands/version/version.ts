@@ -14,6 +14,7 @@ import {
   Version,
 } from "@teambit/bvm.list";
 import semver from "semver";
+import { getBitxVersionsInfo, BitxVersionsInfo } from "@teambit/bvm.bitx";
 
 export type LocalBitVersions = {
   currentVersion?: Version;
@@ -30,6 +31,7 @@ export type VersionsResult = {
   latestBvmRemoteVersion?: string;
   localBitVersions: LocalBitVersions;
   remoteBitVersions: RemoteBitVersions;
+  bitx?: BitxVersionsInfo;
 };
 
 export type ShowVersionsOptions = {
@@ -128,11 +130,19 @@ export async function showAllVersions(
     latestRemoteNightlyVersion,
   };
 
+  let bitx: BitxVersionsInfo | undefined;
+  try {
+    bitx = await getBitxVersionsInfo(actualOpts.includeRemote);
+  } catch {
+    // bitx info is best effort, it must not fail the version command
+  }
+
   const output = formatOutput({
     currentBvmVersion,
     latestBvmRemoteVersion,
     localBitVersions,
     remoteBitVersions,
+    bitx,
   });
   return output;
 }
@@ -195,11 +205,31 @@ function formatOutput(versions: VersionsResult): string {
     latestInstalled,
     latestRemoteStable,
     latestRemoteNightly,
+    ...formatBitxOutput(versions.bitx),
     "\n",
     newerBvmOutput,
     newerBitOutput,
   ].filter((output) => output);
   return outputs.join("\n");
+}
+
+function formatBitxOutput(bitx?: BitxVersionsInfo): string[] {
+  if (!bitx) return [];
+  const lines = [
+    bitx.currentVersion ? `current (used) bitx version: ${chalk.green(bitx.currentVersion)}` : undefined,
+    bitx.latestInstalledVersion ? `latest installed bitx version: ${chalk.green(bitx.latestInstalledVersion)}` : undefined,
+    bitx.latestRemoteVersion ? `latest available bitx version (${bitx.distTag}): ${chalk.green(bitx.latestRemoteVersion)}` : undefined,
+  ];
+  if (
+    bitx.currentVersion &&
+    bitx.latestRemoteVersion &&
+    semver.valid(bitx.currentVersion) &&
+    semver.valid(bitx.latestRemoteVersion) &&
+    semver.gt(bitx.latestRemoteVersion, bitx.currentVersion)
+  ) {
+    lines.push(`${chalk.greenBright("new")} version (${bitx.latestRemoteVersion}) of ${chalk.cyan("bitx")} is available, upgrade it by running "${chalk.cyan("bvm upgrade --next")}"`);
+  }
+  return lines.filter((line): line is string => !!line);
 }
 
 function getNewerBitAvailableOutput(

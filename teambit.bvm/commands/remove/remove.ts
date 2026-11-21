@@ -1,6 +1,7 @@
 import type {CommandModule, Argv} from 'yargs';
 import {removeVersions, removeAll, RemoveResults} from '@teambit/bvm.remove';
 import { BvmError } from '@teambit/bvm.error';
+import { removeBitxVersions, removeAllBitx } from '@teambit/bvm.bitx';
 import chalk from 'chalk';
 import ora from 'ora';
 
@@ -16,6 +17,12 @@ export class RemoveCmd implements CommandModule {
       describe: 'bit versions to remove'
     })
     .option({
+      next: {
+        alias: ['bitx'],
+        describe: 'remove bitx (the next Bit CLI) versions instead of bit versions',
+        default: false,
+        type: 'boolean',
+      },
       all: {
         alias: ['a'],
         describe: 'remove all installed versions',
@@ -39,6 +46,7 @@ export class RemoveCmd implements CommandModule {
     .example('$0 remove --all', 'remove all installed versions')
     .example('$0 remove --all --keep-versions 0.0.200', 'remove all installed versions except v0.0.200')
     .example('$0 remove --all --keep-latest-versions 3', 'remove all installed versions except the last 3 installed versions')
+    .example('$0 remove --next 0.1.0-alpha.1', 'remove version 0.1.0-alpha.1 of bitx (the next Bit CLI)')
     return yargs;
   }
   async handler(args) {
@@ -46,14 +54,16 @@ export class RemoveCmd implements CommandModule {
     const loaderText = 'removing versions from the file system';
     if (args.versions && args.versions.length){
       loader.start(loaderText);
-      res = await removeVersions(args.versions);
+      res = args.next ? await removeBitxVersions(args.versions.map(String)) : await removeVersions(args.versions);
       loader.stop();
       printOutput(res);
       return;
     } 
     if (args.all){
       loader.start(loaderText);
-      res = await removeAll(args.keepVersions, args.keepLatestVersions);
+      res = args.next
+        ? await removeAllBitx(args.keepVersions, args.keepLatestVersions)
+        : await removeAll(args.keepVersions, args.keepLatestVersions);
       loader.stop();
       printOutput(res);
       return;

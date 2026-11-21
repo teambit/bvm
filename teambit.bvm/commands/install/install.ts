@@ -4,6 +4,7 @@ import {installVersion, InstallOpts, InstallationMethods, InstallationMethod} fr
 import { timeFormat } from '@teambit/toolbox.time.time-format';
 import { renderPathExtenderReport } from '@teambit/bvm.reporter';
 import { getBvmLocalVersion, getBvmRemoteVersion, getNewerBvmAvailableOutput } from '@teambit/bvm.version';
+import { installBitx, validateNoBitOnlyFlags } from '@teambit/bvm.bitx';
 
 import chalk from 'chalk';
 export class InstallCmd implements CommandModule {
@@ -16,6 +17,14 @@ export class InstallCmd implements CommandModule {
     yargs.positional('bit-version', {
       describe: 'version to install',
       type: 'string'
+    })
+    .option({
+      next: {
+        alias: ['bitx'],
+        describe: 'install bitx, the next Bit CLI, as the "bitx" command (side by side with bit). the version can be an exact version or a dist-tag (default "next")',
+        default: false,
+        type: 'boolean'
+      }
     })
     .option({
       'skip-update-path': {
@@ -94,6 +103,8 @@ export class InstallCmd implements CommandModule {
     })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
+    .example('$0 install --next', 'install the latest bitx (the next Bit CLI) as the "bitx" command')
+    .example('$0 install --next 0.1.0-alpha.1', 'install version 0.1.0-alpha.1 of bitx')
     return yargs;
   }
   async handler(args) {
@@ -105,6 +116,10 @@ export class InstallCmd implements CommandModule {
         if (upgradeBvmMsg){
           console.log(chalk.yellow(upgradeBvmMsg));
         }
+      }
+      if (args.next) {
+        await installNextBit(args);
+        return;
       }
       const opts: InstallOpts = {
         addToPathIfMissing: !args.skipUpdatePath,
@@ -143,6 +158,31 @@ See related docs: https://bit.dev/reference/reference/config/network-config/
       throw error;
     }
   };
+}
+
+async function installNextBit(args) {
+  validateNoBitOnlyFlags(args, ['file', 'extractMethod', 'lockfilePath', 'os', 'arch']);
+  const installStartTime = Date.now();
+  const results = await installBitx(args.bitVersion, {
+    addToPathIfMissing: !args.skipUpdatePath,
+    override: args.override,
+    replace: args.replace,
+    useSystemNode: args.useSystemNode,
+    verbose: args.verbose,
+  });
+  const installTimeDiff = timeFormat(Date.now() - installStartTime);
+  console.log(`bitx version ${chalk.green(results.installedVersion)} installed on ${chalk.green(results.versionPath)} in ${chalk.cyan(installTimeDiff)}`);
+  if (results.replacedCurrent) {
+    console.log(`run it with ${chalk.cyan(results.linkName)}`);
+  }
+  if (results.warnings.length) {
+    console.log(chalk.yellowBright(results.warnings.join('\n')));
+  }
+  if (!results.pathExtenderReport) return;
+  const output = renderPathExtenderReport(results.pathExtenderReport);
+  if (output) {
+    console.log(`\n${output}`);
+  }
 }
 
 export const command =  new InstallCmd();

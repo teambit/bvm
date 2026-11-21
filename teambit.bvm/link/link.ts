@@ -9,6 +9,7 @@ import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 import semver from 'semver';
 import { getLinkSource } from './link-source';
+import { getBitxLinkSource, readBitxMetadata, validateBitxLinkName } from './bitx-link';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://bit.dev/docs';
@@ -90,6 +91,9 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   if (!exists){
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
+  if (config.getBitxLinks()[linkName]) {
+    throw new BvmError(`the link name "${linkName}" is used by bitx (the next Bit). choose another link name for Bit`);
+  }
   const source = getLinkSource(versionDir);
   let nodeExecPath: string;
   const wantedNodeVersion = config.getWantedNodeVersion(versionDir);
@@ -105,6 +109,47 @@ export async function linkOne(linkName: string, version: string | undefined, opt
   } else if (semver.lt(process.version, wantedNodeVersion)) {
     warnings.push(`The system Node.js is ${process.version} while Bit CLI requires at least Node.js ${wantedNodeVersion}!`)
   }
+  const generatedLink = await createShim({
+    linkName,
+    versionDir,
+    source,
+    nodeExecPath,
+    prependToPath: nodeExecPath ? path.dirname(nodeExecPath) : undefined,
+  });
+
+  let previousLinkVersion;
+  if (opts.addToConfig){
+    previousLinkVersion = config.setLink(linkName, concreteVersion);
+  }
+  const { pathExtenderReport, warning } = await validateBinDirInPath(getBinDir(), opts);
+  if (warning) {
+    warnings.push(warning);
+  }
+
+  return {
+    linkName, 
+    previousLinkVersion,
+    version: concreteVersion,
+    generatedLink,
+    pathExtenderReport,
+    warnings,
+  }
+}
+
+type CreateShimOpts = {
+  linkName: string,
+  versionDir: string,
+  // relative to versionDir
+  source: string,
+  nodeExecPath?: string,
+  prependToPath?: string,
+}
+
+/**
+ * Points `<bvm dir>/links/<linkName>` at the version directory and writes the
+ * `<linkName>` shim (in ~/bin, or in the bvm directory on Windows) that runs `source` from it.
+ */
+async function createShim({ linkName, versionDir, source, nodeExecPath, prependToPath }: CreateShimOpts): Promise<GeneratedLink> {
   const pkg = {
     bin: {
       [linkName]: source
@@ -129,30 +174,84 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     // so it is better to not use them.
     createPwshFile: false,
     nodeExecPath,
-    prependToPath: nodeExecPath ? path.dirname(nodeExecPath) : undefined,
+    prependToPath,
   });
+  return generatedLink;
+}
 
-  let previousLinkVersion;
-  if (opts.addToConfig){
-    previousLinkVersion = config.setLink(linkName, concreteVersion);
-  }
-  let binDir = path.join(os.homedir(), 'bin');
+function getBinDir(): string {
   if (IS_WINDOWS){
-    binDir = config.getBvmDirectory();
+    return config.getBvmDirectory();
   }
-  const { pathExtenderReport, warning } = await validateBinDirInPath(binDir, opts);
+  return path.join(os.homedir(), 'bin');
+}
+
+export type BitxLinkOptions = {
+  addToConfig?: boolean
+  addToPathIfMissing?: boolean
+  useSystemNode?: boolean
+}
+
+/**
+ * Links an installed bitx (the next Bit) version.
+ * bitx is a native executable, so the shim runs it directly. Unless `useSystemNode` is set,
+ * the shim puts the Node.js that was installed for this bitx version first on the PATH,
+ * since bitx runs Node.js for env-related work (compile, test, build, start...).
+ */
+export async function linkBitx(linkName: string | undefined, version: string, opts: BitxLinkOptions = {}): Promise<LinkResult> {
+  const concreteLinkName = linkName || config.getBitxLinkName();
+  validateBitxLinkName(concreteLinkName, config.getDefaultLinkName(), config.getLinks());
+  const { versionDir } = config.getSpecificBitxVersionDir(version);
+  const metadata = readBitxMetadata(versionDir);
+  if (!metadata) {
+    throw new BvmError(`bitx version ${version} is not installed`);
+  }
+  const source = getBitxLinkSource(versionDir);
+  const warnings: string[] = [];
+  let prependToPath: string | undefined;
+  if (!opts.useSystemNode && metadata.node) {
+    const node = config.getSpecificNodeVersionDir(metadata.node);
+    if (!node.exists) {
+      throw new BvmError(`Node.js version ${metadata.node} is not installed. Try to reinstall bitx with "bvm install --next ${version} --override"`);
+    }
+    prependToPath = IS_WINDOWS ? node.versionDir : path.join(node.versionDir, 'bin');
+  }
+  const generatedLink = await createShim({
+    linkName: concreteLinkName,
+    versionDir,
+    source,
+    prependToPath,
+  });
+  let previousLinkVersion;
+  if (opts.addToConfig) {
+    previousLinkVersion = config.setBitxLink(concreteLinkName, version);
+  }
+  const { pathExtenderReport, warning } = await validateBinDirInPath(getBinDir(), opts);
   if (warning) {
     warnings.push(warning);
   }
-
   return {
-    linkName, 
+    linkName: concreteLinkName,
     previousLinkVersion,
-    version: concreteVersion,
+    version,
     generatedLink,
     pathExtenderReport,
     warnings,
-  }
+  };
+}
+
+/**
+ * Relinks every bitx link that is saved in the config.
+ */
+export async function linkAllBitx(opts: { addToPathIfMissing?: boolean, useSystemNode?: boolean }): Promise<LinkResult[]> {
+  const links = config.getBitxLinks();
+  return Promise.all(Object.entries(links).map(([linkName, version]) => {
+    return linkBitx(linkName, version, {
+      addToConfig: false,
+      addToPathIfMissing: opts.addToPathIfMissing,
+      useSystemNode: opts.useSystemNode,
+    });
+  }));
 }
 
 async function validateBinDirInPath(binDir: string, opts: { addToPathIfMissing?: boolean } = { addToPathIfMissing: true }): Promise<{ pathExtenderReport?: PathExtenderReport | undefined, warning?: string }> {

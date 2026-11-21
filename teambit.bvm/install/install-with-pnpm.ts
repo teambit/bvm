@@ -145,6 +145,52 @@ export async function installNodeWithPnpm(version: string, dest: string, opts: I
   }
 }
 
+export type InstallPackagesWithPnpmOpts = NetworkOpts & {
+  registry: string;
+};
+
+/**
+ * Installs the given dependencies (`{ name: version }`) into `dir/node_modules`
+ * with a hoisted layout and without running install scripts.
+ * Optional dependencies that don't match the current platform are skipped by the engine.
+ */
+export async function installPackagesWithPnpm(
+  dir: string,
+  dependencies: Record<string, string>,
+  opts: InstallPackagesWithPnpmOpts
+) {
+  fs.mkdirSync(dir, { recursive: true });
+  await nodeApi.install({
+    ...engineOptions(dir, opts),
+    dir,
+    projects: [{
+      rootDir: dir,
+      manifest: {
+        name: 'bvm-package',
+        version: '0.0.0',
+        dependencies,
+      },
+    }],
+    registries: { default: opts.registry },
+  });
+}
+
+/**
+ * The Authorization header configured (in the .npmrc cascade) for the given registry, if any.
+ */
+export function getRegistryAuthHeader(registry: string, dir: string): string | undefined {
+  try {
+    const { authHeaderByUri } = nodeApi.readConfig({ dir });
+    const url = new URL(registry);
+    // "nerf-darted" URI: //host[:port]/path/
+    let nerfDart = `//${url.host}${url.pathname}`;
+    if (!nerfDart.endsWith('/')) nerfDart += '/';
+    return authHeaderByUri?.[nerfDart] ?? authHeaderByUri?.[`//${url.host}/`];
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * The options that every bvm installation shares. The proxy and TLS settings
  * that bvm was configured with win over the ones the pnpm engine reads from the
