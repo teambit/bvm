@@ -42,6 +42,21 @@ Install the latest version and remove the version previously used.
 bvm upgrade
 ```
 
+### Install bitx (the next Bit CLI)
+bitx is installed side by side with Bit and is available as the `bitx` command (`bit` keeps running Bit).
+Add `--next` (or its alias `--bitx`) to `install`, `upgrade`, `list`, `use`, `remove` and `link` to manage bitx
+instead of Bit:
+
+```shell
+bvm install --next                  # the version of the "next" dist-tag
+bvm install --next <bitx-version>   # an exact version
+bvm upgrade --next                  # upgrade bitx and remove the previously used bitx version
+bvm list --next --remote            # published bitx versions
+```
+
+bvm also installs the Node.js version bitx runs env code with. See [docs/bitx.md](docs/bitx.md) for the details,
+the settings, and what to know when using Bit and bitx side by side.
+
 ### Manage versions
 
 #### Get the current version of BVM
@@ -129,6 +144,9 @@ For example, to change the default link for Bit, from  `bit` to `bitty`:
 ```shell
 bvm config set DEFAULT_LINK bitty
 ```
+
+bitx has its own settings (`BITX_LINK`, `BITX_DIST_TAG`, `BITX_PACKAGE`, `BITX_NODE_VERSION`), see
+[docs/bitx.md](docs/bitx.md#configuration).
 
 
 

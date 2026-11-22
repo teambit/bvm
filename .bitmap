@@ -9,6 +9,14 @@
  */
 
 {
+    "bitx": {
+        "name": "bitx",
+        "scope": "",
+        "version": "",
+        "defaultScope": "teambit.bvm",
+        "mainFile": "index.ts",
+        "rootDir": "teambit.bvm/bitx"
+    },
     "bundle-env": {
         "name": "bundle-env",
         "scope": "teambit.bvm",

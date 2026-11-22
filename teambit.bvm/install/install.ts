@@ -260,7 +260,7 @@ function getBitVersionFromFilePath(filePath: string): string | null {
   return parseVersionFromTarFileName(filePath) ?? null;
 }
 
-function networkOpts(config: Config) {
+export function networkOpts(config: Config) {
   return {
     networkConfig: config.networkConfig(),
     proxyConfig: config.proxyConfig(),
@@ -270,7 +270,7 @@ function networkOpts(config: Config) {
 /**
  * Install the given Node.js version to the bvm directory if it is wasn't installed yet.
  */
-async function installNode(config: Config, version: string): Promise<string | undefined> {
+export async function installNode(config: Config, version: string): Promise<string | undefined> {
   const { versionDir, exists } = config.getSpecificNodeVersionDir(version);
   if (exists) return versionDir;
   const loaderText = `downloading Node.js ${version}`

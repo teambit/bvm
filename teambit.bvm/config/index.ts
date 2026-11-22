@@ -1,1 +1,7 @@
-export {Config} from './config';
+export {
+  Config,
+  DEFAULT_BITX_LINK,
+  DEFAULT_BITX_PACKAGE,
+  DEFAULT_BITX_DIST_TAG,
+  DEFAULT_BITX_NODE_VERSION,
+} from './config';

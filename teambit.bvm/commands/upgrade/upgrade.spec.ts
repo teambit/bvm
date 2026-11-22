@@ -20,6 +20,16 @@ jest.mock(
 );
 
 jest.mock(
+  "@teambit/bvm.bitx",
+  () => ({
+    installBitx: jest.fn(),
+    removeBitxVersions: jest.fn(),
+    validateNoBitOnlyFlags: jest.fn(),
+  }),
+  { virtual: true }
+);
+
+jest.mock(
   "@teambit/bvm.version",
   () => ({
     getBvmLocalVersion: jest.fn(),
@@ -36,6 +46,8 @@ jest.mock(
     default: {
       green: (value: string) => value,
       yellow: (value: string) => value,
+      yellowBright: (value: string) => value,
+      cyan: (value: string) => value,
     },
   }),
   { virtual: true }
@@ -43,10 +55,13 @@ jest.mock(
 
 import { installVersion } from "@teambit/bvm.install";
 import { removeVersions } from "@teambit/bvm.remove";
+import { installBitx, removeBitxVersions } from "@teambit/bvm.bitx";
 import { UpgradeCmd } from "./upgrade";
 
 const mockedInstallVersion = installVersion as jest.Mock;
 const mockedRemoveVersions = removeVersions as jest.Mock;
+const mockedInstallBitx = installBitx as jest.Mock;
+const mockedRemoveBitxVersions = removeBitxVersions as jest.Mock;
 
 describe("bvm upgrade", () => {
   let bvmDir: string;
@@ -113,5 +128,36 @@ describe("bvm upgrade", () => {
 
     expect(nodeFs.existsSync(installedVersionDir)).toBe(true);
     expect(mockedRemoveVersions).not.toHaveBeenCalled();
+  });
+
+  describe("--next (bitx)", () => {
+    const bitxResults = (previousCurrentVersion?: string) => ({
+      installedVersion: "0.2.0",
+      previousCurrentVersion,
+      downloadRequired: true,
+      replacedCurrent: true,
+      versionPath: "/bvm/bitx/versions/0.2.0",
+      linkName: "bitx",
+      warnings: [],
+    });
+
+    it("upgrades bitx and removes the previously linked bitx version, without touching bit", async () => {
+      mockedInstallBitx.mockResolvedValue(bitxResults("0.1.0"));
+
+      await new UpgradeCmd().handler({ next: true, skipUpdateCheck: true, skipUpdatePath: true });
+
+      expect(mockedInstallBitx).toHaveBeenCalledWith(undefined, expect.objectContaining({ replace: true, override: false }));
+      expect(mockedRemoveBitxVersions).toHaveBeenCalledWith(["0.1.0"]);
+      expect(mockedInstallVersion).not.toHaveBeenCalled();
+      expect(mockedRemoveVersions).not.toHaveBeenCalled();
+    });
+
+    it("keeps bitx when it is already on the latest version", async () => {
+      mockedInstallBitx.mockResolvedValue(bitxResults("0.2.0"));
+
+      await new UpgradeCmd().handler({ next: true, skipUpdateCheck: true, skipUpdatePath: true });
+
+      expect(mockedRemoveBitxVersions).not.toHaveBeenCalled();
+    });
   });
 });

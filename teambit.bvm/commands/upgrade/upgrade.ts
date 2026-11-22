@@ -1,6 +1,7 @@
 import type { CommandModule, Argv } from "yargs";
 import { installVersion, InstallResults, InstallationMethods, InstallationMethod } from "@teambit/bvm.install";
 import { removeVersions } from "@teambit/bvm.remove";
+import { installBitx, removeBitxVersions, validateNoBitOnlyFlags } from "@teambit/bvm.bitx";
 import chalk from "chalk";
 import {
   getBvmLocalVersion,
@@ -15,6 +16,14 @@ export class UpgradeCmd implements CommandModule {
   command = ["upgrade"];
   builder(yargs: Argv) {
     yargs
+      .option({
+        next: {
+          alias: ["bitx"],
+          describe: 'upgrade bitx (the next Bit CLI) to the version of its dist-tag (default "next") instead of bit',
+          default: false,
+          type: "boolean",
+        },
+      })
       .option({
         "skip-update-path": {
           describe: "don't add the bvm directory to the system PATH",
@@ -72,6 +81,10 @@ export class UpgradeCmd implements CommandModule {
       .example(
         "$0 upgrade",
         "install latest bit version from the server, update the current version, and delete the previous installed version"
+      )
+      .example(
+        "$0 upgrade --next",
+        "install the latest bitx (the next Bit CLI), link it as bitx, and delete the previously linked bitx version"
       );
     return yargs;
   }
@@ -86,6 +99,10 @@ export class UpgradeCmd implements CommandModule {
       if (upgradeBvmMsg) {
         console.log(chalk.yellow(upgradeBvmMsg));
       }
+    }
+    if (args.next) {
+      await upgradeNextBit(args);
+      return;
     }
     const upgradeResults = await installVersion("latest", {
       override: false,
@@ -109,6 +126,26 @@ export class UpgradeCmd implements CommandModule {
 }
 
 export const command = new UpgradeCmd();
+
+async function upgradeNextBit(args) {
+  validateNoBitOnlyFlags(args, ["extractMethod", "lockfilePath", "os", "arch"]);
+  const results = await installBitx(undefined, {
+    override: false,
+    replace: true,
+    useSystemNode: args.useSystemNode,
+    addToPathIfMissing: !args.skipUpdatePath,
+    verbose: args.verbose,
+  });
+  if (results.previousCurrentVersion && results.previousCurrentVersion !== results.installedVersion) {
+    await removeBitxVersions([results.previousCurrentVersion]);
+  }
+  const output = [
+    results.previousCurrentVersion ? `bitx upgraded from version ${chalk.green(results.previousCurrentVersion)}` : undefined,
+    `${chalk.cyan(results.linkName)} is now linked to version ${chalk.green(results.installedVersion)} in path ${chalk.green(results.versionPath)}`,
+    results.warnings.length ? chalk.yellowBright(results.warnings.join("\n")) : undefined,
+  ].filter((msg) => msg);
+  console.log(output.join("\n"));
+}
 
 function formatOutput(upgradeResults: InstallResults): string {
   const replacedText = upgradeResults.previousCurrentVersion

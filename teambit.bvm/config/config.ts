@@ -13,7 +13,9 @@ export const CONFIG_DIR = "config";
 export const CONFIG_FILENAME = "config.json";
 export const ALIASES_KEY = "aliases";
 export const LINKS_KEY = "links";
+export const BITX_LINKS_KEY = "bitx_links";
 export const BIT_VERSIONS_FOLDER_NAME = "versions";
+export const BITX_FOLDER_NAME = "bitx";
 export const NODE_VERSIONS_FOLDER_NAME = "nodejs";
 const CONFIG_KEY_NAME = "global";
 
@@ -35,6 +37,19 @@ export const CFG_NETWORK_CA_FILE = "network.cafile";
 export const CFG_NETWORK_STRICT_SSL = "network.strict-ssl";
 export const CFG_NETWORK_CERT = "network.cert";
 export const CFG_NETWORK_KEY = "network.key";
+
+// bitx (the next Bit CLI) config
+export const CFG_BITX_LINK = "BITX_LINK";
+export const CFG_BITX_PACKAGE = "BITX_PACKAGE";
+export const CFG_BITX_DIST_TAG = "BITX_DIST_TAG";
+export const CFG_BITX_NODE_VERSION = "BITX_NODE_VERSION";
+
+export const DEFAULT_BITX_LINK = "bitx";
+export const DEFAULT_BITX_PACKAGE = "@cocycles/bitx";
+export const DEFAULT_BITX_DIST_TAG = "next";
+// The Node.js version that bitx's pinned Bit runtime is tested with. Used when the
+// installed bitx release doesn't declare its own one (a "bvm.node" field in its package.json).
+export const DEFAULT_BITX_NODE_VERSION = "22.23.4";
 
 // GCP config for set releases metadata
 export const CFG_GCP_ACCESS_KEY = "gcp_access_key";
@@ -69,6 +84,10 @@ export const KNOWN_KEYS = [
   CFG_NETWORK_STRICT_SSL,
   CFG_NETWORK_CERT,
   CFG_NETWORK_KEY,
+  CFG_BITX_LINK,
+  CFG_BITX_PACKAGE,
+  CFG_BITX_DIST_TAG,
+  CFG_BITX_NODE_VERSION,
 ];
 
 const DEFAULT_LINK = "bit";
@@ -203,7 +222,8 @@ export class Config {
       return (
         KNOWN_KEYS.includes(key) ||
         key.startsWith(ALIASES_KEY) ||
-        key.startsWith(LINKS_KEY)
+        key.startsWith(LINKS_KEY) ||
+        key.startsWith(BITX_LINKS_KEY)
       );
     });
   }
@@ -305,12 +325,16 @@ export class Config {
   }
 
   getLinks(): Record<string, string> {
+    return this.getPrefixedEntries(LINKS_KEY);
+  }
+
+  private getPrefixedEntries(prefix: string): Record<string, string> {
     const all = this.list();
     const flatLinks = pickBy(all, (val, key) => {
-      return key.startsWith(LINKS_KEY);
+      return key.startsWith(prefix);
     });
     const res = Object.keys(flatLinks).reduce((acc, keyName) => {
-      const keyWithoutPrefix = keyName.replace(`${LINKS_KEY}.`, "");
+      const keyWithoutPrefix = keyName.replace(`${prefix}.`, "");
       acc[keyWithoutPrefix] = flatLinks[keyName];
       return acc;
     }, {});
@@ -332,6 +356,61 @@ export class Config {
     const allLinks = this.getLinks();
     const defaultLinkName = this.getDefaultLinkName();
     return allLinks[defaultLinkName];
+  }
+
+  getBitxDir(): string {
+    return path.join(this.getBvmDirectory(), BITX_FOLDER_NAME);
+  }
+
+  /**
+   * Must stay at the same depth as Bit's inner version directories (versions/<v>/bit-<v>),
+   * since the shim location is derived from it (<bvm dir>/../bin, or <bvm dir> on Windows).
+   */
+  getBitxVersionsDir(): string {
+    return path.join(this.getBitxDir(), BIT_VERSIONS_FOLDER_NAME);
+  }
+
+  getSpecificBitxVersionDir(version: string): { versionDir: string; exists: boolean } {
+    const versionDir = path.join(this.getBitxVersionsDir(), version);
+    return {
+      versionDir,
+      exists: fs.existsSync(versionDir),
+    };
+  }
+
+  getBitxLinkName(): string {
+    return this.get(CFG_BITX_LINK) || DEFAULT_BITX_LINK;
+  }
+
+  getBitxPackage(): string {
+    return this.get(CFG_BITX_PACKAGE) || DEFAULT_BITX_PACKAGE;
+  }
+
+  getBitxDistTag(): string {
+    return this.get(CFG_BITX_DIST_TAG) || DEFAULT_BITX_DIST_TAG;
+  }
+
+  getBitxNodeVersion(): string {
+    return this.get(CFG_BITX_NODE_VERSION) || DEFAULT_BITX_NODE_VERSION;
+  }
+
+  getBitxLinks(): Record<string, string> {
+    return this.getPrefixedEntries(BITX_LINKS_KEY);
+  }
+
+  setBitxLink(linkName: string, value: string): string {
+    const keyName = `${BITX_LINKS_KEY}.${linkName}`;
+    const previousLinkVersion = this.get(keyName);
+    this.set(keyName, value);
+    return previousLinkVersion;
+  }
+
+  delBitxLink(linkName: string): void {
+    this.del(`${BITX_LINKS_KEY}.${linkName}`);
+  }
+
+  getBitxLinkVersion(): string | undefined {
+    return this.getBitxLinks()[this.getBitxLinkName()];
   }
 
   networkConfig() {
