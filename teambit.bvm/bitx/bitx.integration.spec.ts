@@ -21,6 +21,7 @@ describeIfSupported('bitx install integration', () => {
     // The bvm directory and the shims go to the temp dir. Shims are written next to the
     // bvm directory (<bvm dir>/../bin), so the bvm directory is placed in the fake home.
     process.env.BVM_GLOBALS_DIR = path.join(root, 'home', '.bvm');
+    process.env.BVM_BITX_LINK = 'bitx';
     process.env.HOME = path.join(root, 'home');
     process.env.USERPROFILE = path.join(root, 'home');
     jest.resetModules();

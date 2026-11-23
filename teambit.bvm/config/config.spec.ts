@@ -25,7 +25,7 @@ describe('bitx config', () => {
 
   it('has defaults for the bitx settings', () => {
     const config = loadConfig();
-    expect(config.getBitxLinkName()).toBe('bitx');
+    expect(config.getBitxLinkName()).toBe('bit');
     expect(config.getBitxPackage()).toBe('@cocycles/bitx');
     expect(config.getBitxDistTag()).toBe('next');
     expect(config.getBitxNodeVersion()).toBe('22.23.4');
@@ -41,6 +41,7 @@ describe('bitx config', () => {
   });
 
   it('keeps bitx links separate from Bit links', () => {
+    process.env.BVM_BITX_LINK = 'bitx';
     const config = loadConfig();
     config.setLink('bit', '2.2.164');
     const previous = config.setBitxLink('bitx', '0.1.0');

@@ -12,5 +12,5 @@ An invalid native entry fails linking with a filesystem error.
 
 `linkBitx()` links an installed bitx (the next Bit CLI) version from `<bvm dir>/bitx/versions/<version>`.
 The shim runs the native `bin/bitx` directly and puts the Node.js installed for that version first on the `PATH`.
-bitx links are saved under `bitx_links` in the config, and a bitx link can't take the name of a Bit link (or the
-other way around), since both share the links and bin directories.
+bitx links are saved under `bitx_links` in the config. The default bitx link name is `bit` (see `BITX_LINK`), so set
+`BITX_LINK` to another name to keep Bit and bitx side by side. A Bit link can't take the name of a bitx link.

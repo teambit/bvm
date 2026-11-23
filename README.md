@@ -43,7 +43,8 @@ bvm upgrade
 ```
 
 ### Install bitx (the next Bit CLI)
-bitx is installed side by side with Bit and is available as the `bitx` command (`bit` keeps running Bit).
+bitx is linked with the command name set by `BITX_LINK` (default `bit`). To run it side by side with Bit, run
+`bvm config set BITX_LINK bitx`, and `bit` keeps running Bit. The installed versions are kept apart from Bit's.
 Add `--next` (or its alias `--bitx`) to `install`, `upgrade`, `list`, `use`, `remove` and `link` to manage bitx
 instead of Bit:
 

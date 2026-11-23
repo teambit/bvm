@@ -44,7 +44,7 @@ export const CFG_BITX_PACKAGE = "BITX_PACKAGE";
 export const CFG_BITX_DIST_TAG = "BITX_DIST_TAG";
 export const CFG_BITX_NODE_VERSION = "BITX_NODE_VERSION";
 
-export const DEFAULT_BITX_LINK = "bitx";
+export const DEFAULT_BITX_LINK = "bit";
 export const DEFAULT_BITX_PACKAGE = "@cocycles/bitx";
 export const DEFAULT_BITX_DIST_TAG = "next";
 // The Node.js version that bitx's pinned Bit runtime is tested with. Used when the

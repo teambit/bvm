@@ -1,7 +1,7 @@
 # Installing bitx (the next Bit CLI) with bvm
 
-bitx is the next version of the Bit CLI. bvm installs it side by side with Bit: Bit stays on the `bit` command,
-and bitx is available as the `bitx` command. Installing, upgrading or removing one never touches the other.
+bitx is the next version of the Bit CLI. bvm keeps its versions apart from Bit's. It is linked with the command name
+set by `BITX_LINK` (default `bit`). To keep Bit on `bit` and use bitx as `bitx`, run `bvm config set BITX_LINK bitx`.
 
 > Older bvm versions don't know the `--next` flag and silently ignore it, which installs Bit instead.
 > Make sure `bvm install --help` lists `--next`, or upgrade bvm first (`npm i -g @teambit/bvm`).
@@ -12,11 +12,11 @@ Every command below accepts `--bitx` as an alias of `--next`.
 
 | command | what it does |
 | --- | --- |
-| `bvm install --next` | installs the bitx version of the `next` dist-tag and links it as `bitx` |
+| `bvm install --next` | installs the bitx version of the `next` dist-tag and links it as `BITX_LINK` |
 | `bvm install --next <version>` | installs an exact version, or the version of a dist-tag (`next`, `latest`) |
 | `bvm install --next --override` | reinstalls a version that is already installed |
 | `bvm install --next --no-replace` | installs without relinking `bitx` (when `bitx` is already linked) |
-| `bvm upgrade --next` | installs the version of the dist-tag, links it as `bitx`, and removes the previously linked bitx version |
+| `bvm upgrade --next` | installs the version of the dist-tag, links it as `BITX_LINK`, and removes the previously linked bitx version |
 | `bvm list --next` | lists installed bitx versions and marks the linked one |
 | `bvm list --next --remote` | lists published bitx versions, with their publish time and dist-tags |
 | `bvm use --next [<version>]` | shows the linked bitx version, or links `bitx` to another installed version (`latest` = newest installed) |
@@ -93,7 +93,7 @@ bitx links are kept in the bvm config apart from Bit links:
 
 | setting | default | meaning |
 | --- | --- | --- |
-| `BITX_LINK` | `bitx` | the command name bitx is linked with |
+| `BITX_LINK` | `bit` | the command name bitx is linked with. Set it to `bitx` to keep Bit on `bit` |
 | `BITX_DIST_TAG` | `next` | the dist-tag `bvm install --next` and `bvm upgrade --next` install |
 | `BITX_PACKAGE` | `@cocycles/bitx` | the npm package bitx is installed from |
 | `BITX_NODE_VERSION` | `22.23.4` | the Node.js version for bitx, when the release doesn't declare one |
@@ -101,8 +101,8 @@ bitx links are kept in the bvm config apart from Bit links:
 Set them with `bvm config set <setting> <value>`, or with a `BVM_` environment variable (for example
 `BVM_BITX_DIST_TAG=latest`), which is handy in CI.
 
-Bit and bitx share the links directory and the bin directory, so they can't use the same command name: bvm refuses
-to link bitx with the name of a Bit link (including `DEFAULT_LINK`), and refuses to link Bit with the name of a
+Bit and bitx share the links directory and the bin directory, so they can't use the same command name. The default
+bitx name is `bit`, so to run both, run `bvm config set BITX_LINK bitx`. bvm refuses to link Bit with the name of a
 bitx link.
 
 ## Using Bit and bitx side by side

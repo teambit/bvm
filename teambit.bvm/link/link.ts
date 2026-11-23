@@ -9,7 +9,7 @@ import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
 import semver from 'semver';
 import { getLinkSource } from './link-source';
-import { getBitxLinkSource, readBitxMetadata, validateBitxLinkName } from './bitx-link';
+import { getBitxLinkSource, readBitxMetadata } from './bitx-link';
 
 const IS_WINDOWS = os.platform() === 'win32';
 const DOCS_BASE_URL = 'https://bit.dev/docs';
@@ -92,7 +92,7 @@ export async function linkOne(linkName: string, version: string | undefined, opt
     throw new BvmError(`version ${concreteVersion} is not installed`);
   }
   if (config.getBitxLinks()[linkName]) {
-    throw new BvmError(`the link name "${linkName}" is used by bitx (the next Bit). choose another link name for Bit`);
+    throw new BvmError(`the link name "${linkName}" is used by bitx (the next Bit). choose another link name for Bit, or change the bitx link name with "bvm config set BITX_LINK <name>"`);
   }
   const source = getLinkSource(versionDir);
   let nodeExecPath: string;
@@ -200,7 +200,7 @@ export type BitxLinkOptions = {
  */
 export async function linkBitx(linkName: string | undefined, version: string, opts: BitxLinkOptions = {}): Promise<LinkResult> {
   const concreteLinkName = linkName || config.getBitxLinkName();
-  validateBitxLinkName(concreteLinkName, config.getDefaultLinkName(), config.getLinks());
+  if (!concreteLinkName) throw new BvmError('bitx link name is empty');
   const { versionDir } = config.getSpecificBitxVersionDir(version);
   const metadata = readBitxMetadata(versionDir);
   if (!metadata) {
