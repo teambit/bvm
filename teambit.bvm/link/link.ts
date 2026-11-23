@@ -7,7 +7,6 @@ import symlinkDir from 'symlink-dir';
 import binLinks from 'bin-links';
 import { BvmError } from '@teambit/bvm.error';
 import os from 'os';
-import readline from 'readline';
 import semver from 'semver';
 import { getLinkSource } from './link-source';
 import { getBitxLinkSource, readBitxMetadata } from './bitx-link';
@@ -187,25 +186,7 @@ function getBinDir(): string {
   return path.join(os.homedir(), 'bin');
 }
 
-export class BitLinkOverrideDeclined extends BvmError {
-  constructor(linkName: string, bitVersion: string) {
-    super(`the link name "${linkName}" is already used by Bit ${bitVersion}, and it was not replaced with bitx. change the bitx link name with "bvm config set BITX_LINK <name>" or run "bvm link --next ${linkName} <version>" to replace it`);
-  }
-}
-
-async function confirmBitLinkOverride(linkName: string, bitVersion: string): Promise<boolean> {
-  if (!process.stdin.isTTY) return false;
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const answer = await new Promise<string>((resolve) => {
-    rl.question(`"${linkName}" is currently linked to Bit ${bitVersion} (the old Bit). Override it to point to bitx? [y/N] `, resolve);
-  });
-  rl.close();
-  return /^y(es)?$/i.test(answer.trim());
-}
-
 export type BitxLinkOptions = {
-  /** replace a Bit link that uses the bitx link name. when undefined, the user is asked */
-  overrideBitLink?: boolean
   addToConfig?: boolean
   addToPathIfMissing?: boolean
   useSystemNode?: boolean
@@ -222,11 +203,8 @@ export async function linkBitx(linkName: string | undefined, version: string, op
   if (!concreteLinkName) throw new BvmError('bitx link name is empty');
   const { versionDir } = config.getSpecificBitxVersionDir(version);
   const conflictingBitVersion = config.getLinks()[concreteLinkName];
-  let overrideBitLink = false;
-  if (conflictingBitVersion) {
-    overrideBitLink = opts.overrideBitLink ?? (await confirmBitLinkOverride(concreteLinkName, conflictingBitVersion));
-    if (!overrideBitLink) throw new BitLinkOverrideDeclined(concreteLinkName, conflictingBitVersion);
-  }
+  // linking bitx replaces a Bit link that uses the same name
+  const replacedBitVersion = config.getLinks()[concreteLinkName];
   const metadata = readBitxMetadata(versionDir);
   if (!metadata) {
     throw new BvmError(`bitx version ${version} is not installed`);
@@ -247,7 +225,10 @@ export async function linkBitx(linkName: string | undefined, version: string, op
     source,
     prependToPath,
   });
-  if (overrideBitLink) config.delLink(concreteLinkName);
+  if (replacedBitVersion) {
+    config.delLink(concreteLinkName);
+    warnings.push(`the "${concreteLinkName}" link used to point to Bit ${replacedBitVersion} and now points to bitx. to keep both, run "bvm config set BITX_LINK <name>"`);
+  }
   let previousLinkVersion;
   if (opts.addToConfig) {
     previousLinkVersion = config.setBitxLink(concreteLinkName, version);
