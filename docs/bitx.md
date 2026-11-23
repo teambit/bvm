@@ -105,8 +105,8 @@ Bit and bitx share the links directory and the bin directory, so they can't use 
 bitx name is `bit`, so to run both, run `bvm config set BITX_LINK bitx`. bvm refuses to link Bit with the name of a
 bitx link.
 
-If `bit` is already linked to a Bit version when bitx is linked with that name, bvm replaces it without asking: the
-Bit link is removed from the config and a warning says so. Set `BITX_LINK` to another name to keep both.
+If `bit` is already linked to a Bit version when bitx is linked with that name, bvm replaces it without asking and
+removes the Bit link from the config. Set `BITX_LINK` to another name to keep both.
 
 ## Using Bit and bitx side by side
 

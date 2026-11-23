@@ -203,8 +203,6 @@ export async function linkBitx(linkName: string | undefined, version: string, op
   if (!concreteLinkName) throw new BvmError('bitx link name is empty');
   const { versionDir } = config.getSpecificBitxVersionDir(version);
   const conflictingBitVersion = config.getLinks()[concreteLinkName];
-  // linking bitx replaces a Bit link that uses the same name
-  const replacedBitVersion = config.getLinks()[concreteLinkName];
   const metadata = readBitxMetadata(versionDir);
   if (!metadata) {
     throw new BvmError(`bitx version ${version} is not installed`);
@@ -225,10 +223,8 @@ export async function linkBitx(linkName: string | undefined, version: string, op
     source,
     prependToPath,
   });
-  if (replacedBitVersion) {
-    config.delLink(concreteLinkName);
-    warnings.push(`the "${concreteLinkName}" link used to point to Bit ${replacedBitVersion} and now points to bitx. to keep both, run "bvm config set BITX_LINK <name>"`);
-  }
+  // linking bitx replaces a Bit link that uses the same name
+  config.delLink(concreteLinkName);
   let previousLinkVersion;
   if (opts.addToConfig) {
     previousLinkVersion = config.setBitxLink(concreteLinkName, version);
