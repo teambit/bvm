@@ -14,7 +14,6 @@ import { BvmError } from '@teambit/bvm.error';
 import { installNode, installPackagesWithPnpm, getRegistryAuthHeader, networkOpts } from '@teambit/bvm.install';
 import {
   BITX_METADATA_FILE,
-  BitLinkOverrideDeclined,
   BitxMetadata,
   getBitxExecutableName,
   linkBitx,
@@ -132,7 +131,7 @@ export async function installBitx(spec: string | undefined, opts: BitxInstallOpt
       useSystemNode = !(await installNode(config, existingMetadata.node));
     }
     loader.stop();
-    const linkResult = await linkIfNeeded(version, { ...opts, useSystemNode }, warnings);
+    const linkResult = await linkIfNeeded(version, { ...opts, useSystemNode });
     return toInstallResults(version, versionDir, false, linkResult, warnings);
   }
   if (exists) {
@@ -196,7 +195,7 @@ export async function installBitx(spec: string | undefined, opts: BitxInstallOpt
 
   const versionWarning = await checkExecutableVersion(versionDir, version);
   if (versionWarning) warnings.push(versionWarning);
-  const linkResult = await linkIfNeeded(version, opts, warnings);
+  const linkResult = await linkIfNeeded(version, opts);
   return toInstallResults(version, versionDir, true, linkResult, warnings);
 }
 
@@ -260,24 +259,15 @@ export async function getBitxVersionsInfo(includeRemote = true): Promise<BitxVer
   return { currentVersion, latestInstalledVersion, distTag, latestRemoteVersion };
 }
 
-async function linkIfNeeded(version: string, opts: BitxInstallOpts, warnings: string[]): Promise<LinkResult | undefined> {
+async function linkIfNeeded(version: string, opts: BitxInstallOpts): Promise<LinkResult | undefined> {
   const config = Config.load();
   const replace = opts.replace ?? true;
   if (!replace && config.getBitxLinkVersion()) return undefined;
-  try {
-    return await linkBitx(undefined, version, {
-      addToConfig: true,
-      addToPathIfMissing: opts.addToPathIfMissing,
-      useSystemNode: opts.useSystemNode,
-    });
-  } catch (err) {
-    // an installed bitx that is not linked is better than a failed install
-    if (err instanceof BitLinkOverrideDeclined) {
-      warnings.push(err.message);
-      return undefined;
-    }
-    throw err;
-  }
+  return linkBitx(undefined, version, {
+    addToConfig: true,
+    addToPathIfMissing: opts.addToPathIfMissing,
+    useSystemNode: opts.useSystemNode,
+  });
 }
 
 function toInstallResults(
