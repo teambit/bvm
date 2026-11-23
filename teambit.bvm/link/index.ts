@@ -5,5 +5,4 @@ export {
   getBitxExecutableName,
   getBitxLinkSource,
   readBitxMetadata,
-  validateBitxLinkName,
 } from './bitx-link';

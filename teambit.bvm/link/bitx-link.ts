@@ -49,16 +49,3 @@ export function getBitxLinkSource(versionDir: string, platform = process.platfor
   if (platform !== 'win32') fs.accessSync(filename, fs.constants.X_OK);
   return source;
 }
-
-/**
- * bitx and Bit share the links directory and the bin directory, so a bitx link
- * must not take a name that a Bit version is linked with.
- */
-export function validateBitxLinkName(linkName: string, defaultLinkName: string, bitLinks: Record<string, string>) {
-  if (!linkName) {
-    throw new BvmError('bitx link name is empty');
-  }
-  if (linkName === defaultLinkName || bitLinks[linkName]) {
-    throw new BvmError(`the link name "${linkName}" is used by Bit. bitx must be linked with another name (see "bvm config set BITX_LINK <name>")`);
-  }
-}

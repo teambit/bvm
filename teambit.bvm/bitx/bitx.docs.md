@@ -16,7 +16,7 @@ machine comes with it), keeps only the executable, and records the installation 
 ```
 
 - `installBitx(spec)` resolves a dist-tag (default `next`, see `BITX_DIST_TAG`) or an exact version from the
-  registry, installs it, installs the Node.js version the release asks for, and links it as `bitx`.
+  registry, installs it, installs the Node.js version the release asks for, and links it as `BITX_LINK` (default `bit`).
 - `listLocalBitx()` / `listRemoteBitx()` list installed and published versions.
 - `removeBitxVersions()` / `removeAllBitx()` remove installed versions.
 - `useBitx()` switches the `bitx` link to another installed version.

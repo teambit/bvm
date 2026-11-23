@@ -1,7 +1,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { getBitxLinkSource, readBitxMetadata, validateBitxLinkName, BITX_METADATA_FILE } from './bitx-link';
+import { getBitxLinkSource, readBitxMetadata, BITX_METADATA_FILE } from './bitx-link';
 
 describe('bitx link helpers', () => {
   let root: string;
@@ -32,19 +32,5 @@ describe('bitx link helpers', () => {
     expect(readBitxMetadata(root)).toBeUndefined();
     fs.writeFileSync(path.join(root, BITX_METADATA_FILE), JSON.stringify({ version: '0.1.0', node: '22.23.4' }));
     expect(readBitxMetadata(root)).toEqual({ version: '0.1.0', node: '22.23.4' });
-  });
-
-  describe('validateBitxLinkName', () => {
-    it('accepts a name that Bit does not use', () => {
-      expect(() => validateBitxLinkName('bitx', 'bit', { bit: '2.2.164' })).not.toThrow();
-    });
-
-    it('refuses the default Bit link name', () => {
-      expect(() => validateBitxLinkName('bit', 'bit', {})).toThrow('is used by Bit');
-    });
-
-    it('refuses a name that a Bit version is linked with', () => {
-      expect(() => validateBitxLinkName('bit2', 'bit', { bit2: '2.0.0' })).toThrow('is used by Bit');
-    });
   });
 });

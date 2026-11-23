@@ -21,7 +21,7 @@ export class InstallCmd implements CommandModule {
     .option({
       next: {
         alias: ['bitx'],
-        describe: 'install bitx, the next Bit CLI, as the "bitx" command (side by side with bit). the version can be an exact version or a dist-tag (default "next")',
+        describe: 'install bitx, the next Bit CLI, as the command named by BITX_LINK (default "bit"). the version can be an exact version or a dist-tag (default "next")',
         default: false,
         type: 'boolean'
       }
@@ -103,7 +103,7 @@ export class InstallCmd implements CommandModule {
     })
     .example('$0 install 0.0.200', 'install version 0.0.200 of bit')
     .example('$0 install -f "/tmp/bit-0.0.740.tar.gz"', 'install version 0.0.740 of bit from a tar file')
-    .example('$0 install --next', 'install the latest bitx (the next Bit CLI) as the "bitx" command')
+    .example('$0 install --next', 'install the latest bitx (the next Bit CLI) with the BITX_LINK command name (default "bit")')
     .example('$0 install --next 0.1.0-alpha.1', 'install version 0.1.0-alpha.1 of bitx')
     return yargs;
   }
