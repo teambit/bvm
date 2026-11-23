@@ -352,6 +352,10 @@ export class Config {
     return previousLinkVersion;
   }
 
+  delLink(linkName: string): void {
+    this.del(`${LINKS_KEY}.${linkName}`);
+  }
+
   getDefaultLinkVersion(): string | undefined {
     const allLinks = this.getLinks();
     const defaultLinkName = this.getDefaultLinkName();
