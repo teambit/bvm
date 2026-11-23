@@ -86,3 +86,5 @@ async function main() {
 }
 
 main().then().catch((e) => {})
+
+// trigger version bump
